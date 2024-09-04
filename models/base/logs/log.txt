@@ -1,0 +1,12 @@
+
+
+
+
+Namespace(cuda='cuda', mode='test', test_mode='all', gall_mode='single', regdb_test_mode='v-t', dataset='sysu', sysu_data_path='E:/hhj/SYSU-MM01/', regdb_data_path='/opt/data/private/data/RegDB/', trial=1, batch_size=32, img_w=144, img_h=288, seed=1, pid_num=395, learning_rate=0.0003, weight_decay=0.0005, milestones=[40, 70], stage1_batch_size=32, stage1_learning_rate=0.0003, stage2_learning_rate=0.0003, stage1_weight_decay=0.0001, stage1_lr_min=1e-06, stage1_warmup_lr_init=1e-05, stage1_warmup_epochs=5, stage1_train_epochs=60, lambda1=0.15, lambda2=0.05, lambda3=0.1, num_pos=4, num_workers=8, output_path='models/base/', max_save_model_num=1, resume_train_epoch=-1, auto_resume_training_from_lastest_step=True, total_train_epoch=120, eval_epoch=1, resume_test_model=106)
+Time: 2024-09-04 16:19:44; Test on Dataset: sysu, 
+mINP: 0.5916757022563637 
+mAP: 0.7181614840223048 
+ Rank: [0.75282675 0.8443071  0.8846173  0.90957135 0.92650545 0.9392058
+ 0.9492242  0.9564554  0.9619511  0.9665265  0.9704444  0.9737312
+ 0.97665006 0.97914803 0.9809624  0.9829872  0.9845648  0.98637927
+ 0.98790425 0.98895615]
