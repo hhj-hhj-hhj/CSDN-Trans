@@ -5,6 +5,7 @@ from data_loader.dataset import SYSUData, RegDBData, TestData, process_query_sys
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
+from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
 
 import torch.utils.data as data
 
@@ -46,6 +47,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
+            RandomColoring(p=0.5, is_rgb=True),
+            normalize])
+        self.transform_test_ir = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize((config.img_h, config.img_w)),
+            transforms.ToTensor(),
+            RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset
@@ -84,7 +92,7 @@ class Loader:
             self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test,
-                                      transform2=self.transform_test)
+                                      transform2=self.transform_test_ir)
             self.normal_color_pos, self.normal_thermal_pos = GenIdx(normal_samples.train_color_label,
                                                                     normal_samples.train_thermal_label)
             self.normal_samples = normal_samples
@@ -169,6 +177,16 @@ class Loader:
         train_loader = data.DataLoader(self.samples, batch_size=self.batch_size,
                                        sampler=sampler, num_workers=self.num_workers, drop_last=True)
         return train_loader
+
+    def get_train_normal_loader_trans(self):
+        normal_sampler = IdentitySampler(self.normal_samples.train_color_label, self.normal_samples.train_thermal_label,
+                                         self.normal_color_pos, self.normal_thermal_pos, self.num_pos,
+                                         int(self.batch_size / self.num_pos))
+        self.normal_samples.cIndex = normal_sampler.index1
+        self.normal_samples.tIndex = normal_sampler.index2
+        normal_train_loader = data.DataLoader(self.normal_samples, batch_size=self.stage1_batch_size,
+                                       sampler=normal_sampler, num_workers=self.num_workers, drop_last=True)
+        return normal_train_loader
 
     def get_train_normal_loader(self):
         normal_sampler = IdentitySampler(self.normal_samples.train_color_label, self.normal_samples.train_thermal_label,
