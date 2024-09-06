@@ -5,7 +5,7 @@ def train_stage1(base, data_loader):
     base.set_train()
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
-    for i, data in range(data_loader):
+    for i, data in enumerate(data_loader):
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
         rgb_image_features = base.model(x1=rgb_img, get_image=True)
@@ -28,14 +28,17 @@ def train_stage1(base, data_loader):
 
     return meter.get_val(), meter.get_str()
 
-def train_stage2(base, num_image, i_ter, batch, labels_list, image_features_list):
+def train_stage2(base, data_loader):
     base.set_train()
     meter = MultiItemAverageMeter()
-    iter_list = torch.randperm(num_image).to(base.device)
-    for i in range(i_ter):
-        b_list = iter_list[i*batch: (i+1)*batch]
-        target = labels_list[b_list].long()
-        image_features = image_features_list[b_list]
+    for i, data in enumerate(data_loader):
+        # print(f'Epoch: [{11111}][{i}/{len(data_loader)}]\t')
+        rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
+        rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
+        rgb_image_features_proj = base.model(x1=rgb_img, get_image=True)
+        ir_image_features_proj = base.model(x2=ir_img, get_image=True)
+        target = torch.cat([rgb_target, ir_target], dim=0)
+        image_features = torch.cat([rgb_image_features_proj, ir_image_features_proj], dim=0)
         text_features = base.model(label=target, get_fusion_text=True)
         loss_i2t = base.con_creiteron(image_features, text_features, target, target)
         loss_t2i = base.con_creiteron(text_features, image_features, target, target)
@@ -56,6 +59,7 @@ def train(base, loaders, text_features, config):
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
     for i, (input1_0, input1_1, input2, label1, label2) in enumerate(loader):
+        # print(f"now is {i}/{len(loader)} step")
         rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
         ir_imgs, ir_pids = input2, label2
         rgb_imgs1, rgb_imgs2, rgb_pids = rgb_imgs1.to(base.device),  rgb_imgs2.to(base.device), \

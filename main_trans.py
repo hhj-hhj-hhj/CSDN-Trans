@@ -81,40 +81,18 @@ def main(config):
         print('The 1st Stage of Trained')
 
         print('Start the 2st Stage Training')
-        print('Extracting Image Features')
-
-        image_features = []
-        labels = []
-
-        with torch.no_grad():
-            for i, data in enumerate(loaders.get_train_normal_loader()):
-                rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
-                ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
-                rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
-                ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
-                pids = torch.cat([rgb_pids, ir_pids], dim=0)
-                image_features_proj = torch.cat([rgb_image_features_proj, ir_image_features_proj], dim=0)
-                for i, img_feat in zip(pids, image_features_proj):
-                    labels.append(i)
-                    image_features.append(img_feat.cpu())
-            labels_list = torch.stack(labels, dim=0).cuda()
-            image_features_list = torch.stack(image_features, dim=0).cuda()
-            batch = config.batch_size * 2
-            num_image = labels_list.shape[0]
-            i_ter = num_image // batch
-        del labels, image_features
-        print('Image Features Extracted, Start Training')
-
         model._init_optimizer_stage2()
 
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
             model.model_lr_scheduler_stage2.step(current_epoch)
-            _, result = train_stage2(model, num_image, i_ter, batch, labels_list,
-                                     image_features_list, )
+            _, result = train_stage2(model, data_all_loader)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage2._get_lr
                                                             (current_epoch)[0], result))
 
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage2.pth')
+        torch.save(model.model.state_dict(), model_file_path)
         print('The 2st Stage Trained')
 
         print('Start the 3st Stage Training')
@@ -153,15 +131,16 @@ def main(config):
                 best_rank1 = max(cmc[0], best_rank1)
                 model.save_model(current_epoch, is_best_rank)
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
-                                                                                            config.dataset,
-                                                                                            mINP, mAP, cmc))
+                                                                                                config.dataset,
+                                                                                                mINP, mAP, cmc))
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
         cmc, mAP, mINP = test(model, loaders, config)
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
-                                                                                       config.dataset,
-                                                                                       mINP, mAP, cmc))
+                                                                                        config.dataset,
+                                                                                        mINP, mAP, cmc))
+
 
 if __name__ == '__main__':
 
