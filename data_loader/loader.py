@@ -44,6 +44,8 @@ class Loader:
             RandomColoring(p=0.5, is_rgb=False),
             normalize,
             ChannelRandomErasing(probability=0.5),
+
+
             ChannelAdapGray(probability=0.5)])
 
         self.transform_test = transforms.Compose([
