@@ -1,7 +1,6 @@
 import torch
 from tools import MultiItemAverageMeter
 
-
 def train_stage1(base, data_loader):
     base.set_train()
     meter = MultiItemAverageMeter()
@@ -70,7 +69,7 @@ def train(base, loaders, text_features, config):
         rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, pp = base.model(x1=rgb_imgs, x2=ir_imgs)
+        features, cls_score = base.model(x1=rgb_imgs, x2=ir_imgs)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
@@ -83,16 +82,11 @@ def train(base, loaders, text_features, config):
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
-        loss_hcc_euc = base.criterion_hcc(features[1], pids)
-        loss_pp_euc = 0
-        for i in range(pp.size(1)):
-            loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
-
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_euc + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
