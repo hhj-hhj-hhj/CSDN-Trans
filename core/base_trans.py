@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 
 from bisect import bisect_right
-from network import Model
+from network.model_trans import Model
 from network.lr import CosineLRScheduler
 from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc, ptcc
 

@@ -29,30 +29,6 @@ def train_stage1(base, data_loader):
 
     return meter.get_val(), meter.get_str()
 
-def train_stage2(base, data_loader):
-    base.set_train()
-    meter = MultiItemAverageMeter()
-    for i, data in enumerate(data_loader):
-        # print(f'Epoch: [{11111}][{i}/{len(data_loader)}]\t')
-        rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
-        rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
-        rgb_image_features_proj = base.model(x1=rgb_img, get_image=True)
-        ir_image_features_proj = base.model(x2=ir_img, get_image=True)
-        target = torch.cat([rgb_target, ir_target], dim=0)
-        image_features = torch.cat([rgb_image_features_proj, ir_image_features_proj], dim=0)
-        text_features = base.model(label=target, get_fusion_text=True)
-        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
-        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
-
-        loss = loss_i2t + loss_t2i
-        base.model_optimizer_stage2.zero_grad()
-        loss.backward()
-        base.model_optimizer_stage2.step()
-
-        meter.update({'loss_i2t': loss_i2t.data,
-                      'loss_t2i': loss_t2i.data,})
-
-    return meter.get_val(), meter.get_str()
 
 def train(base, loaders, text_features, config):
 

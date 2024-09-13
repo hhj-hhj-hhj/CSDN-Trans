@@ -8,8 +8,7 @@ import numpy as np
 
 
 from data_loader.loader import Loader
-# from core import Base, train, train_stage1, train_stage2, test
-from core.train_trans import train, train_stage1, train_stage2
+from core.train_trans import train, train_stage1
 from core.test import test
 from core.base_trans import Base
 
@@ -79,21 +78,6 @@ def main(config):
         model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
         torch.save(model.model.state_dict(), model_file_path)
         print('The 1st Stage of Trained')
-
-        print('Start the 2st Stage Training')
-        model._init_optimizer_stage2()
-
-        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-            data_all_loader = loaders.get_train_normal_loader()
-            model.model_lr_scheduler_stage2.step(current_epoch)
-            _, result = train_stage2(model, data_all_loader)
-            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-                                                            model.model_lr_scheduler_stage2._get_lr
-                                                            (current_epoch)[0], result))
-
-        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage2.pth')
-        torch.save(model.model.state_dict(), model_file_path)
-        print('The 2st Stage Trained')
 
         print('Start the 3st Stage Training')
         print('Extracting Text Features')
