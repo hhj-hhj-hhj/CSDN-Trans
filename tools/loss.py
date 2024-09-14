@@ -102,10 +102,21 @@ def compute_dist_euc(x1,x2,p1,p2):
     mask = p1.expand(n, m).t().eq(p2.expand(m, n))
     return dist, mask
 
+def compute_dist_kl(x1,x2,p1,p2):
+    n1, c = x1.shape
+    n2, c = x2.shape
+    pr1 = x1.expand(n2, n1, c).detach()
+    pr2 = x2.expand(n1, n2, c).detach()
+    x1 = x1.clamp(1e-9).log().expand(n2, n1, c)
+    x2 = x2.clamp(1e-9).log().expand(n1, n2, c)
+    dist = (pr2 * x2.detach() - pr2 * x1.permute(1, 0, 2)).sum(dim=2) + \
+           (pr1 * x1.detach() - pr1 * x2.permute(1, 0, 2)).sum(dim=2).t()
+    mask = p1.expand(n2, n1).t().eq(p2.expand(n1, n2))
+    return dist, mask
 
-class hcc(nn.Module):
+class hcc_euc(nn.Module):
     def __init__(self, margin_euc=0.6):
-        super(hcc, self).__init__()
+        super(hcc_euc, self).__init__()
         self.margin_euc = margin_euc
 
     def forward(self, x, pids):
@@ -125,6 +136,36 @@ class hcc(nn.Module):
             loss.append(dist[i][:m // 2][mask[i][:m // 2]])
         loss1 = torch.cat(loss).mean()
         dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n):
+            loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
+        loss2 = torch.cat(loss).mean()
+        return loss1 + loss2
+
+class hcc_kl(nn.Module):
+    def __init__(self, margin_kl=6):
+        super(hcc_kl, self).__init__()
+        self.margin_kl = margin_kl
+
+    def forward(self, x, pids):
+        margin = self.margin_kl
+        x = x.softmax(dim=-1)
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidhc = pids.reshape(2*p, -1)[:, 0]# pid编号
+        hcen = x.reshape(2*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+
+        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n // 2):
+            loss.append(dist[i][m // 2:][mask[i][m // 2:]])
+        for i in range(n // 2, n):
+            loss.append(dist[i][:m // 2][mask[i][:m // 2]])
+        loss1 = torch.cat(loss).mean()
+        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
         loss = []
         n, m = dist.shape
         for i in range(n):
@@ -153,11 +194,6 @@ class ptcc(nn.Module):
             loss.append(dist[i][:m // 2][mask[i][:m // 2]])
         loss = torch.cat(loss).mean()
         return loss
-
-
-
-
-
 
 
 

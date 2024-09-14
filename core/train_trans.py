@@ -38,22 +38,23 @@ def train(base, loaders, text_features, config):
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
-    for i, (input1_0, input1_1, input2, label1, label2) in enumerate(loader):
+    for i, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
-        rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
+        # if i == 10:
+        #     break
+        rgb_imgs1, rgb_pids = input1_0, label1
         ir_imgs, ir_pids = input2, label2
-        rgb_imgs1, rgb_imgs2, rgb_pids = rgb_imgs1.to(base.device),  rgb_imgs2.to(base.device), \
-                                        rgb_pids.to(base.device).long()
+        rgb_imgs1, rgb_pids = rgb_imgs1.to(base.device), rgb_pids.to(base.device).long()
         ir_imgs, ir_pids = ir_imgs.to(base.device), ir_pids.to(base.device).long()
 
-        rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
-        pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
+        rgb_imgs = rgb_imgs1
+        pids = torch.cat([rgb_pids, ir_pids], dim=0)
 
         features, cls_score, pp = base.model(x1=rgb_imgs, x2=ir_imgs)
 
-        n = features[1].shape[0] // 3
-        rgb_attn_features = features[1].narrow(0, 0, n)
-        ir_attn_features = features[1].narrow(0, 2 * n, n)
+        n = features[1].shape[0] // 2
+        rgb_attn_features = features[1][:n]
+        ir_attn_features = features[1][n:]
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
 
@@ -62,7 +63,8 @@ def train(base, loaders, text_features, config):
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
-        loss_hcc_euc = base.criterion_hcc(features[1], pids)
+        # loss_hcc_euc = base.criterion_hcc_euc(features[1], pids)
+        # loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
         loss_pp_euc = 0
         for i in range(pp.size(1)):
             loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
@@ -70,8 +72,11 @@ def train(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.05
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_euc + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05
+
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
@@ -81,7 +86,8 @@ def train(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      'loss_hcc_euc': loss_hcc_euc.data,
+                      # 'loss_hcc_euc': loss_hcc_euc.data,
+                      #   'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
