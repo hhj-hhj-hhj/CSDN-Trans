@@ -1,21 +1,24 @@
 import torch
 from tools import MultiItemAverageMeter
 
-
-def train_stage1(base, data_loader):
+def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_image_features_list,
+                   infrared_image_features_list):
     base.set_train()
     meter = MultiItemAverageMeter()
-    # iter_list = torch.randperm(num_image).to(base.device)
-    for i, data in enumerate(data_loader):
-        rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
-        rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
-        rgb_image_features = base.model(x1=rgb_img, get_image=True)
-        ir_image_features = base.model(x2=ir_img, get_image=True)
+    iter_list = torch.randperm(num_image).to(base.device)
+    for i in range(i_ter):
+        # print(f"this is the {i}/{i_ter} iteration")
+        b_list = iter_list[i*batch: (i+1)*batch]
+        rgb_target = visible_labels_list[b_list].long()
+        # ir_target = visible_labels_list[b_list].long()
+        rgb_image_features = visible_image_features_list[b_list]
+        ir_image_features = infrared_image_features_list[b_list]
         rgb_text_features = base.model(label1=rgb_target, get_text=True)
-        ir_text_features = base.model(label2=ir_target, get_text=True)
+        # ir_text_features = base.model(label2=ir_target, get_text=True)
         image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
-        text_features = torch.cat([rgb_text_features, ir_text_features], dim=0)
-        target = torch.cat([rgb_target, ir_target], dim=0)
+        text_features = torch.cat([rgb_text_features, rgb_text_features], dim=0)
+        # text_features = rgb_text_features
+        target = torch.cat([rgb_target, rgb_target], dim=0)
         loss_i2t = base.con_creiteron(image_features, text_features, target, target)
         loss_t2i = base.con_creiteron(text_features, image_features, target, target)
 
@@ -35,22 +38,21 @@ def train(base, loaders, text_features, config):
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
-    for i, (input1_0, input1_1, input2, label1, label2) in enumerate(loader):
+    for i, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
-        rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
+        rgb_imgs1, rgb_pids = input1_0, label1
         ir_imgs, ir_pids = input2, label2
-        rgb_imgs1, rgb_imgs2, rgb_pids = rgb_imgs1.to(base.device),  rgb_imgs2.to(base.device), \
-                                        rgb_pids.to(base.device).long()
+        rgb_imgs1, rgb_pids = rgb_imgs1.to(base.device), rgb_pids.to(base.device).long()
         ir_imgs, ir_pids = ir_imgs.to(base.device), ir_pids.to(base.device).long()
 
-        rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
-        pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
+        rgb_imgs = rgb_imgs1
+        pids = torch.cat([rgb_pids, ir_pids], dim=0)
 
         features, cls_score, pp = base.model(x1=rgb_imgs, x2=ir_imgs)
 
-        n = features[1].shape[0] // 3
-        rgb_attn_features = features[1].narrow(0, 0, n)
-        ir_attn_features = features[1].narrow(0, 2 * n, n)
+        n = features[1].shape[0] // 2
+        rgb_attn_features = features[1][:n]
+        ir_attn_features = features[1][n:]
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
 
@@ -78,6 +80,8 @@ def train(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
+                      'loss_hcc_euc': loss_hcc_euc.data,
+                      'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
 

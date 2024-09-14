@@ -1,6 +1,6 @@
 
 import torchvision.transforms as transforms
-from data_loader.dataset import SYSUData, RegDBData, TestData, process_query_sysu, process_gallery_sysu, \
+from data_loader.dataset_trans import SYSUData, RegDBData, TestData, process_query_sysu, process_gallery_sysu, \
     process_test_regdb, SYSUDataNormalSamples, Dataset, SYSUDataRGBNormalSamples, SYSUDataIRNormalSamples, \
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
@@ -24,16 +24,16 @@ class Loader:
             normalize,
             ChannelRandomErasing(probability=0.5)])
 
-        self.transform_color2 = transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Pad(10),
-            transforms.RandomCrop((288, 144)),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
-            normalize,
-            ChannelRandomErasing(probability=0.5),
-            ChannelExchange(gray=2)])
+        # self.transform_color2 = transforms.Compose([
+        #     transforms.ToPILImage(),
+        #     transforms.Pad(10),
+        #     transforms.RandomCrop((288, 144)),
+        #     transforms.RandomHorizontalFlip(),
+        #     transforms.ToTensor(),
+        #     RandomColoring(p=0.5, is_rgb=True),
+        #     normalize,
+        #     ChannelRandomErasing(probability=0.5),
+        #     ChannelExchange(gray=2)])
 
         self.transform_thermal = transforms.Compose([
             transforms.ToPILImage(),
@@ -91,8 +91,7 @@ class Loader:
 
     def _loader(self):
         if self.dataset == 'sysu':
-            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform2=self.transform_color2,
-                               transform3=self.transform_thermal)
+            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform3=self.transform_thermal)
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
