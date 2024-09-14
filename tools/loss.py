@@ -93,7 +93,66 @@ class TripletLoss_WRT(nn.Module):
 
 
 
+def compute_dist_euc(x1,x2,p1,p2):
+    m, n = x1.shape[0], x2.shape[0]
+    dist = torch.pow(x1, 2).sum(dim=1, keepdim=True).expand(m, n) + \
+           torch.pow(x2, 2).sum(dim=1, keepdim=True).expand(n, m).t()
+    dist.addmm_(x1, x2.t(), beta=1, alpha=-2)
+    dist = dist.clamp(min=1e-12).sqrt()
+    mask = p1.expand(n, m).t().eq(p2.expand(m, n))
+    return dist, mask
 
+
+class hcc(nn.Module):
+    def __init__(self, margin_euc=0.6):
+        super(hcc, self).__init__()
+        self.margin_euc = margin_euc
+
+    def forward(self, x, pids):
+        margin = self.margin_euc
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidhc = pids.reshape(2*p, -1)[:, 0]# pid编号
+        hcen = x.reshape(2*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+
+        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n // 2):
+            loss.append(dist[i][m // 2:][mask[i][m // 2:]])
+        for i in range(n // 2, n):
+            loss.append(dist[i][:m // 2][mask[i][:m // 2]])
+        loss1 = torch.cat(loss).mean()
+        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n):
+            loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
+        loss2 = torch.cat(loss).mean()
+        return loss1 + loss2
+
+class ptcc(nn.Module):
+    def __init__(self, margin_euc=0.3):
+        super(ptcc, self).__init__()
+        self.margin_euc = margin_euc
+
+    def forward(self, x, pids):
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidhc = pids.reshape(2*p, -1)[:, 0]# pid编号
+        hcen = x.reshape(2*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+
+        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n // 2):
+            loss.append(dist[i][m // 2:][mask[i][m // 2:]])
+        for i in range(n // 2, n):
+            loss.append(dist[i][:m // 2][mask[i][:m // 2]])
+        loss = torch.cat(loss).mean()
+        return loss
 
 
 

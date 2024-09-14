@@ -32,27 +32,6 @@ def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_ima
 
     return meter.get_val(), meter.get_str()
 
-def train_stage2(base, num_image, i_ter, batch, labels_list, image_features_list):
-    base.set_train()
-    meter = MultiItemAverageMeter()
-    iter_list = torch.randperm(num_image).to(base.device)
-    for i in range(i_ter):
-        b_list = iter_list[i*batch: (i+1)*batch]
-        target = labels_list[b_list].long()
-        image_features = image_features_list[b_list]
-        text_features = base.model(label=target, get_fusion_text=True)
-        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
-        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
-
-        loss = loss_i2t + loss_t2i
-        base.model_optimizer_stage2.zero_grad()
-        loss.backward()
-        base.model_optimizer_stage2.step()
-
-        meter.update({'loss_i2t': loss_i2t.data,
-                      'loss_t2i': loss_t2i.data,})
-
-    return meter.get_val(), meter.get_str()
 
 def train(base, loaders, text_features, config):
 
@@ -60,24 +39,21 @@ def train(base, loaders, text_features, config):
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
     for i, (input1_0, input1_1, input2, label1, label2) in enumerate(loader):
-        # print(f"this is {i}/{len(loader)}th batch")
-        rgb_imgs1, _, rgb_pids = input1_0, input1_1, label1
+        # print(f"now is {i}/{len(loader)} step")
+        rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
         ir_imgs, ir_pids = input2, label2
-        rgb_imgs1, rgb_pids = rgb_imgs1.to(base.device), \
+        rgb_imgs1, rgb_imgs2, rgb_pids = rgb_imgs1.to(base.device),  rgb_imgs2.to(base.device), \
                                         rgb_pids.to(base.device).long()
         ir_imgs, ir_pids = ir_imgs.to(base.device), ir_pids.to(base.device).long()
 
-        # rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
-        rgb_imgs = rgb_imgs1
-        pids = torch.cat([rgb_pids, ir_pids], dim=0)
+        rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
+        pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score = base.model(x1=rgb_imgs, x2=ir_imgs)
+        features, cls_score, pp = base.model(x1=rgb_imgs, x2=ir_imgs)
 
-        n = features[1].shape[0] // 2
-        # rgb_attn_features = features[1].narrow(0, 0, n)
-        # ir_attn_features = features[1].narrow(0, n, n)
-        rgb_attn_features = features[1][:n]
-        ir_attn_features = features[1][n:]
+        n = features[1].shape[0] // 3
+        rgb_attn_features = features[1].narrow(0, 0, n)
+        ir_attn_features = features[1].narrow(0, 2 * n, n)
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
 
@@ -86,11 +62,16 @@ def train(base, loaders, text_features, config):
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
+        loss_hcc_euc = base.criterion_hcc(features[1], pids)
+        loss_pp_euc = 0
+        for i in range(pp.size(1)):
+            loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
+
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_euc + loss_pp_euc * 0.05
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
@@ -100,6 +81,8 @@ def train(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
+                      'loss_hcc_euc': loss_hcc_euc.data,
+                      'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
 

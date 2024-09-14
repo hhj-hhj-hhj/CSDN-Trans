@@ -1,3 +1,4 @@
+
 import os
 import ast
 import torch
@@ -6,10 +7,12 @@ import argparse
 import numpy as np
 
 
-from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
 from data_loader.loader import Loader
-from core import Base, train, train_stage1, train_stage2, test
+# from core import Base, train, train_stage1, train_stage2, test
+from core.train_trans import train, train_stage1, train_stage2
+from core.test import test
+from core.base import Base
+
 from tools import make_dirs, Logger, os_walk, time_now
 import warnings
 warnings.filterwarnings("ignore")
@@ -26,6 +29,7 @@ def seed_torch(seed):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
 
 def main(config):
     global best_mAP
@@ -61,6 +65,36 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
+        print('Start the 1st Stage of Training')
+
+        model._init_optimizer_stage1()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 1st Stage of Trained')
+
+        print('Start the 2st Stage Training')
+        model._init_optimizer_stage2()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage2.step(current_epoch)
+            _, result = train_stage2(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage2._get_lr
+                                                            (current_epoch)[0], result))
+
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage2.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 2st Stage Trained')
+
         print('Start the 3st Stage Training')
         print('Extracting Text Features')
 
@@ -70,45 +104,42 @@ def main(config):
         left = num_classes - batch * (num_classes // batch)
         if left != 0:
             i_ter = i_ter + 1
-        text_features_rgb = []
-        text_features_ir = []
+        text_features = []
         with torch.no_grad():
             for i in range(i_ter):
                 if i + 1 != i_ter:
                     l_list = torch.arange(i * batch, (i + 1) * batch)
                 else:
                     l_list = torch.arange(i * batch, num_classes)
-                text_feature_rgb = model.model(label1=l_list, get_text=True)
-                text_feature_ir = model.model(label2=l_list, get_text=True)
-                text_features_rgb.append(text_feature_rgb.cpu())
-                text_features_ir.append(text_feature_ir.cpu())
-            text_features_rgb = torch.cat(text_features_rgb, 0)
-            text_features_ir = torch.cat(text_features_ir, 0)
+                text_feature = model.model(label=l_list, get_fusion_text=True)
+                text_features.append(text_feature.cpu())
+            text_features = torch.cat(text_features, 0).cuda()
         print('Text Features Extracted, Start Training')
 
-        def draw_tsne(rgb, ir):
-            tsne = TSNE(n_components=2, init='pca', random_state=42, n_iter=1000)
-            all_features = np.concatenate((rgb, ir), axis=0)
-            X_tsne = tsne.fit_transform(all_features)
-            X_tsne_rgb = X_tsne[:len(rgb)]
-            X_tsne_ir = X_tsne[len(rgb):]
+        model._init_optimizer_stage3()
 
-            # 创建一个颜色列表，长度与特征点数量相同
-            colors = plt.cm.rainbow(np.linspace(0, 1, len(rgb)))
+        for current_epoch in range(start_train_epoch, config.total_train_epoch):
+            model.model_lr_scheduler_stage3.step(current_epoch)
 
-            plt.figure(figsize=(10, 5))
-            # 对于rgb特征，使用五角星形状，颜色从颜色列表中获取
-            plt.scatter(X_tsne_rgb[:, 0], X_tsne_rgb[:, 1] + 0.5, c=colors, label='rgb', marker='*')
+            _, result = train(model, loaders, text_features, config)
+            logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage3.get_lr()[0], result))
 
-            # 对于ir特征，使用默认的圆形形状，颜色从颜色列表中获取
-            plt.scatter(X_tsne_ir[:, 0], X_tsne_ir[:, 1], c=colors, label='ir', marker='s')
+            if current_epoch + 1 >= 1 and (current_epoch + 1) % config.eval_epoch == 0:
+                cmc, mAP, mINP = test(model, loaders, config)
+                is_best_rank = (cmc[0] >= best_rank1)
+                best_rank1 = max(cmc[0], best_rank1)
+                model.save_model(current_epoch, is_best_rank)
+                logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
+                                                                                            config.dataset,
+                                                                                            mINP, mAP, cmc))
 
-            plt.legend()
-            plt.show()
-
-            print('t-SNE finished!')
-
-        draw_tsne(text_features_rgb, text_features_ir)
+    elif config.mode == 'test':
+        model.resume_model(config.resume_test_model)
+        cmc, mAP, mINP = test(model, loaders, config)
+        logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
+                                                                                       config.dataset,
+                                                                                       mINP, mAP, cmc))
 
 if __name__ == '__main__':
 
@@ -119,6 +150,7 @@ if __name__ == '__main__':
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
+    # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
     parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
@@ -147,8 +179,10 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_pos', default=4, type=int,
                         help='num of pos per identity in each modality')
-    parser.add_argument('--num_workers', default=8, type=int,
+    parser.add_argument('--num_workers', default=0, type=int,
                         help='num of pos per identity in each modality')
+    # parser.add_argument('--output_path', type=str, default='models/base/',
+    #                     help='path to save related informations')
     parser.add_argument('--output_path', type=str, default='D:/PretrainModel/CSDN/models/base/',
                         help='path to save related informations')
     parser.add_argument('--max_save_model_num', type=int, default=1, help='0 for max num is infinit')
@@ -156,7 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('--auto_resume_training_from_lastest_step', type=ast.literal_eval, default=True)
     parser.add_argument('--total_train_epoch', type=int, default=120)
     parser.add_argument('--eval_epoch', type=int, default=1)
-    parser.add_argument('--resume_test_model', type=int, default=119, help='-1 for no resuming')
+    parser.add_argument('--resume_test_model', type=int, default=105, help='-1 for no resuming')
 
     config = parser.parse_args()
     seed_torch(config.seed)
