@@ -61,7 +61,8 @@ def train(base, loaders, text_features, config):
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
-        loss_hcc_euc = base.criterion_hcc(features[1], pids)
+        # loss_hcc_euc = base.criterion_hcc_euc(features[1], pids)
+        # loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
         loss_pp_euc = 0
         for i in range(pp.size(1)):
             loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
@@ -69,8 +70,11 @@ def train(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.05
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_euc + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05
+
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
@@ -80,7 +84,8 @@ def train(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      'loss_hcc_euc': loss_hcc_euc.data,
+                      # 'loss_hcc_euc': loss_hcc_euc.data,
+                      #   'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
