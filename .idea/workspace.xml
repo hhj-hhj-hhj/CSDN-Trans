@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="209">
-      <change afterPath="$PROJECT_DIR$/data_loader/dataset_trans.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loader/loader_trans.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="main_one_trans">
       <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,12 +78,21 @@
       <option name="project" value="LOCAL" />
       <updated>1726326404504</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="main_one_trans">
+      <option name="closed" value="true" />
+      <created>1726328513862</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726328513862</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="209" />
-    <option name="LAST_COMMIT_MESSAGE" value="209" />
+    <MESSAGE value="main_one_trans" />
+    <option name="LAST_COMMIT_MESSAGE" value="main_one_trans" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
