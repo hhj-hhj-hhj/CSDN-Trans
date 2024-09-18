@@ -182,7 +182,9 @@ class Loader:
         self.normal_samples.cIndex = normal_sampler.index1
         self.normal_samples.tIndex = normal_sampler.index2
         normal_train_loader = data.DataLoader(self.normal_samples, batch_size=self.stage1_batch_size,
-                                       sampler=normal_sampler, num_workers=self.num_workers, drop_last=True)
+                                       sampler=normal_sampler, num_workers=self.num_workers, drop_last=True
+                                              # ,pin_memory=True
+                                              )
         return normal_train_loader
 
     def get_stage1_rgb_loader(self, rgb_samples):
