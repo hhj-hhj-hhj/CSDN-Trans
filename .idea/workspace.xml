@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="Trans">
-      <change beforePath="$PROJECT_DIR$/core/base_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visual/visual_base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visual/visual_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +51,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
     &quot;Python.a.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
@@ -75,6 +77,9 @@
       <recent name="D:\Users\HHJ\PycharmProjects\CSDN" />
       <recent name="D:\Users\HHJ\PycharmProjects\CSDN\core" />
       <recent name="D:\Users\HHJ\PycharmProjects\CSDN\models\base\models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\HHJ\PycharmProjects\CSDN\visual" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -106,7 +111,11 @@
       <workItem from="1725932122922" duration="12616000" />
       <workItem from="1726105091411" duration="14575000" />
       <workItem from="1726193413480" duration="17009000" />
-      <workItem from="1726278730939" duration="6522000" />
+      <workItem from="1726278730939" duration="7165000" />
+      <workItem from="1726649270374" duration="18000" />
+      <workItem from="1726713833342" duration="8535000" />
+      <workItem from="1726734888421" duration="240000" />
+      <workItem from="1726735139590" duration="1322000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -164,7 +173,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726300658508</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Trans">
+      <option name="closed" value="true" />
+      <created>1726302035619</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1726302035619</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +193,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="Trans" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CSDN$GradCam.coverage" NAME="GradCam 覆盖结果" MODIFIED="1726736456663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$run_tSNE_trans.coverage" NAME="run_tSNE_trans 覆盖结果" MODIFIED="1726210399481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$run_tSNE.coverage" NAME="run_tSNE 覆盖结果" MODIFIED="1726205191864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$main_test.coverage" NAME="main_test 覆盖结果" MODIFIED="1726198983911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
