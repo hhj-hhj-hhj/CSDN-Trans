@@ -159,8 +159,8 @@ def main(config):
 
 if __name__ == '__main__':
     # set multi-processing start method
-    import multiprocessing as mp
-    mp.set_start_method('spawn', force=True)
+    # import multiprocessing as mp
+    # mp.set_start_method('spawn', force=True)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_pos', default=4, type=int,
                         help='num of pos per identity in each modality')
-    parser.add_argument('--num_workers', default=4, type=int,
+    parser.add_argument('--num_workers', default=0, type=int,
                         help='num of pos per identity in each modality')
     # parser.add_argument('--output_path', type=str, default='models/base/',
     #                     help='path to save related informations')

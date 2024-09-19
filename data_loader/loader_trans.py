@@ -172,7 +172,9 @@ class Loader:
         self.samples.cIndex = sampler.index1
         self.samples.tIndex = sampler.index2
         train_loader = data.DataLoader(self.samples, batch_size=self.batch_size,
-                                       sampler=sampler, num_workers=self.num_workers, drop_last=True)
+                                       sampler=sampler, num_workers=self.num_workers, drop_last=True
+                                       ,pin_memory=True
+                                       )
         return train_loader
 
     def get_train_normal_loader(self):
@@ -182,9 +184,7 @@ class Loader:
         self.normal_samples.cIndex = normal_sampler.index1
         self.normal_samples.tIndex = normal_sampler.index2
         normal_train_loader = data.DataLoader(self.normal_samples, batch_size=self.stage1_batch_size,
-                                       sampler=normal_sampler, num_workers=self.num_workers, drop_last=True
-                                              # ,pin_memory=True
-                                              )
+                                       sampler=normal_sampler, num_workers=self.num_workers, drop_last=True)
         return normal_train_loader
 
     def get_stage1_rgb_loader(self, rgb_samples):

@@ -1,62 +1,68 @@
+import matplotlib.pyplot as plt
+import torch
+import cv2
+import numpy as np
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
+from visual.visual_base import Base
+from PIL import Image
+# from torchvision.models import resnet50
+# model = resnet50(pretrained=True)
+
+
+import argparse
+import random
 import os
 import ast
-import torch
-import random
-import argparse
-import numpy as np
-
-
-from data_loader.loader_trans import Loader
-from core import test
-from core.base_trans import Base
-from core.train_trans import train, train_stage1
-from tools import make_dirs, Logger, os_walk, time_now
-import warnings
-warnings.filterwarnings("ignore")
-
-best_mAP = 0
-best_rank1 = 0
-def seed_torch(seed):
-    seed = int(seed)
-    random.seed(seed)
-    os.environ['PYTHONASHSEED'] = str(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-
-from data_loader.sampler import GenIdx, IdentitySampler
-
+# 使用预训练模型
 def main(config):
+    base = Base(config)
+    model_trans = base.model
+    model_trans.eval()
 
-    loaders = Loader(config)
-    # dataloader = loaders.get_train_loader()
-    import pickle
-    sampler = IdentitySampler(loaders.samples.train_color_label, loaders.samples.train_thermal_label, loaders.color_pos,
-                              loaders.thermal_pos, loaders.num_pos, int(loaders.batch_size / loaders.num_pos))
-    loaders.samples.cIndex = sampler.index1
-    loaders.samples.tIndex = sampler.index2
+    image_path = r"E:\hhj\SYSU-MM01\cam1\0001\0001.jpg"
+    image = Image.open(image_path)
+    # rgb_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    dataloader = torch.utils.data.DataLoader(loaders.samples, batch_size=loaders.batch_size, sampler=sampler, num_workers=1, pin_memory=True)
-    # data = loaders.samples[0]
-    # try:
-    #     pickle.dumps(data)
-    #     print("Serialization successful!")
-    # except Exception as e:
-    #     print(f"Serialization failed: {e}")
-    data = next(iter(dataloader))
-    # print(type(data))
-    # pickle.dumps(data)
-    # for i, (input1_0, input2, label1, label2) in enumerate(loader):
-    #     print(i, input1_0.shape, input2.shape, label1.shape, label2.shape)
+    import torchvision.transforms as transforms
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    transform_test_rgb = transforms.Compose([
+        # transforms.ToPILImage(),
+        transforms.Resize((config.img_h, config.img_w)),
+        transforms.ToTensor(),
+        normalize])
+    input_tensor = transform_test_rgb(image.copy())
+    input_tensor = input_tensor.unsqueeze(0)
+
+    # input_tensor = preprocess_image(rgb_img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    target_layers = [model_trans.module.image_encoder[-1][-1]]
+    cam = GradCAM(model=model_trans, target_layers=target_layers)
+
+    grayscale_cam = cam(input_tensor=input_tensor, targets=None)
+    grayscale_cam = grayscale_cam[0, :]
+
+    img = np.array(image)
+    img = cv2.resize(img, (config.img_w, config.img_h))
+
+    visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
+
+    plt.imshow(visualization)
+    plt.axis('off')
+    plt.show()
+
+
 
 if __name__ == '__main__':
-    # set multi-processing start method
-    import multiprocessing as mp
-    mp.set_start_method('spawn', force=True)
-
+    def seed_torch(seed):
+        seed = int(seed)
+        random.seed(seed)
+        os.environ['PYTHONASHSEED'] = str(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
     parser.add_argument('--mode', type=str, default='train', help='train, test')
@@ -65,7 +71,7 @@ if __name__ == '__main__':
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
-    parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
+    parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')
@@ -93,7 +99,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_pos', default=4, type=int,
                         help='num of pos per identity in each modality')
-    parser.add_argument('--num_workers', default=4, type=int,
+    parser.add_argument('--num_workers', default=0, type=int,
                         help='num of pos per identity in each modality')
     # parser.add_argument('--output_path', type=str, default='models/base/',
     #                     help='path to save related informations')
