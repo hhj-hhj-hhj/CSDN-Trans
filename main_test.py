@@ -9,7 +9,7 @@ import numpy as np
 
 from data_loader.loader import Loader
 # from core import Base, train, train_stage1, train_stage2, test
-from core.train_trans import train, train_stage1, train_stage2
+from core.train_trans import train, train_stage1
 from core.test import test
 from core.base import Base
 
