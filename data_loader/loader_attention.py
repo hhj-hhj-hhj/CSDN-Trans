@@ -24,17 +24,6 @@ class Loader:
             normalize,
             ChannelRandomErasing(probability=0.5)])
 
-        self.transform_color2 = transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Pad(10),
-            transforms.RandomCrop((288, 144)),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
-            normalize,
-            ChannelRandomErasing(probability=0.5),
-            ChannelExchange(gray=2)])
-
         self.transform_thermal = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Pad(10),
@@ -44,8 +33,6 @@ class Loader:
             RandomColoring(p=0.5, is_rgb=False),
             normalize,
             ChannelRandomErasing(probability=0.5),
-
-
             ChannelAdapGray(probability=0.5)])
 
         self.transform_test = transforms.Compose([
@@ -58,13 +45,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            # RandomColoring(p=0.5, is_rgb=True),
+            RandomColoring(p=0.5, is_rgb=True),
             normalize])
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            # RandomColoring(p=0.5, is_rgb=False),
+            RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset
@@ -104,8 +91,8 @@ class Loader:
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
                                       transform2=self.transform_test_ir)
 
-            normal_samples_with_shape = SYSUDataNormalSamplesWithShap(self.sysu_data_path, transform1=self.transform_test_rgb,
-                                                   transform2=self.transform_test_ir)
+            normal_samples_with_shape = SYSUDataNormalSamplesWithShap(self.sysu_data_path, transform1=self.transform_test,
+                                                   transform2=self.transform_test)
 
             self.normal_color_pos, self.normal_thermal_pos = GenIdx(normal_samples.train_color_label,
                                                                     normal_samples.train_thermal_label)
