@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="visual">
-      <change afterPath="$PROJECT_DIR$/main_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/base_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_loader/dataset_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradCam.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loader/loader_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +45,7 @@
   "keyToString": {
     "Python.GradCam.executor": "Run",
     "Python.main.executor": "Run",
+    "Python.main_attention.executor": "Run",
     "Python.main_one_trans.executor": "Run",
     "Python.main_test.executor": "Run",
     "Python.main_trans.executor": "Debug",
@@ -60,6 +62,9 @@
       <recent name="D:\hhjhhj\CSDN\data_loader" />
       <recent name="D:\hhjhhj\CSDN\network" />
       <recent name="D:\hhjhhj\CSDN\tools" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\hhjhhj\CSDN\network" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -126,7 +131,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726741195004</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="visual">
+      <option name="closed" value="true" />
+      <created>1727051602508</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727051602508</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
