@@ -14,6 +14,7 @@ def train_stage0(base, num_image, i_ter, batch, labels_list, image_maps_list, sh
 
         fusion_map = base.model(image_maps=image_maps, shape_maps=shape_maps, get_atten=True)
         text_features = base.model.normal_text_features
+        text_features = text_features.unsqueeze(0).repeat(batch, 1)
         with torch.no_grad():
             image_features = base.model(fusion_map=fusion_map, maps2feature=True)
 

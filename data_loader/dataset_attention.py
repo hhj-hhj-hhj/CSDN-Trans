@@ -61,7 +61,8 @@ class SYSUDataNormalSamplesWithShap(data.Dataset):
 
         img1 = self.transform1(img1)
         img2 = self.transform2(img2)
-
+        shape1 = self.transform1(shape1)
+        shape2 = self.transform2(shape2)
 
         return img1, img2, target1, target2, shape1, shape2
 
