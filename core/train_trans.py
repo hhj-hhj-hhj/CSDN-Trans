@@ -12,12 +12,6 @@ def train_stage1_randomcolor(base, data_loader):
             rgb_image_features = base.model(x1=rgb_img, get_image=True)
             ir_image_features = base.model(x2=ir_img, get_image=True)
         rgb_text_features = base.model(label1=rgb_target, get_text=True)
-        # ir_test_features = base.model(label2=ir_target, get_text=True)
-        # image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
-        # text_features = torch.cat([rgb_text_features, ir_text_features], dim=0)
-        # target = torch.cat([rgb_target, ir_target], dim=0)
-        # loss_i2t = base.con_creiteron(image_features, text_features, target, target)
-        # loss_t2i = base.con_creiteron(text_features, image_features, target, target)
         loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
         loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
         loss_i2t = loss_i2t_rgb + loss_i2t_ir

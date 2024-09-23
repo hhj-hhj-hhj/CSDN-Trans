@@ -39,6 +39,35 @@ def train_stage0(base, dataloader):
 
     return meter.get_val(), meter.get_str()
 
+def train_stage1_randomcolor(base, data_loader):
+    base.set_train()
+    meter = MultiItemAverageMeter()
+    # iter_list = torch.randperm(num_image).to(base.device)
+    for i, data in enumerate(data_loader):
+        rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
+        rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
+        with torch.no_grad():
+            rgb_image_features = base.model(x1=rgb_img, get_image=True)
+            ir_image_features = base.model(x2=ir_img, get_image=True)
+        rgb_text_features = base.model(label1=rgb_target, get_text=True)
+        loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
+        loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
+        loss_i2t = loss_i2t_rgb + loss_i2t_ir
+
+        loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
+        loss_t2i_ir = base.con_creiteron(rgb_text_features, ir_image_features, ir_target, ir_target)
+        loss_t2i = loss_t2i_rgb + loss_t2i_ir
+
+        loss = loss_i2t + loss_t2i
+        base.model_optimizer_stage1.zero_grad()
+        loss.backward()
+        base.model_optimizer_stage1.step()
+
+        meter.update({'loss_i2t': loss_i2t.data,
+                      'loss_t2i': loss_t2i.data,})
+
+    return meter.get_val(), meter.get_str()
+
 def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_image_features_list,
                    infrared_image_features_list):
     base.set_train()
@@ -78,6 +107,8 @@ def train(base, loaders, text_features, config):
     loader = loaders.get_train_loader()
     for i, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
+        # if i == 10:
+        #     break
         rgb_imgs1, rgb_pids = input1_0, label1
         ir_imgs, ir_pids = input2, label2
         rgb_imgs1, rgb_pids = rgb_imgs1.to(base.device), rgb_pids.to(base.device).long()
@@ -100,7 +131,7 @@ def train(base, loaders, text_features, config):
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
         # loss_hcc_euc = base.criterion_hcc_euc(features[1], pids)
-        # loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
+        loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
         loss_pp_euc = 0
         for i in range(pp.size(1)):
             loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
@@ -109,9 +140,17 @@ def train(base, loaders, text_features, config):
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.05
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.15
+
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (loss_hcc_euc + loss_hcc_kl)
+
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + loss_hcc_kl
+
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        0.075 * rgb_i2t_ide_loss + 0.15 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (
+        #                    loss_hcc_euc + loss_hcc_kl)
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -123,7 +162,7 @@ def train(base, loaders, text_features, config):
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       # 'loss_hcc_euc': loss_hcc_euc.data,
-                      #   'loss_hcc_kl': loss_hcc_kl.data,
+                        'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
