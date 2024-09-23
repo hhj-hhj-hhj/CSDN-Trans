@@ -45,13 +45,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            # RandomColoring(p=0.5, is_rgb=True),
+            RandomColoring(p=0.5, is_rgb=True),
             normalize])
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            # RandomColoring(p=0.5, is_rgb=False),
+            RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset

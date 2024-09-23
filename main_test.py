@@ -1,80 +1,65 @@
-import matplotlib.pyplot as plt
-import torch
-import cv2
-import numpy as np
-from pytorch_grad_cam import GradCAM
-from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
-from visual.visual_base import Base
-from PIL import Image
-# from torchvision.models import resnet50
-# model = resnet50(pretrained=True)
 
-
-import argparse
-import random
 import os
 import ast
-# 使用预训练模型
+import torch
+import random
+import argparse
+import numpy as np
+
+
+from data_loader.loader_trans import Loader
+from core import test
+from core.base_trans import Base
+from core.train_trans import train, train_stage1
+from tools import make_dirs, Logger, os_walk, time_now
+import warnings
+warnings.filterwarnings("ignore")
+
+
+best_mAP = 0
+best_rank1 = 0
+def seed_torch(seed):
+    seed = int(seed)
+    random.seed(seed)
+    os.environ['PYTHONASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
 def main(config):
-    base = Base(config)
-    model_trans = base.model
-    model_trans.eval()
+    global best_mAP
+    global best_rank1
 
-    model_path = r'D:\PretrainModel\CSDN\models\base\models\model_106_init.pth'
-    model_trans.load_state_dict(torch.load(model_path), strict=False)
+    loaders = Loader(config)
+    model = Base(config)
 
-    image_path = r"D:\hhj\SYSU-MM01\cam2\0001\0001.jpg"
-    image = Image.open(image_path)
-
-    import torchvision.transforms as transforms
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    transform_test_rgb = transforms.Compose([
-        # transforms.ToPILImage(),
-        transforms.Resize((config.img_h, config.img_w)),
-        transforms.ToTensor(),
-        normalize])
-    input_tensor = transform_test_rgb(image.copy())
-    input_tensor = input_tensor.unsqueeze(0)
-
-    # input_tensor = preprocess_image(rgb_img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    target_layers = [model_trans.module.image_encoder[-1][-1]]
-    # target_layers = [model_trans.module.attnpool]
-    cam = GradCAM(model=model_trans, target_layers=target_layers)
-
-    grayscale_cam = cam(input_tensor=input_tensor, targets=None)
-    grayscale_cam = grayscale_cam[0, :]
-
-    img = np.array(image)
-    img = cv2.resize(img, (config.img_w, config.img_h))
-
-    visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
-
-    plt.imshow(visualization)
-    plt.axis('off')
-    plt.show()
+    model_path = r"D:\PretrainModel\CSDN\models\base\models\backup\model_151_without_hcc.pth"
+    model.model.load_state_dict(torch.load(model_path), strict=False)
 
 
+    cmc, mAP, mINP = test(model, loaders, config)
+    print('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
+                                                                                   config.dataset,
+                                                                                   mINP, mAP, cmc))
 
 if __name__ == '__main__':
-    def seed_torch(seed):
-        seed = int(seed)
-        random.seed(seed)
-        os.environ['PYTHONASHSEED'] = str(seed)
-        np.random.seed(seed)
-        torch.manual_seed(seed)
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
-        torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark = False
+    # set multi-processing start method
+    # import multiprocessing as mp
+    # mp.set_start_method('spawn', force=True)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
-    parser.add_argument('--mode', type=str, default='train', help='train, test')
+    parser.add_argument('--mode', type=str, default='test', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
-    parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
+    parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')

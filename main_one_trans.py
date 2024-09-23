@@ -10,7 +10,7 @@ import numpy as np
 from data_loader.loader_trans import Loader
 from core import test
 from core.base_trans import Base
-from core.train_trans import train, train_stage1
+from core.train_trans import train, train_stage1, train_stage1_randomcolor
 from tools import make_dirs, Logger, os_walk, time_now
 import warnings
 warnings.filterwarnings("ignore")
@@ -64,6 +64,21 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
+        print('Start the 1st Stage of Training')
+
+        model._init_optimizer_stage1()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 1st Stage of Trained')
+
         # print('Start the 1st Stage of Training')
         # print('Extracting Image Features')
         #
@@ -71,7 +86,7 @@ def main(config):
         # visible_labels = []
         # infrared_image_features = []
         # infrared_labels = []
-        #
+
         # with torch.no_grad():
         #     for i, data in enumerate(loaders.get_train_normal_loader()):
         #         rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
@@ -193,7 +208,7 @@ if __name__ == '__main__':
     parser.add_argument('--stage1_train_epochs', type=int, default=60)
 
     parser.add_argument('--lambda1', type=float, default=0.15)
-    parser.add_argument('--lambda2', type=float, default=0.05)
+    parser.add_argument('--lambda2', type=float, default=0.1)
     parser.add_argument('--lambda3', type=float, default=0.1)
 
     parser.add_argument('--num_pos', default=4, type=int,

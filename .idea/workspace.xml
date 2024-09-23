@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="main_one_trans">
-      <change afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/visual/visual_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/visual/visual_model.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="visual">
+      <change afterPath="$PROJECT_DIR$/main_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradCam.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_loader/loader_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_trans.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mutil_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutil_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +42,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.GradCam.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_one_trans.executor": "Run",
+    "Python.main_test.executor": "Run",
     "Python.main_trans.executor": "Debug",
     "Python.mutil_test.executor": "Run",
     "Python.run_tSNE.executor": "Run",
@@ -117,13 +118,22 @@
       <option name="project" value="LOCAL" />
       <updated>1726647422011</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="visual">
+      <option name="closed" value="true" />
+      <created>1726741195004</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1726741195004</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="209" />
     <MESSAGE value="main_one_trans" />
-    <option name="LAST_COMMIT_MESSAGE" value="main_one_trans" />
+    <MESSAGE value="visual" />
+    <option name="LAST_COMMIT_MESSAGE" value="visual" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
