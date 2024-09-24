@@ -241,7 +241,7 @@ class Model(nn.Module):
                 image_features_map1 = self.image_encoder(image_features_map1)
                 shape_feature_map1  = self.image_encoder1(shape_img)
                 shape_feature_map1 = self.image_encoder(shape_feature_map1)
-                image_features_maps = self.image_attention_fusion(image_features_map1, shape_feature_map1)
+                image_features_maps = self.image_attention_fusion(shape_feature_map1, image_features_map1)
                 image_features1_proj = self.attnpool(image_features_maps)[0]
                 return image_features1_proj
             elif x1 is None and x2 is not None:
@@ -249,7 +249,7 @@ class Model(nn.Module):
                 image_features_map2 = self.image_encoder(image_features_map2)
                 shape_feature_map2 = self.image_encoder2(shape_img)
                 shape_feature_map2 = self.image_encoder(shape_feature_map2)
-                image_features_maps = self.image_attention_fusion(image_features_map2, shape_feature_map2)
+                image_features_maps = self.image_attention_fusion(shape_feature_map2, image_features_map2)
                 image_features2_proj = self.attnpool(image_features_maps)[0]
                 return image_features2_proj
 
