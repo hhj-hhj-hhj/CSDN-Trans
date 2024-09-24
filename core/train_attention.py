@@ -30,17 +30,16 @@ def train_stage0(base, dataloader, text_features):
         logit = image_features @ text_features.t()
         loss_i2t = base.pid_creiteron(logit, target_i)
         # loss_t2i = base.con_creiteron(text_features, image_features, target_t, target_i)
-        loss_t2i = loss_i2t
+        # loss_t2i = loss_i2t
 
-        loss = loss_i2t + loss_t2i
+        # loss = loss_i2t + loss_t2i
         base.model_optimizer_stage2.zero_grad()
-        loss.backward()
+        loss_i2t.backward()
         base.model_optimizer_stage2.step()
 
-        meter.update({'loss_i2t': loss_i2t.data,
-                      'loss_t2i': loss_t2i.data, })
-        if i % 50 == 0:
-            print(f"[{i}/{len(dataloader)}] {meter.get_str()}")
+        meter.update({'loss_i2t': loss_i2t.data,})
+        if i % 150 == 0:
+            print(f"[{i}/{len(dataloader)}] {loss_i2t}")
 
     return meter.get_val(), meter.get_str()
 
@@ -73,8 +72,8 @@ def train_stage1_randomcolor(base, data_loader):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
-        if i % 50 == 0:
-            print(f"[{i}/{len(data_loader)}] {meter.get_str()}")
+        if i % 150 == 0:
+            print(f"[{i}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
 
     return meter.get_val(), meter.get_str()
 
@@ -162,6 +161,7 @@ def train(base, loaders, text_features, config):
         #        0.075 * rgb_i2t_ide_loss + 0.15 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (
         #                    loss_hcc_euc + loss_hcc_kl)
 
+
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
@@ -175,6 +175,8 @@ def train(base, loaders, text_features, config):
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
+        if i % 150 == 0:
+            print(f'Iteration: [{i}/{len(loader)}]  {meter.get_str()}')
     return meter.get_val(), meter.get_str()
 
 

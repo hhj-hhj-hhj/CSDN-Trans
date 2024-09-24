@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="attention">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loader/dataset_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/dataset_attention.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loader/loader_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +139,7 @@
       <workItem from="1727051757986" duration="13335000" />
       <workItem from="1727078164319" duration="3915000" />
       <workItem from="1727082287535" duration="3403000" />
-      <workItem from="1727140818696" duration="9612000" />
+      <workItem from="1727140818696" duration="12660000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -278,7 +277,31 @@
       <option name="project" value="LOCAL" />
       <updated>1727149958648</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727150660699</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1727150660699</updated>
+    </task>
+    <task id="LOCAL-00019" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727150895076</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1727150895076</updated>
+    </task>
+    <task id="LOCAL-00020" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727151618041</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1727151618041</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
