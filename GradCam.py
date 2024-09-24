@@ -20,7 +20,7 @@ def main(config):
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"D:\hhj\SYSU-MM01\cam1\0001\0006.jpg"
+    image_path = r"D:\hhj\SYSU-MM01\cam2\0001\0006.jpg"
     image = Image.open(image_path)
 
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'

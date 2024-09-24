@@ -237,7 +237,7 @@ class Model(nn.Module):
         import cv2
         import numpy as np
         from PIL import Image
-        shape_path = r"D:\hhj\SYSU-MM01-output\cam1\0001\rgb_0006.png"
+        shape_path = r"D:\hhj\SYSU-MM01-output\cam2\0001\rgb_0006.png"
         shape = cv2.imread(shape_path)
         shape_np = np.array(shape)
         shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
