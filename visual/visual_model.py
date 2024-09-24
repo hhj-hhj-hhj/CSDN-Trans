@@ -2,7 +2,7 @@ import copy
 import torch
 import torchvision
 import torch.nn as nn
-from ..network.gem_pool import GeneralizedMeanPoolingP
+from network.gem_pool import GeneralizedMeanPoolingP
 
 
 class Normalize(nn.Module):
@@ -142,7 +142,6 @@ class TextEncoder(nn.Module):
         x = x[torch.arange(x.shape[0]), tokenized_prompts.argmax(dim=-1)] @ self.text_projection
         return x
 
-
 class AttentionFusion(nn.Module):
     def __init__(self, embed_dim):
         super(AttentionFusion, self).__init__()
@@ -233,8 +232,28 @@ class Model(nn.Module):
             text_features_n = clip_model.encode_text(text_tokens_n)
         return text_features_p, text_features_n
 
+
     def forward(self, data=None):
-        img, shape = data
+        import cv2
+        import numpy as np
+        from PIL import Image
+        shape_path = r"D:\hhj\SYSU-MM01-output\cam1\0001\rgb_0006.png"
+        shape = cv2.imread(shape_path)
+        shape_np = np.array(shape)
+        shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
+        shape = Image.fromarray(shape_np)
+        from torchvision import transforms
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        transform_test_rgb = transforms.Compose([
+            # transforms.ToPILImage(),
+            transforms.Resize((288, 144)),
+            transforms.ToTensor(),
+            normalize])
+        shape_tensor = transform_test_rgb(shape.copy())
+        shape_tensor = shape_tensor.unsqueeze(0)
+        shape_tensor = shape_tensor.to('cuda')
+
+        img, shape = data, shape_tensor
         img_map = self.image_encoder1(img)
         img_map = self.image_encoder(img_map)
         shape_map = self.image_encoder1(shape)
@@ -244,7 +263,7 @@ class Model(nn.Module):
         return image_features_proj
 
 
-from ..network.clip import clip
+from network.clip import clip
 
 
 def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_size):
