@@ -223,7 +223,7 @@ class Model(nn.Module):
         self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
 
     def get_normal_text_features(self, clip_model):
-        text_p = "A photo of a person"
+        text_p = "A close-up photo of a person"
         text_n = "The background of the photo"
         text_tokens_p = clip.tokenize([text_p]).cuda()
         text_tokens_n = clip.tokenize([text_n]).cuda()
