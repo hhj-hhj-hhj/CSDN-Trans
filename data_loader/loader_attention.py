@@ -89,7 +89,7 @@ class Loader:
             self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
-                                      transform2=self.transform_test_ir)
+                                      transform2=self.transform_test_ir, transforms_test=self.transform_test)
 
             normal_samples_with_shape = SYSUDataNormalSamplesWithShap(self.sysu_data_path, transform1=self.transform_test,
                                                    transform2=self.transform_test)

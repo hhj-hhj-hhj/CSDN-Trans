@@ -33,11 +33,6 @@ def train_stage0(base, dataloader, text_features):
         # loss_t2i = base.con_creiteron(text_features, image_features, target_t, target_i)
         loss_t2i = loss_i2t
 
-        if torch.isnan(loss_i2t).any():
-            print("loss_i2t 中检测到 NaN")
-        if torch.isnan(loss_t2i).any():
-            print("loss_t2i 中检测到 NaN")
-
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage2.zero_grad()
         loss.backward()
@@ -56,12 +51,17 @@ def train_stage1_randomcolor(base, data_loader):
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
     for i, data in enumerate(data_loader):
+        # print(f"now is {i}/{len(loader)} step")
+        # if i == 10:
+        #     break
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
+        shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
+
         with torch.no_grad():
-            rgb_image_features = base.model(x1=rgb_img, get_image=True)
-            ir_image_features = base.model(x2=ir_img, get_image=True)
-        rgb_text_features = base.model(label1=rgb_target, get_text=True)
+            rgb_image_features = base.model(x1=rgb_img,shape_img=shape_img_rgb, get_image=True)
+            ir_image_features = base.model(x2=ir_img,shape_img=shape_img_ir, get_image=True)
+        rgb_text_features = base.model(label=rgb_target, get_text=True)
         loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
         loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
         loss_i2t = loss_i2t_rgb + loss_i2t_ir
