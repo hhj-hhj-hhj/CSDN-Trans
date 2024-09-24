@@ -7,6 +7,7 @@
     <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +140,7 @@
       <workItem from="1727051757986" duration="13335000" />
       <workItem from="1727078164319" duration="3915000" />
       <workItem from="1727082287535" duration="3403000" />
-      <workItem from="1727140818696" duration="12660000" />
+      <workItem from="1727140818696" duration="18180000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -301,7 +302,23 @@
       <option name="project" value="LOCAL" />
       <updated>1727151618041</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727156791174</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1727156791174</updated>
+    </task>
+    <task id="LOCAL-00022" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727157344753</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1727157344753</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

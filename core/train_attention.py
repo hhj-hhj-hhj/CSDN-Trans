@@ -29,10 +29,7 @@ def train_stage0(base, dataloader, text_features):
 
         logit = image_features @ text_features.t()
         loss_i2t = base.pid_creiteron(logit, target_i)
-        # loss_t2i = base.con_creiteron(text_features, image_features, target_t, target_i)
-        # loss_t2i = loss_i2t
 
-        # loss = loss_i2t + loss_t2i
         base.model_optimizer_stage2.zero_grad()
         loss_i2t.backward()
         base.model_optimizer_stage2.step()
