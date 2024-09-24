@@ -15,12 +15,6 @@ def train_stage0(base, dataloader, text_features):
 
         imgs = torch.cat([rgb_imgs, ir_imgs], dim=0)
 
-        # target_t_p = torch.tensor([1]).to(base.device).long()
-        # target_t_n = torch.tensor([2]).to(base.device).long()
-        # target_t_p = target_t_p.repeat(rgb_imgs.size(0))
-        # target_t_n = target_t_n.repeat(rgb_imgs.size(0))
-        # target_t = torch.cat([target_t_p, target_t_n], dim=0)
-
         target_i = torch.tensor([0]).to(base.device).long()
         target_i = target_i.repeat(2 * rgb_imgs.size(0))
         shape_imgs = torch.cat([shape_maps_rgb, shape_maps_ir], dim=0)
@@ -38,11 +32,6 @@ def train_stage0(base, dataloader, text_features):
         loss_i2t = base.pid_creiteron(logit, target_i)
         # loss_t2i = base.con_creiteron(text_features, image_features, target_t, target_i)
         loss_t2i = loss_i2t
-
-        if torch.isnan(loss_i2t).any():
-            print("loss_i2t 中检测到 NaN")
-        if torch.isnan(loss_t2i).any():
-            print("loss_t2i 中检测到 NaN")
 
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage2.zero_grad()
@@ -62,6 +51,9 @@ def train_stage1_randomcolor(base, data_loader):
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
     for i, data in enumerate(data_loader):
+        # print(f"now is {i}/{len(loader)} step")
+        # if i == 10:
+        #     break
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
         shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
