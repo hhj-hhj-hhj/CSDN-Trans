@@ -15,12 +15,6 @@ def train_stage0(base, dataloader, text_features):
 
         imgs = torch.cat([rgb_imgs, ir_imgs], dim=0)
 
-        # target_t_p = torch.tensor([1]).to(base.device).long()
-        # target_t_n = torch.tensor([2]).to(base.device).long()
-        # target_t_p = target_t_p.repeat(rgb_imgs.size(0))
-        # target_t_n = target_t_n.repeat(rgb_imgs.size(0))
-        # target_t = torch.cat([target_t_p, target_t_n], dim=0)
-
         target_i = torch.tensor([0]).to(base.device).long()
         target_i = target_i.repeat(2 * rgb_imgs.size(0))
         shape_imgs = torch.cat([shape_maps_rgb, shape_maps_ir], dim=0)

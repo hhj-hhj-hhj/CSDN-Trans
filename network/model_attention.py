@@ -233,18 +233,24 @@ class Model(nn.Module):
         return text_features_p, text_features_n
 
 
-    def forward(self, x1=None, x2=None, label = None, get_image=False, get_text=False, img_map = None, shape_map = None,\
+    def forward(self, x1=None, x2=None, shape_img = None, label = None, get_image=False, get_text=False, img_map = None, shape_map = None,\
                 fusion_map = None, get_map = False, get_atten = False, maps2feature = False):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
                 image_features_map1 = self.image_encoder(image_features_map1)
-                image_features1_proj = self.attnpool(image_features_map1)[0]
+                shape_feature_map1  = self.image_encoder1(shape_img)
+                shape_feature_map1 = self.image_encoder(shape_feature_map1)
+                image_features_maps = self.image_attention_fusion(image_features_map1, shape_feature_map1)
+                image_features1_proj = self.attnpool(image_features_maps)[0]
                 return image_features1_proj
             elif x1 is None and x2 is not None:
                 image_features_map2 = self.image_encoder2(x2)
                 image_features_map2 = self.image_encoder(image_features_map2)
-                image_features2_proj = self.attnpool(image_features_map2)[0]
+                shape_feature_map2 = self.image_encoder2(shape_img)
+                shape_feature_map2 = self.image_encoder(shape_feature_map2)
+                image_features_maps = self.image_attention_fusion(image_features_map2, shape_feature_map2)
+                image_features2_proj = self.attnpool(image_features_maps)[0]
                 return image_features2_proj
 
         if get_text == True:
