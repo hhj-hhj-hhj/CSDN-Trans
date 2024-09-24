@@ -64,9 +64,11 @@ def train_stage1_randomcolor(base, data_loader):
     for i, data in enumerate(data_loader):
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
+        shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
+
         with torch.no_grad():
-            rgb_image_features = base.model(x1=rgb_img, get_image=True)
-            ir_image_features = base.model(x2=ir_img, get_image=True)
+            rgb_image_features = base.model(x1=rgb_img,shape_img=shape_img_rgb, get_image=True)
+            ir_image_features = base.model(x2=ir_img,shape_img=shape_img_ir, get_image=True)
         rgb_text_features = base.model(label=rgb_target, get_text=True)
         loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
         loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
