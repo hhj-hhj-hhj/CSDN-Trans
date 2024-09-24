@@ -72,6 +72,8 @@ def main(config):
         text_features = torch.cat([text_features_p, text_features_n], dim=0)
 
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            if current_epoch == 3:
+                break
             data_loader = loaders.get_train_normal_with_shape_loader()
             model.model_lr_scheduler_stage2.step(current_epoch)
 
