@@ -22,14 +22,13 @@ def main(config):
 
     image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0006.jpg"
     image = Image.open(image_path)
-    # rgb_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_91_only3.pth'
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_106.pth'
-    model_path = r'D:/PretrainModel/CSDN/models/testModel/model_86_one_prompt.pth'
+    # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_86_one_prompt.pth'
 
-    model_trans.load_state_dict(torch.load(model_path), strict=False)
+    # model_trans.load_state_dict(torch.load(model_path), strict=False)
 
     import torchvision.transforms as transforms
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -38,12 +37,15 @@ def main(config):
         transforms.Resize((config.img_h, config.img_w)),
         transforms.ToTensor(),
         normalize])
-    input_tensor = transform_test_rgb(image.copy())
-    input_tensor = input_tensor.unsqueeze(0)
-    input_tensor = input_tensor.to(base.device)
+
+    img_tensor = transform_test_rgb(image.copy())
+    img_tensor = img_tensor.unsqueeze(0)
+    img_tensor = img_tensor.to(base.device)
+
+    input_tensor = img_tensor
 
     # input_tensor = preprocess_image(rgb_img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    target_layers = [model_trans.module.image_encoder[-1][-1]]
+    target_layers = [model_trans.module.image_attention_fusion]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 
     grayscale_cam = cam(input_tensor=input_tensor, targets=None)

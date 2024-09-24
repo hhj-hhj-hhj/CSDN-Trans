@@ -2,7 +2,7 @@ import copy
 import torch
 import torchvision
 import torch.nn as nn
-from ..network.gem_pool import GeneralizedMeanPoolingP
+from network.gem_pool import GeneralizedMeanPoolingP
 
 
 class Normalize(nn.Module):
@@ -233,86 +233,37 @@ class Model(nn.Module):
         return text_features_p, text_features_n
 
 
-    def forward(self, x1=None, x2=None, label = None, get_image=False, get_text=False, img_map = None, shape_map = None,\
-                fusion_map = None, get_map = False, get_atten = False, maps2feature = False):
-        if get_image == True:
-            if x1 is not None and x2 is None:
-                image_features_map1 = self.image_encoder1(x1)
-                image_features_map1 = self.image_encoder(image_features_map1)
-                image_features1_proj = self.attnpool(image_features_map1)[0]
-                return image_features1_proj
-            elif x1 is None and x2 is not None:
-                image_features_map2 = self.image_encoder2(x2)
-                image_features_map2 = self.image_encoder(image_features_map2)
-                image_features2_proj = self.attnpool(image_features_map2)[0]
-                return image_features2_proj
+    def forward(self, data=None):
+        import cv2
+        import numpy as np
+        from PIL import Image
+        shape_path = r"E:\hhj\SYSU-MM01-output\cam2\0001\rgb_0006.png"
+        shape = cv2.imread(shape_path)
+        shape_np = np.array(shape)
+        shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
+        shape = Image.fromarray(shape_np)
+        from torchvision import transforms
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        transform_test_rgb = transforms.Compose([
+            # transforms.ToPILImage(),
+            transforms.Resize((288, 144)),
+            transforms.ToTensor(),
+            normalize])
+        shape_tensor = transform_test_rgb(shape.copy())
+        shape_tensor = shape_tensor.unsqueeze(0)
+        shape_tensor = shape_tensor.to('cuda')
 
-        if get_text == True:
-            prompts = self.prompt_learner(label)
-            text_features = self.text_encoder(prompts, self.prompt_learner.tokenized_prompts)
-            return text_features
-
-        if get_map == True:
-            if x1 is not None and x2 is not None:
-                image_features_map1 = self.image_encoder1(x1)
-                image_features_map2 = self.image_encoder2(x2)
-                image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
-                image_features_maps = self.image_encoder(image_features_maps)
-                return image_features_maps
-            elif x1 is not None and x2 is None:
-                image_features_map1 = self.image_encoder1(x1)
-                image_features_map1 = self.image_encoder(image_features_map1)
-                return image_features_map1
-            elif x1 is None and x2 is not None:
-                image_features_map2 = self.image_encoder2(x2)
-                image_features_map2 = self.image_encoder(image_features_map2)
-                return image_features_map2
-        if get_atten == True:
-            image_features_maps = self.image_attention_fusion(img_map, shape_map)
-            return image_features_maps
-
-        if maps2feature == True:
-            image_features_proj = self.attnpool(fusion_map)[0]
-            return image_features_proj
-
-        if x1 is not None and x2 is not None:
-
-            image_features_map1 = self.image_encoder1(x1)
-            image_features_map2 = self.image_encoder2(x2)
-            image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
-            image_features_maps = self.image_encoder(image_features_maps)
-            image_features_proj = self.attnpool(image_features_maps)[0]
-            features, cls_scores, _ = self.classifier(image_features_maps)
-            cls_scores_proj, _ = self.classifier2(image_features_proj)
-
-            B, C, H, W = image_features_maps.shape
-            pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
-            pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
-            pp = pp.view(B, 8 * 6, self.in_planes // 8)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], pp
-
-        elif x1 is not None and x2 is None:
-
-            image_features_map1 = self.image_encoder1(x1)
-            image_features_map1 = self.image_encoder(image_features_map1)
-            image_features1_proj = self.attnpool(image_features_map1)[0]
-            _, _, test_features1 = self.classifier(image_features_map1)
-            _, test_features1_proj = self.classifier2(image_features1_proj)
-
-            return torch.cat([test_features1, test_features1_proj], dim=1)
-
-        elif x1 is None and x2 is not None:
-
-            image_features_map2 = self.image_encoder2(x2)
-            image_features_map2 = self.image_encoder(image_features_map2)
-            image_features2_proj = self.attnpool(image_features_map2)[0]
-            _, _, test_features2 = self.classifier(image_features_map2)
-            _, test_features2_proj = self.classifier2(image_features2_proj)
-
-            return torch.cat([test_features2, test_features2_proj], dim=1)
+        img, shape = data, shape_tensor
+        img_map = self.image_encoder1(img)
+        img_map = self.image_encoder(img_map)
+        shape_map = self.image_encoder1(shape)
+        shape_map = self.image_encoder(shape_map)
+        image_features_maps = self.image_attention_fusion(img_map, shape_map)
+        image_features_proj = self.attnpool(image_features_maps)[0]
+        return image_features_proj
 
 
-from ..network.clip import clip
+from network.clip import clip
 
 
 def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_size):
