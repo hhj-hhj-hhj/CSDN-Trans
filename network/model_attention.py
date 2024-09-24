@@ -220,14 +220,17 @@ class Model(nn.Module):
         self.prompt_learner = PromptLearner(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
         self.image_attention_fusion = AttentionFusion(self.in_planes)
-        self.normal_text_features = self.get_normal_text_features(clip_model)
+        self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
 
     def get_normal_text_features(self, clip_model):
-        text = "A photo of a person"
-        text_tokens = clip.tokenize([text]).cuda()
+        text_p = "A person in the photo"
+        text_n = "The background of the photo"
+        text_tokens_p = clip.tokenize([text_p]).cuda()
+        text_tokens_n = clip.tokenize([text_n]).cuda()
         with torch.no_grad():
-            text_features = clip_model.encode_text(text_tokens)
-        return text_features
+            text_features_p = clip_model.encode_text(text_tokens_p)
+            text_features_n = clip_model.encode_text(text_tokens_n)
+        return text_features_p, text_features_n
 
 
     def forward(self, x1=None, x2=None, label = None, get_image=False, get_text=False, img_map = None, shape_map = None,\

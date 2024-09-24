@@ -67,10 +67,15 @@ def main(config):
 
         model._init_optimizer_stage2()
 
+        text_features_p = model.model.module.text_features_p
+        text_features_n = model.model.module.text_features_n
+        text_features = torch.cat([text_features_p, text_features_n], dim=0)
+
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
             data_loader = loaders.get_train_normal_with_shape_loader()
             model.model_lr_scheduler_stage2.step(current_epoch)
-            _, result = train_stage0(model, data_loader)
+
+            _, result = train_stage0(model, data_loader, text_features)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage2._get_lr
                                                             (current_epoch)[0], result))

@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="visual">
-      <change afterPath="$PROJECT_DIR$/core/base_attention.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loader/dataset_attention.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,14 +136,31 @@
       <option name="project" value="LOCAL" />
       <updated>1727051602508</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727084059995</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727084059995</updated>
+    </task>
+    <task id="LOCAL-00009" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727085226934</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727085226934</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="209" />
     <MESSAGE value="main_one_trans" />
     <MESSAGE value="visual" />
-    <option name="LAST_COMMIT_MESSAGE" value="visual" />
+    <MESSAGE value="attention" />
+    <option name="LAST_COMMIT_MESSAGE" value="attention" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -156,7 +170,17 @@
           <line>80</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/core/train_attention.py</url>
+          <line>46</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="target_i.T" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
