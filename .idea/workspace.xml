@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="attention">
-      <change beforePath="$PROJECT_DIR$/core/train_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/dataset_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/dataset_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/loader_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +175,23 @@
       <option name="project" value="LOCAL" />
       <updated>1727149290435</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727149952992</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727149952992</updated>
+    </task>
+    <task id="LOCAL-00014" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727150230095</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727150230095</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -51,9 +51,9 @@ def train_stage1_randomcolor(base, data_loader):
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
     for i, data in enumerate(data_loader):
-        # print(f"now is {i}/{len(loader)} step")
-        # if i == 10:
-        #     break
+        print(f"now is {i}/{len(data_loader)} step")
+        if i == 10:
+            break
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
         shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)

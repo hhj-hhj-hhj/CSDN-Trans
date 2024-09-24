@@ -274,7 +274,7 @@ class Model(nn.Module):
                 image_features_map2 = self.image_encoder(image_features_map2)
                 return image_features_map2
         if get_atten == True:
-            image_features_maps = self.image_attention_fusion(img_map, shape_map)
+            image_features_maps = self.image_attention_fusion(shape_map, img_map)
             return image_features_maps
 
         if maps2feature == True:
@@ -335,5 +335,3 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
     model = clip.build_model(state_dict or model.state_dict(), h_resolution, w_resolution, vision_stride_size)
 
     return model
-
-

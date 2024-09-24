@@ -305,7 +305,7 @@ class TestData(data.Dataset):
         test_image = []
         for i in range(len(test_img_file)):
             img = Image.open(test_img_file[i])
-            img = img.resize((img_size[0], img_size[1]), Image.ANTIALIAS)
+            img = img.resize((img_size[0], img_size[1]), Image.Resampling.LANCZOS)
             pix_array = np.array(img)
             test_image.append(pix_array)
         test_image = np.array(test_image)
