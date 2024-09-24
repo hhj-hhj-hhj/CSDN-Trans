@@ -258,7 +258,7 @@ class Model(nn.Module):
         img_map = self.image_encoder(img_map)
         shape_map = self.image_encoder1(shape)
         shape_map = self.image_encoder(shape_map)
-        image_features_maps = self.image_attention_fusion(img_map, shape_map)
+        image_features_maps = self.image_attention_fusion(shape_map, img_map)
         image_features_proj = self.attnpool(image_features_maps)[0]
         return image_features_proj
 
