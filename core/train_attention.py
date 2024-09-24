@@ -7,7 +7,6 @@ def train_stage0(base, dataloader, text_features):
     meter = MultiItemAverageMeter()
 
     for i, data in enumerate(dataloader):
-        # print(f"this is the {i}/{len(dataloader)} iteration")
         rgb_imgs, ir_imgs, label1, label2, shape_maps_rgb, shape_maps_ir = data
         rgb_imgs, ir_imgs = rgb_imgs.to(base.device), ir_imgs.to(base.device)
         # label1, label2 = label1.to(base.device).long(), label2.to(base.device).long()
@@ -40,7 +39,7 @@ def train_stage0(base, dataloader, text_features):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
-        if i % 10 == 0:
+        if i % 50 == 0:
             print(f"[{i}/{len(dataloader)}] {meter.get_str()}")
 
     return meter.get_val(), meter.get_str()
@@ -51,9 +50,6 @@ def train_stage1_randomcolor(base, data_loader):
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
     for i, data in enumerate(data_loader):
-        # print(f"now is {i}/{len(loader)} step")
-        # if i == 10:
-        #     break
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
         shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
@@ -77,6 +73,8 @@ def train_stage1_randomcolor(base, data_loader):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
+        if i % 50 == 0:
+            print(f"[{i}/{len(data_loader)}] {meter.get_str()}")
 
     return meter.get_val(), meter.get_str()
 
@@ -178,10 +176,5 @@ def train(base, loaders, text_features, config):
                       'loss_pp_euc': loss_pp_euc.data,
                       })
     return meter.get_val(), meter.get_str()
-
-
-
-
-
 
 

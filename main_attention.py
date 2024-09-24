@@ -63,26 +63,28 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        print('Start the 0 Stage Training')
-
-        model._init_optimizer_stage2()
-
-        text_features_p = model.model.module.text_features_p
-        text_features_n = model.model.module.text_features_n
-        text_features = torch.cat([text_features_p, text_features_n], dim=0)
-
-        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-            data_loader = loaders.get_train_normal_with_shape_loader()
-            model.model_lr_scheduler_stage2.step(current_epoch)
-
-            _, result = train_stage0(model, data_loader, text_features)
-            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-                                                            model.model_lr_scheduler_stage2._get_lr
-                                                            (current_epoch)[0], result))
-
-        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage0.pth')
-        torch.save(model.model.state_dict(), model_file_path)
-        print('The 0 Stage Trained')
+        # print('Start the 0 Stage Training')
+        #
+        # model._init_optimizer_stage2()
+        #
+        # text_features_p = model.model.module.text_features_p
+        # text_features_n = model.model.module.text_features_n
+        # text_features = torch.cat([text_features_p, text_features_n], dim=0)
+        #
+        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+        #     if current_epoch == 3:
+        #         break
+        #     data_loader = loaders.get_train_normal_with_shape_loader()
+        #     model.model_lr_scheduler_stage2.step(current_epoch)
+        #
+        #     _, result = train_stage0(model, data_loader, text_features)
+        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+        #                                                     model.model_lr_scheduler_stage2._get_lr
+        #                                                     (current_epoch)[0], result))
+        #
+        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage0.pth')
+        # torch.save(model.model.state_dict(), model_file_path)
+        # print('The 0 Stage Trained')
 
 
         print('Start the 1st Stage of Training')
@@ -156,7 +158,7 @@ if __name__ == '__main__':
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
-    parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
+    parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')
