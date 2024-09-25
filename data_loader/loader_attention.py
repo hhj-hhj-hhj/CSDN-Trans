@@ -23,7 +23,16 @@ class Loader:
             RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability=0.5)])
-
+        self.transform_color2 = transforms.Compose( [
+            transforms.ToPILImage(),
+            transforms.Pad(10),
+            transforms.RandomCrop((288, 144)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            RandomColoring(p=0.5, is_rgb=True),
+            normalize,
+            ChannelRandomErasing(probability = 0.5),
+            ChannelExchange(gray = 2)])
         self.transform_thermal = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Pad(10),

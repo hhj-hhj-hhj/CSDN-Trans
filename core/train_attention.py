@@ -39,7 +39,7 @@ def train_stage0(base, dataloader, text_features):
 
         meter.update({'loss_i2t': loss_i2t.data,})
         if i % 150 == 0:
-            print(f"[{i}/{len(dataloader)}] {loss_i2t}")
+            print(f"Iteration: [{i}/{len(dataloader)}] loss_i2t : {loss_i2t}")
 
     return meter.get_val(), meter.get_str()
 
@@ -73,7 +73,7 @@ def train_stage1_randomcolor(base, data_loader):
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
         if i % 150 == 0:
-            print(f"[{i}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
+            print(f"Iteration: [{i}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
 
     return meter.get_val(), meter.get_str()
 

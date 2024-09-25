@@ -224,7 +224,7 @@ class Model(nn.Module):
 
     def get_normal_text_features(self, clip_model):
         text_p = "A photo of a person"
-        text_n = "The background of the photo"
+        text_n = "Backgrounds for people's photo"
         text_tokens_p = clip.tokenize([text_p]).cuda()
         text_tokens_n = clip.tokenize([text_n]).cuda()
         with torch.no_grad():
