@@ -20,7 +20,7 @@ def main(config):
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0006.jpg"
+    image_path = r"E:\hhj\SYSU-MM01\cam1\0001\0006.jpg"
     image = Image.open(image_path)
 
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'
@@ -44,7 +44,6 @@ def main(config):
 
     input_tensor = img_tensor
 
-    # input_tensor = preprocess_image(rgb_img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     target_layers = [model_trans.module.image_attention_fusion]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 
@@ -59,6 +58,22 @@ def main(config):
     plt.imshow(visualization)
     plt.axis('off')
     plt.show()
+
+    # print('----------------------')
+    # target_layers = [model_trans.module.image_encoder[-1][-1]]
+    # cam = GradCAM(model=model_trans, target_layers=target_layers)
+    #
+    # grayscale_cam = cam(input_tensor=input_tensor, targets=None)
+    # grayscale_cam = grayscale_cam[0, :]
+    #
+    # img = np.array(image)
+    # img = cv2.resize(img, (config.img_w, config.img_h))
+    #
+    # visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
+    #
+    # plt.imshow(visualization)
+    # plt.axis('off')
+    # plt.show()
 
 
 

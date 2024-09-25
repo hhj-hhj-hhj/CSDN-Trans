@@ -237,7 +237,7 @@ class Model(nn.Module):
         import cv2
         import numpy as np
         from PIL import Image
-        shape_path = r"E:\hhj\SYSU-MM01-output\cam2\0001\rgb_0006.png"
+        shape_path = r"E:\hhj\SYSU-MM01-output\cam1\0001\rgb_0006.png"
         shape = cv2.imread(shape_path)
         shape_np = np.array(shape)
         shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
@@ -259,6 +259,7 @@ class Model(nn.Module):
         shape_map = self.image_encoder1(shape)
         shape_map = self.image_encoder(shape_map)
         image_features_maps = self.image_attention_fusion(img_map, shape_map)
+        # image_features_maps = img_map
         image_features_proj = self.attnpool(image_features_maps)[0]
         return image_features_proj
 
