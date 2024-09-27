@@ -79,12 +79,7 @@ class Base:
         params = []
         keys = []
         for key, value in self.model.named_parameters():
-            if 'prompt_learner1' in key:
-                lr = self.stage1_learning_rate
-                weight_decay = self.stage1_weight_decay
-                params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-                keys += [[key]]
-            if 'prompt_learner2' in key:
+            if 'prompt_learner' in key:
                 lr = self.stage1_learning_rate
                 weight_decay = self.stage1_weight_decay
                 params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
@@ -100,7 +95,7 @@ class Base:
         params = []
         keys = []
         for key, value in self.model.named_parameters():
-            if 'attention_fusion' in key:
+            if 'image_attention_fusion' in key:
                 lr = self.stage2_learning_rate
                 weight_decay = self.stage1_weight_decay
                 params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]

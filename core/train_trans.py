@@ -34,12 +34,13 @@ def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_ima
 
 
 def train(base, loaders, text_features, config):
-
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
     for i, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
+        # if i == 10:
+        #     break
         rgb_imgs1, rgb_pids = input1_0, label1
         ir_imgs, ir_pids = input2, label2
         rgb_imgs1, rgb_pids = rgb_imgs1.to(base.device), rgb_pids.to(base.device).long()
@@ -62,18 +63,27 @@ def train(base, loaders, text_features, config):
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
         # loss_hcc_euc = base.criterion_hcc_euc(features[1], pids)
-        # loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
+        loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
         loss_pp_euc = 0
         for i in range(pp.size(1)):
-            loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
+            loss_pp_euc += base.criterion_pp(pp[:, i], pids) / pp.size(1)
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.05
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + (loss_hcc_euc + loss_hcc_kl) + loss_pp_euc * 0.15
+
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (loss_hcc_euc + loss_hcc_kl)
+
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + loss_hcc_kl
+
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        0.075 * rgb_i2t_ide_loss + 0.15 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (
+        #                    loss_hcc_euc + loss_hcc_kl)
+
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -85,9 +95,11 @@ def train(base, loaders, text_features, config):
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       # 'loss_hcc_euc': loss_hcc_euc.data,
-                      #   'loss_hcc_kl': loss_hcc_kl.data,
+                      'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
+        if i % 150 == 0:
+            print(f'Iteration: [{i}/{len(loader)}]  {meter.get_str()}')
     return meter.get_val(), meter.get_str()
 
 

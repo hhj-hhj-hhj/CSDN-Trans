@@ -166,6 +166,7 @@ class AttentionFusion(nn.Module):
         )
         self.embedding_common = nn.Conv2d(self.embed_dim_qkv, self.embed_dim, kernel_size=1)
         self.softmax = nn.Softmax(dim=-1)
+        self.gamma = nn.Parameter(torch.zeros(1))  # 学习的标量，用于控制注意力机制的输出
 
     def q_k_v_product_attention(self, q_emb, k_emb, v_emb):
         # Flatten the spatial dimensions for batch matrix multiplication
@@ -190,7 +191,7 @@ class AttentionFusion(nn.Module):
         v_emb = self.embedding_v(img_map)
         new_v_emb = self.q_k_v_product_attention(q_emb, k_emb, v_emb)
         new_feature_map = self.embedding_common(new_v_emb)
-        new_feature_map = new_feature_map + shape_map
+        new_feature_map = self.gamma * new_feature_map + img_map
         return new_feature_map
 
 
@@ -237,7 +238,7 @@ class Model(nn.Module):
         import cv2
         import numpy as np
         from PIL import Image
-        shape_path = r"E:\hhj\SYSU-MM01-output\cam1\0001\rgb_0006.png"
+        shape_path = r"E:\hhj\SYSU-MM01-output\cam3\0001\rgb_0001.png"
         shape = cv2.imread(shape_path)
         shape_np = np.array(shape)
         shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
@@ -253,7 +254,8 @@ class Model(nn.Module):
         shape_tensor = shape_tensor.unsqueeze(0)
         shape_tensor = shape_tensor.to('cuda')
 
-        img, shape = data, shape_tensor
+        img = data
+        shape = shape_tensor
         img_map = self.image_encoder1(img)
         img_map = self.image_encoder(img_map)
         shape_map = self.image_encoder1(shape)

@@ -17,10 +17,11 @@ import ast
 # 使用预训练模型
 def main(config):
     base = Base(config)
+    base._init_optimizer_stage2()
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"E:\hhj\SYSU-MM01\cam1\0001\0006.jpg"
+    image_path = r"E:\hhj\SYSU-MM01\cam3\0001\0001.jpg"
     image = Image.open(image_path)
 
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'
@@ -44,7 +45,9 @@ def main(config):
 
     input_tensor = img_tensor
 
+    # target_layers = [model_trans.module.image_encoder[-1][-1]]
     target_layers = [model_trans.module.image_attention_fusion]
+    # target_layers = [model_trans.module.attnpool]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 
     grayscale_cam = cam(input_tensor=input_tensor, targets=None)
