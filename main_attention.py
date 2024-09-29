@@ -181,7 +181,7 @@ if __name__ == '__main__':
     parser.add_argument('--stage1_train_epochs', type=int, default=60)
 
     parser.add_argument('--lambda1', type=float, default=0.15)
-    parser.add_argument('--lambda2', type=float, default=0.1)
+    parser.add_argument('--lambda2', type=float, default=0.05)
     parser.add_argument('--lambda3', type=float, default=0.1)
 
     parser.add_argument('--num_pos', default=4, type=int,

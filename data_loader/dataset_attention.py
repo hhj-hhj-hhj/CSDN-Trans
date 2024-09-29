@@ -27,12 +27,13 @@ class SYSUData(data.Dataset):
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
-        if random.uniform(0, 1) > 0.5:
-            trans_rgb = self.transform1
-        else:
-            trans_rgb = self.transform2
+        # if random.uniform(0, 1) > 0.5:
+        #     trans_rgb = self.transform1
+        # else:
+        #     trans_rgb = self.transform2
 
-        img1 = trans_rgb(img1)
+        # img1 = trans_rgb(img1)
+        img1 = self.transform1(img1)
         img2 = self.transform3(img2)
 
         return img1, img2, target1, target2
@@ -311,7 +312,7 @@ class TestData(data.Dataset):
         test_image = []
         for i in range(len(test_img_file)):
             img = Image.open(test_img_file[i])
-            img = img.resize((img_size[0], img_size[1]), Image.ANTIALIAS)
+            img = img.resize((img_size[0], img_size[1]), Image.Resampling.LANCZOS)
             pix_array = np.array(img)
             test_image.append(pix_array)
         test_image = np.array(test_image)

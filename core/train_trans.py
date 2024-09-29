@@ -27,7 +27,6 @@ def train_stage1_randomcolor(base, data_loader):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data,})
-
     return meter.get_val(), meter.get_str()
 
 def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_image_features_list,
@@ -58,6 +57,8 @@ def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_ima
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data,})
+        # if (i + 1) % 200 == 0:
+        #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
 
     return meter.get_val(), meter.get_str()
 
@@ -67,7 +68,7 @@ def train(base, loaders, text_features, config):
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
-    for i, (input1_0, input2, label1, label2) in enumerate(loader):
+    for iter, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
         # if i == 10:
         #     break
@@ -93,10 +94,10 @@ def train(base, loaders, text_features, config):
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
 
         # loss_hcc_euc = base.criterion_hcc_euc(features[1], pids)
-        loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
-        loss_pp_euc = 0
-        for i in range(pp.size(1)):
-            loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
+        # loss_hcc_kl = base.criterion_hcc_kl(cls_score[1], pids)
+        # loss_pp_euc = 0
+        # for i in range(pp.size(1)):
+        #     loss_pp_euc += base.criterion_pp(pp[:,i], pids) / pp.size(1)
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
@@ -107,12 +108,14 @@ def train(base, loaders, text_features, config):
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
         #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (loss_hcc_euc + loss_hcc_kl)
 
-        loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + loss_hcc_kl
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + loss_hcc_kl
 
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
         #        0.075 * rgb_i2t_ide_loss + 0.15 * ir_i2t_ide_loss + loss_pp_euc * 0.05 + (
         #                    loss_hcc_euc + loss_hcc_kl)
+
+        loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) +  config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -124,9 +127,12 @@ def train(base, loaders, text_features, config):
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       # 'loss_hcc_euc': loss_hcc_euc.data,
-                        'loss_hcc_kl': loss_hcc_kl.data,
-                      'loss_pp_euc': loss_pp_euc.data,
+                      #   'loss_hcc_kl': loss_hcc_kl.data,
+                      # 'loss_pp_euc': loss_pp_euc.data,
                       })
+        if (iter + 1) % 200 == 0:
+            print(f'Iteration: [{iter + 1}/{len(loader)}]  pid_loss: {ide_loss.data} pid_loss_proj: {ide_loss_proj.data}'\
+                  f' triplet_loss: {triplet_loss.data} triplet_loss_proj: {triplet_loss_proj.data} rgb_i2t_pid_loss: {rgb_i2t_ide_loss.data} ir_i2t_pid_loss: {ir_i2t_ide_loss.data}')
     return meter.get_val(), meter.get_str()
 
 

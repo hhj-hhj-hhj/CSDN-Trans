@@ -166,6 +166,7 @@ class AttentionFusion(nn.Module):
         )
         self.embedding_common = nn.Conv2d(self.embed_dim_qkv, self.embed_dim, kernel_size=1)
         self.softmax = nn.Softmax(dim=-1)
+        self.gamma = nn.Parameter(torch.zeros(1))  # 学习的标量，用于控制注意力机制的输出
 
     def q_k_v_product_attention(self, q_emb, k_emb, v_emb):
         # Flatten the spatial dimensions for batch matrix multiplication
@@ -190,7 +191,7 @@ class AttentionFusion(nn.Module):
         v_emb = self.embedding_v(img_map)
         new_v_emb = self.q_k_v_product_attention(q_emb, k_emb, v_emb)
         new_feature_map = self.embedding_common(new_v_emb)
-        new_feature_map = new_feature_map + shape_map
+        new_feature_map = self.gamma * new_feature_map + img_map
         return new_feature_map
 
 

@@ -20,9 +20,20 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability=0.5)])
+
+        self.transform_color2 = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Pad(10),
+            transforms.RandomCrop((288, 144)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            # RandomColoring(p=0.5, is_rgb=True),
+            normalize,
+            ChannelRandomErasing(probability=0.5),
+            ChannelExchange(gray=2)])
 
         self.transform_thermal = transforms.Compose([
             transforms.ToPILImage(),
@@ -30,7 +41,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize,
             ChannelRandomErasing(probability=0.5),
             ChannelAdapGray(probability=0.5)])
@@ -45,13 +56,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize])
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset
@@ -78,7 +89,7 @@ class Loader:
 
     def _loader(self):
         if self.dataset == 'sysu':
-            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform3=self.transform_thermal)
+            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform2=self.transform_color2, transform3=self.transform_thermal)
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
@@ -172,9 +183,7 @@ class Loader:
         self.samples.cIndex = sampler.index1
         self.samples.tIndex = sampler.index2
         train_loader = data.DataLoader(self.samples, batch_size=self.batch_size,
-                                       sampler=sampler, num_workers=self.num_workers, drop_last=True
-                                       ,pin_memory=True
-                                       )
+                                       sampler=sampler, num_workers=self.num_workers, drop_last=True)
         return train_loader
 
     def get_train_normal_loader(self):

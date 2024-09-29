@@ -6,7 +6,7 @@ def train_stage0(base, dataloader, text_features):
     base.set_train()
     meter = MultiItemAverageMeter()
 
-    for i, data in enumerate(dataloader):
+    for iter, data in enumerate(dataloader):
         rgb_imgs, ir_imgs, label1, label2, shape_maps_rgb, shape_maps_ir = data
         rgb_imgs, ir_imgs = rgb_imgs.to(base.device), ir_imgs.to(base.device)
         # label1, label2 = label1.to(base.device).long(), label2.to(base.device).long()
@@ -38,8 +38,8 @@ def train_stage0(base, dataloader, text_features):
         base.model_optimizer_stage2.step()
 
         meter.update({'loss_i2t': loss_i2t.data,})
-        if i % 150 == 0:
-            print(f"Iteration: [{i}/{len(dataloader)}] loss_i2t : {loss_i2t}")
+        if (iter + 1) % 200 == 0:
+            print(f"Iteration: [{iter + 1}/{len(dataloader)}] loss_i2t : {loss_i2t}")
 
     return meter.get_val(), meter.get_str()
 
@@ -48,7 +48,7 @@ def train_stage1_randomcolor(base, data_loader):
     base.set_train()
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
-    for i, data in enumerate(data_loader):
+    for iter, data in enumerate(data_loader):
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
         shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
@@ -72,8 +72,8 @@ def train_stage1_randomcolor(base, data_loader):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
-        if i % 150 == 0:
-            print(f"Iteration: [{i}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
+        if (iter + 1) % 200 == 0:
+            print(f"Iteration: [{iter + 1}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
 
     return meter.get_val(), meter.get_str()
 
@@ -114,7 +114,7 @@ def train(base, loaders, text_features, config):
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
-    for i, (input1_0, input2, label1, label2) in enumerate(loader):
+    for iter, (input1_0, input2, label1, label2) in enumerate(loader):
         # print(f"now is {i}/{len(loader)} step")
         # if i == 10:
         #     break
@@ -175,8 +175,8 @@ def train(base, loaders, text_features, config):
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_pp_euc': loss_pp_euc.data,
                       })
-        if i % 150 == 0:
-            print(f'Iteration: [{i}/{len(loader)}]  {meter.get_str()}')
+        if (iter + 1) % 200 == 0:
+            print(f'Iteration: [{iter + 1}/{len(loader)}]  {meter.get_str()}')
     return meter.get_val(), meter.get_str()
 
 
