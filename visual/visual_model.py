@@ -146,25 +146,25 @@ class AttentionFusion(nn.Module):
     def __init__(self, embed_dim):
         super(AttentionFusion, self).__init__()
         self.dropout_rate = 0.1
-        self.embed_dim = embed_dim
-        self.embed_dim_qkv = embed_dim
+        self.in_channels = embed_dim
+        self.in_channels_qkv = embed_dim
 
         self.embedding_q = nn.Sequential(
-            nn.Conv2d(self.embed_dim, self.embed_dim_qkv, kernel_size=1),
+            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
             nn.Tanh(),
             nn.Dropout(self.dropout_rate)
         )
         self.embedding_k = nn.Sequential(
-            nn.Conv2d(self.embed_dim, self.embed_dim_qkv, kernel_size=1),
+            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
             nn.Tanh(),
             nn.Dropout(self.dropout_rate)
         )
         self.embedding_v = nn.Sequential(
-            nn.Conv2d(self.embed_dim, self.embed_dim_qkv, kernel_size=1),
+            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
             nn.Tanh(),
             nn.Dropout(self.dropout_rate)
         )
-        self.embedding_common = nn.Conv2d(self.embed_dim_qkv, self.embed_dim, kernel_size=1)
+        self.embedding_common = nn.Conv2d(self.in_channels_qkv, self.in_channels, kernel_size=1)
         self.softmax = nn.Softmax(dim=-1)
         self.gamma = nn.Parameter(torch.zeros(1))  # 学习的标量，用于控制注意力机制的输出
 
@@ -177,7 +177,7 @@ class AttentionFusion(nn.Module):
 
         # Compute attention weights
         weights = torch.bmm(q_flat, k_flat)
-        weights = torch.div(weights, (self.embed_dim_qkv ** 0.5))
+        weights = torch.div(weights, (self.in_channels_qkv ** 0.5))
         weights = self.softmax(weights)
 
         # Weighted sum of values
@@ -194,6 +194,47 @@ class AttentionFusion(nn.Module):
         new_feature_map = self.gamma * new_feature_map + img_map
         return new_feature_map
 
+class SelfAttentionFusion(nn.Module):
+    def __init__(self, in_channels):
+        super(SelfAttentionFusion, self).__init__()
+        self.in_channels = in_channels  # 设定通道数
+        self.dropout_rate = 0.1  # 设定dropout率
+        self.query_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.key_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.value_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.gamma = nn.Parameter(torch.zeros(1))  # 学习融合权重
+        # self.gamma = nn.Parameter(torch.tensor(0.5))  # 学习融合权重
+
+    def forward(self, feature_shape, feature_orig):
+        batch_size, C, height, width = feature_orig.size()
+
+        # 计算 Q, K, V
+        Q = self.query_conv(feature_orig).view(batch_size, C, -1)  # (batch_size, C, H*W)
+        K = self.key_conv(feature_shape).view(batch_size, C, -1)    # (batch_size, C, H*W)
+        V = self.value_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
+
+        # 计算注意力权重
+        scaled_attention_logits = torch.bmm(Q, K.permute(0,2,1)) / (self.in_channels ** 0.5)
+        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (batch_size, H*W, H*W)
+
+        # 计算加权特征
+        attention_out = torch.bmm(attention_weights, V).view(batch_size, C, height, width)  # (batch_size, C, H, W)
+
+        # 融合特征
+        fused_feature = self.gamma * attention_out + feature_orig
+        return fused_feature
 
 class Model(nn.Module):
     def __init__(self, num_classes, img_h, img_w):
@@ -220,7 +261,8 @@ class Model(nn.Module):
 
         self.prompt_learner = PromptLearner(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.image_attention_fusion = AttentionFusion(self.in_planes)
+        # self.image_attention_fusion = AttentionFusion(self.in_planes)
+        self.image_attention_fusion = SelfAttentionFusion(self.in_planes)
         self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
 
     def get_normal_text_features(self, clip_model):
@@ -238,7 +280,7 @@ class Model(nn.Module):
         import cv2
         import numpy as np
         from PIL import Image
-        shape_path = r"E:\hhj\SYSU-MM01-output\cam3\0001\rgb_0001.png"
+        shape_path = r"E:\hhj\SYSU-MM01-output\cam1\0001\rgb_0001.png"
         shape = cv2.imread(shape_path)
         shape_np = np.array(shape)
         shape_np[np.any(shape_np != [0, 0, 0], axis=-1)] = [255, 255, 255]
@@ -260,7 +302,7 @@ class Model(nn.Module):
         img_map = self.image_encoder(img_map)
         shape_map = self.image_encoder1(shape)
         shape_map = self.image_encoder(shape_map)
-        image_features_maps = self.image_attention_fusion(img_map, shape_map)
+        image_features_maps = self.image_attention_fusion( img_map,shape_map)
         # image_features_maps = img_map
         image_features_proj = self.attnpool(image_features_maps)[0]
         return image_features_proj
