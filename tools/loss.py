@@ -173,6 +173,38 @@ class hcc_kl(nn.Module):
         loss2 = torch.cat(loss).mean()
         return loss1 + loss2
 
+class hcc_kl_3(nn.Module):
+    def __init__(self, margin_kl=6):
+        super(hcc_kl_3, self).__init__()
+        self.margin_kl = margin_kl
+
+    def forward(self, x, pids):
+        margin = self.margin_kl
+        x = x.softmax(dim=-1)
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidhc = pids.reshape(3*p, -1)[:, 0]# pid编号
+        hcen = x.reshape(3*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+
+        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        mid_n = n // 3 * 2
+        mid_m = m // 3 * 2
+        for i in range(mid_n):
+            loss.append(dist[i][mid_m:][mask[i][mid_m:]])
+        for i in range(mid_n, n):
+            loss.append(dist[i][:mid_m][mask[i][:mid_m]])
+        loss1 = torch.cat(loss).mean()
+        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        for i in range(n):
+            loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
+        loss2 = torch.cat(loss).mean()
+        return loss1 + loss2
+
 class ptcc(nn.Module):
     def __init__(self, margin_euc=0.3):
         super(ptcc, self).__init__()
@@ -195,6 +227,29 @@ class ptcc(nn.Module):
         loss = torch.cat(loss).mean()
         return loss
 
+class ptcc_3(nn.Module):
+    def __init__(self, margin_euc=0.3):
+        super(ptcc_3, self).__init__()
+        self.margin_euc = margin_euc
+
+    def forward(self, x, pids):
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidhc = pids.reshape(2*p, -1)[:, 0]# pid编号
+        hcen = x.reshape(2*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+
+        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
+        loss = []
+        n, m = dist.shape
+        mid_n = n // 3 * 2
+        mid_m = m // 3 * 2
+        for i in range(mid_n):
+            loss.append(dist[i][mid_m:][mask[i][mid_m:]])
+        for i in range(n // 2, n):
+            loss.append(dist[i][:mid_m][mask[i][:mid_m]])
+        loss = torch.cat(loss).mean()
+        return loss
 
 
 

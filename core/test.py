@@ -66,6 +66,8 @@ def test(base, loader, config):
             cmc, mAP, mINP = eval_regdb(-distmat, loader.gall_label, loader.query_label)
 
         all_cmc, all_mAP, all_mINP = cmc, mAP, mINP
+    cmc_1_10_20 = [all_cmc[0], all_cmc[1], all_cmc[2]]
 
 
-    return all_cmc, all_mAP, all_mINP
+    # return all_cmc, all_mAP, all_mINP
+    return cmc_1_10_20, all_mAP, all_mINP

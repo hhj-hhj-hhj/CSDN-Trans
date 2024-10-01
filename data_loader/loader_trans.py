@@ -5,7 +5,7 @@ from data_loader.dataset_trans import SYSUData, RegDBData, TestData, process_que
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
-from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
+# from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
 
 import torch.utils.data as data
 

@@ -28,16 +28,17 @@ class SYSUData(data.Dataset):
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
-        if random.uniform(0, 1) > 0.5:
-            trans_rgb = self.transform1
-        else:
-            trans_rgb = self.transform2
+        # if random.uniform(0, 1) > 0.5:
+        #     trans_rgb = self.transform1
+        # else:
+        #     trans_rgb = self.transform2
 
-        # img1 = self.transform1(img1)
-        img1 = trans_rgb(img1)
+        img1_0 = self.transform1(img1)
+        img1_1 = self.transform2(img1)
+        # img1 = trans_rgb(img1)
         img2 = self.transform3(img2)
 
-        return img1, img2, target1, target2
+        return img1_0, img1_1, img2, target1, target2
 
     def __len__(self):
         return len(self.train_color_label)
