@@ -143,7 +143,7 @@ def main(config):
                 # text_feature = model.model(label=l_list, get_fusion_text=True)
                 text_feature = model.model(label1=l_list, get_text=True)
                 text_features.append(text_feature.cpu())
-            text_features = torch.cat(text_features, 0).cuda()
+            text_features = torch.cat(text_features, 0).to(model.device)
         print('Text Features Extracted, Start Training')
 
         model._init_optimizer_stage3()
@@ -154,6 +154,9 @@ def main(config):
 
             # _, result = train(model, loaders, text_features, config)
             _, result = train_2rgb(model, loaders, text_features, config)
+            # # 同步操作
+            # torch.cuda.synchronize()
+
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 
@@ -176,10 +179,8 @@ def main(config):
                                                                                        mINP, mAP, rank_1_10_20))
 
 if __name__ == '__main__':
-    # set multi-processing start method
-    # import multiprocessing as mp
-    # mp.set_start_method('spawn', force=True)
 
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
     parser.add_argument('--mode', type=str, default='train', help='train, test')

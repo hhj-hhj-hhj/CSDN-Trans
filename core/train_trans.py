@@ -194,6 +194,7 @@ def train_2rgb(base, loaders, text_features, config):
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
         # if iter == 3:
         #     break
+        # break
     return meter.get_val(), meter.get_str()
 
 
