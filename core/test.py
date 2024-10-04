@@ -1,7 +1,7 @@
 
 import numpy as np
 import torch
-from torch.autograd import Variable
+# from torch.autograd import Variable
 from tools import eval_regdb, eval_sysu
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -14,7 +14,8 @@ def test(base, loader, config):
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)
-            input = Variable(input.cuda())
+            # input = Variable(input.cuda())
+            input = input.cuda()
             feat = base.model(x2=input)
             query_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
             ptr = ptr + batch_num
@@ -32,7 +33,8 @@ def test(base, loader, config):
             with torch.no_grad():
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)
-                    input = Variable(input.cuda())
+                    # input = Variable(input.cuda())
+                    input = input.cuda()
                     feat = base.model(x1=input)
                     gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
                     ptr = ptr + batch_num
@@ -53,7 +55,8 @@ def test(base, loader, config):
         with torch.no_grad():
             for batch_idx, (input, label) in enumerate(gall_loader):
                 batch_num = input.size(0)
-                input = Variable(input.cuda())
+                # input = Variable(input.cuda())
+                input = input.cuda()
                 feat = base.model(x1=input)
                 gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
 

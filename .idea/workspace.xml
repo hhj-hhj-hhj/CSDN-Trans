@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradCam.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visual/visual_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/visual/visual_model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,30 +46,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GradCam.executor": "Debug",
-    "Python.a.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.main_attention.executor": "Run",
-    "Python.main_test.executor": "Run",
-    "Python.main_trans.executor": "Run",
-    "Python.run_tSNE.executor": "Run",
-    "Python.run_tSNE_trans.executor": "Run",
-    "Python.visual_model.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Users/HHJ/PycharmProjects/CSDN/Plots",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GradCam.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.a.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_tSNE_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.visual_model.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Users/HHJ/PycharmProjects/CSDN/Plots&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Users\HHJ\PycharmProjects\CSDN\tools" />
@@ -146,6 +144,14 @@
       <workItem from="1727424957713" duration="2357000" />
       <workItem from="1727573324310" duration="9811000" />
       <workItem from="1727659976194" duration="11136000" />
+      <workItem from="1727680604779" duration="3565000" />
+      <workItem from="1727793022964" duration="3245000" />
+      <workItem from="1727805213330" duration="999000" />
+      <workItem from="1727831533723" duration="415000" />
+      <workItem from="1727844991026" duration="5318000" />
+      <workItem from="1727979833267" duration="1016000" />
+      <workItem from="1727982634993" duration="1000" />
+      <workItem from="1728005271043" duration="816000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -347,7 +353,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727429602363</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="attention">
+      <option name="closed" value="true" />
+      <created>1727680913213</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1727680913213</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
