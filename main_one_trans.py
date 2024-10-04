@@ -159,19 +159,21 @@ def main(config):
 
             if current_epoch + 1 >= 1 and (current_epoch + 1) % config.eval_epoch == 0:
                 cmc, mAP, mINP = test(model, loaders, config)
+                rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
                 is_best_rank = (cmc[0] >= best_rank1)
                 best_rank1 = max(cmc[0], best_rank1)
                 model.save_model(current_epoch, is_best_rank)
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
-                                                                                            mINP, mAP, cmc))
+                                                                                            mINP, mAP, rank_1_10_20))
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
         cmc, mAP, mINP = test(model, loaders, config)
+        rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                        config.dataset,
-                                                                                       mINP, mAP, cmc))
+                                                                                       mINP, mAP, rank_1_10_20))
 
 if __name__ == '__main__':
     # set multi-processing start method

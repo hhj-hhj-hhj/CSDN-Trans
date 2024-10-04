@@ -186,10 +186,12 @@ def train_2rgb(base, loaders, text_features, config):
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       'loss_hcc_kl': loss_hcc_kl.data,
-                      'loss_hcc_kl_proj': loss_hcc_kl_map.data,
+                      'loss_hcc_kl_map': loss_hcc_kl_map.data,
                       # 'loss_pp_euc': loss_pp_euc,
                       })
         # print(f"iter = {iter}")
+        # if (iter + 1) % 200 == 0:
+        #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
         # if iter == 3:
         #     break
     return meter.get_val(), meter.get_str()

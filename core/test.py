@@ -17,6 +17,8 @@ def test(base, loader, config):
             input = Variable(input.cuda())
             feat = base.model(x2=input)
             query_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
+            if ptr + batch_num > query_feat.shape[0]:
+                raise RuntimeError("Query feature array out of bounds")
             ptr = ptr + batch_num
 
     print('Extracting Gallery Feature...')
@@ -66,8 +68,6 @@ def test(base, loader, config):
             cmc, mAP, mINP = eval_regdb(-distmat, loader.gall_label, loader.query_label)
 
         all_cmc, all_mAP, all_mINP = cmc, mAP, mINP
-    cmc_1_10_20 = [all_cmc[0], all_cmc[9], all_cmc[19]]
 
 
-    # return all_cmc, all_mAP, all_mINP
-    return cmc_1_10_20, all_mAP, all_mINP
+    return all_cmc, all_mAP, all_mINP

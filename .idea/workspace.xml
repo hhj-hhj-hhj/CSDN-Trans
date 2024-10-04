@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="one prompt">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="with kl">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +52,7 @@
     &quot;Python.train.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;209&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/hhjhhj/CSDN/data_loader&quot;
   }
 }</component>
@@ -258,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727796077334</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="with kl">
+      <option name="closed" value="true" />
+      <created>1727889564410</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1727889564410</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -267,7 +275,8 @@
     <MESSAGE value="visual" />
     <MESSAGE value="attention" />
     <MESSAGE value="one prompt" />
-    <option name="LAST_COMMIT_MESSAGE" value="one prompt" />
+    <MESSAGE value="with kl" />
+    <option name="LAST_COMMIT_MESSAGE" value="with kl" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
