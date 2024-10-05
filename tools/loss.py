@@ -174,9 +174,11 @@ class hcc_kl(nn.Module):
         return loss1 + loss2
 
 class hcc_kl_3(nn.Module):
-    def __init__(self, margin_kl=6):
+    def __init__(self, margin_kl=6, k1=1, k2=1):
         super(hcc_kl_3, self).__init__()
         self.margin_kl = margin_kl
+        self.k1 = k1
+        self.k2 = k2
 
     def forward(self, x, pids):
         margin = self.margin_kl
@@ -203,7 +205,8 @@ class hcc_kl_3(nn.Module):
         for i in range(n):
             loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
         loss2 = torch.cat(loss).mean()
-        return loss1 + loss2
+        loss_all = self.k1 * loss1 + self.k2 * loss2
+        return loss_all
 
 class ptcc(nn.Module):
     def __init__(self, margin_euc=0.3):

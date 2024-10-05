@@ -1,7 +1,6 @@
 
 import numpy as np
 import torch
-# from torch.autograd import Variable
 from tools import eval_regdb, eval_sysu
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -15,15 +14,10 @@ def test(base, loader, config):
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)
-            # input = Variable(input.cuda())
             input = input.to(base.device)
             feat = base.model(x2=input)
-            # # 同步操作
-            # torch.cuda.synchronize()
 
             query_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
-            if ptr + batch_num > query_feat.shape[0]:
-                raise RuntimeError("Query feature array out of bounds")
             ptr = ptr + batch_num
 
     print('Extracting Gallery Feature...')
@@ -39,11 +33,8 @@ def test(base, loader, config):
             with torch.no_grad():
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)
-                    # input = Variable(input.cuda())
                     input = input.to(base.device)
                     feat = base.model(x1=input)
-                    # # 同步操作
-                    # torch.cuda.synchronize()
 
                     gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
                     ptr = ptr + batch_num
@@ -64,11 +55,8 @@ def test(base, loader, config):
         with torch.no_grad():
             for batch_idx, (input, label) in enumerate(gall_loader):
                 batch_num = input.size(0)
-                # input = Variable(input.cuda())
                 input = input.to(base.device)
                 feat = base.model(x1=input)
-                # # 同步操作
-                # torch.cuda.synchronize()
 
                 gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
 
