@@ -170,7 +170,10 @@ def main(config):
                                                                                             mINP, mAP, rank_1_10_20))
 
     elif config.mode == 'test':
-        model.resume_model(config.resume_test_model)
+        # model.resume_model(config.resume_test_model)
+        testModelPath = r'D:\PretrainModel\CSDN\models\testModel'
+        modelPath = os.path.join(testModelPath, 'model_108_kl3_kl3map_no_stop.pth')
+        model.model.load_state_dict(torch.load(modelPath))
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
@@ -181,7 +184,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
-    parser.add_argument('--mode', type=str, default='train', help='train, test')
+    parser.add_argument('--mode', type=str, default='test', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
