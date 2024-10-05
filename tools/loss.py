@@ -174,7 +174,7 @@ class hcc_kl(nn.Module):
         return loss1 + loss2
 
 class hcc_kl_3(nn.Module):
-    def __init__(self, margin_kl=6, k1=1, k2=1):
+    def __init__(self, margin_kl=6.0, k1=1.0, k2=1.0):
         super(hcc_kl_3, self).__init__()
         self.margin_kl = margin_kl
         self.k1 = k1
