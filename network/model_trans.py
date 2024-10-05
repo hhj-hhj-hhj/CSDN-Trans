@@ -277,10 +277,11 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            B, C, H, W = image_features_maps.shape
-            pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
-            pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
-            pp = pp.view(B, 8 * 6, self.in_planes // 8)
+            pp = None
+            # B, C, H, W = image_features_maps.shape
+            # pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
+            # pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
+            # pp = pp.view(B, 8 * 6, self.in_planes // 8)
             return [features, image_features_proj], [cls_scores, cls_scores_proj], pp
 
         elif x1 is not None and x2 is None:

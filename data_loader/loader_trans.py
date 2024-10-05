@@ -5,7 +5,7 @@ from data_loader.dataset_trans import SYSUData, RegDBData, TestData, process_que
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
-from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
+# from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
 
 import torch.utils.data as data
 
@@ -20,7 +20,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability=0.5)])
 
@@ -30,7 +30,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability=0.5),
             ChannelExchange(gray=2)])
@@ -41,7 +41,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize,
             ChannelRandomErasing(probability=0.5),
             ChannelAdapGray(probability=0.5)])
@@ -56,13 +56,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize])
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset
