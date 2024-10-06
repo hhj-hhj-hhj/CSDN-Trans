@@ -73,7 +73,7 @@ class Base:
 
         self.criterion_hcc_euc = hcc_euc()
         self.criterion_hcc_kl = hcc_kl()
-        self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
+        self.criterion_hcc_kl_3 = hcc_kl_3(margin_kl=8)
         self.criterion_pp = ptcc()
         self.criterion_pp_3 = ptcc_3()
 

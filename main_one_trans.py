@@ -148,15 +148,11 @@ def main(config):
 
         model._init_optimizer_stage3()
 
-        # for current_epoch in range(start_train_epoch, 160):
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
             # _, result = train(model, loaders, text_features, config)
             _, result = train_2rgb(model, loaders, text_features, config)
-            # # 同步操作
-            # torch.cuda.synchronize()
-
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 

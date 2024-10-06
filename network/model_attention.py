@@ -277,7 +277,7 @@ class Model(nn.Module):
             text_features_n = clip_model.encode_text(text_tokens_n)
         return text_features_p, text_features_n
 
-    def forward(self, x1=None, x2=None, shape_img=None, label=None, get_image=False, get_text=False, img_map=None,shape_map=None, \
+    def forward(self, x1=None, x2=None, label=None, get_image=False, get_text=False, img_map=None,shape_map=None, \
                 fusion_map=None, get_map=False, get_atten=False, maps2feature=False):
         if get_image == True:
             if x1 is not None and x2 is None:

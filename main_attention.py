@@ -117,7 +117,7 @@ def main(config):
         # print('The 1st Stage of Trained')
 
 
-        print('Start the old 1st Stage of Training')
+        # print('Start the old 1st Stage of Training')
 
         # print('Extracting Image Features')
         #
@@ -177,6 +177,7 @@ def main(config):
                     l_list = torch.arange(i * batch, (i + 1) * batch)
                 else:
                     l_list = torch.arange(i * batch, num_classes)
+                # text_feature = model.model(label=l_list, get_fusion_text=True)
                 text_feature = model.model(label=l_list, get_text=True)
                 text_features.append(text_feature.cpu())
             text_features = torch.cat(text_features, 0).to(model.device)
@@ -184,7 +185,6 @@ def main(config):
 
         model._init_optimizer_stage3()
 
-        # for current_epoch in range(start_train_epoch, 160):
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
@@ -199,7 +199,7 @@ def main(config):
                 is_best_rank = (cmc[0] >= best_rank1)
                 best_rank1 = max(cmc[0], best_rank1)
                 model.save_model(current_epoch, is_best_rank)
-                logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank_1_10_20: {}'.format(time_now(),
+                logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                                 config.dataset,
                                                                                                 mINP, mAP, rank_1_10_20))
 
@@ -211,7 +211,7 @@ def main(config):
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
         cmc, mAP, mINP = test(model, loaders, config)
-        logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank_1_10_20: {}'.format(time_now(),
+        logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                         config.dataset,
                                                                                         mINP, mAP, rank_1_10_20))
 
