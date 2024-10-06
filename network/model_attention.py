@@ -142,6 +142,7 @@ class TextEncoder(nn.Module):
         x = x[torch.arange(x.shape[0]), tokenized_prompts.argmax(dim=-1)] @ self.text_projection
         return x
 
+
 class AttentionFusion(nn.Module):
     def __init__(self, embed_dim):
         super(AttentionFusion, self).__init__()
@@ -166,6 +167,7 @@ class AttentionFusion(nn.Module):
         )
         self.embedding_common = nn.Conv2d(self.embed_dim_qkv, self.embed_dim, kernel_size=1)
         self.softmax = nn.Softmax(dim=-1)
+        self.gamma = nn.Parameter(torch.zeros(1))  # 学习的标量，用于控制注意力机制的输出
 
     def q_k_v_product_attention(self, q_emb, k_emb, v_emb):
         # Flatten the spatial dimensions for batch matrix multiplication
@@ -190,8 +192,51 @@ class AttentionFusion(nn.Module):
         v_emb = self.embedding_v(img_map)
         new_v_emb = self.q_k_v_product_attention(q_emb, k_emb, v_emb)
         new_feature_map = self.embedding_common(new_v_emb)
-        new_feature_map = new_feature_map + shape_map
+        new_feature_map = self.gamma * new_feature_map + img_map
         return new_feature_map
+
+
+class SelfAttentionFusion(nn.Module):
+    def __init__(self, in_channels):
+        super(SelfAttentionFusion, self).__init__()
+        self.in_channels = in_channels  # 设定通道数
+        self.dropout_rate = 0.1  # 设定dropout率
+        self.query_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.key_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.value_conv = nn.Sequential(
+            nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1),
+            nn.Tanh(),
+            nn.Dropout(self.dropout_rate)
+        )
+        self.gamma = nn.Parameter(torch.zeros(1))  # 学习融合权重
+        # self.gamma = nn.Parameter(torch.tensor(0.5))  # 学习融合权重
+
+    def forward(self, feature_shape, feature_orig):
+        batch_size, C, height, width = feature_orig.size()
+
+        # 计算 Q, K, V
+        Q = self.query_conv(feature_orig).view(batch_size, C, -1)  # (batch_size, C, H*W)
+        K = self.key_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
+        V = self.value_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
+
+        # 计算注意力权重
+        scaled_attention_logits = torch.bmm(Q, K.permute(0, 2, 1)) / (self.in_channels ** 0.5)
+        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (batch_size, H*W, H*W)
+
+        # 计算加权特征
+        attention_out = torch.bmm(attention_weights, V).view(batch_size, C, height, width)  # (batch_size, C, H, W)
+
+        # 融合特征
+        fused_feature = self.gamma * attention_out + feature_orig
+        return fused_feature
 
 
 class Model(nn.Module):
@@ -219,7 +264,7 @@ class Model(nn.Module):
 
         self.prompt_learner = PromptLearner(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.image_attention_fusion = AttentionFusion(self.in_planes)
+        self.image_attention_fusion = SelfAttentionFusion(self.in_planes)
         self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
 
     def get_normal_text_features(self, clip_model):
@@ -232,25 +277,18 @@ class Model(nn.Module):
             text_features_n = clip_model.encode_text(text_tokens_n)
         return text_features_p, text_features_n
 
-
-    def forward(self, x1=None, x2=None, shape_img = None, label = None, get_image=False, get_text=False, img_map = None, shape_map = None,\
-                fusion_map = None, get_map = False, get_atten = False, maps2feature = False):
+    def forward(self, x1=None, x2=None, label=None, get_image=False, get_text=False, img_map=None,shape_map=None, \
+                fusion_map=None, get_map=False, get_atten=False, maps2feature=False):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
                 image_features_map1 = self.image_encoder(image_features_map1)
-                shape_feature_map1  = self.image_encoder1(shape_img)
-                shape_feature_map1 = self.image_encoder(shape_feature_map1)
-                image_features_maps = self.image_attention_fusion(shape_feature_map1, image_features_map1)
-                image_features1_proj = self.attnpool(image_features_maps)[0]
+                image_features1_proj = self.attnpool(image_features_map1)[0]
                 return image_features1_proj
             elif x1 is None and x2 is not None:
                 image_features_map2 = self.image_encoder2(x2)
                 image_features_map2 = self.image_encoder(image_features_map2)
-                shape_feature_map2 = self.image_encoder2(shape_img)
-                shape_feature_map2 = self.image_encoder(shape_feature_map2)
-                image_features_maps = self.image_attention_fusion(shape_feature_map2, image_features_map2)
-                image_features2_proj = self.attnpool(image_features_maps)[0]
+                image_features2_proj = self.attnpool(image_features_map2)[0]
                 return image_features2_proj
 
         if get_text == True:
@@ -259,13 +297,7 @@ class Model(nn.Module):
             return text_features
 
         if get_map == True:
-            if x1 is not None and x2 is not None:
-                image_features_map1 = self.image_encoder1(x1)
-                image_features_map2 = self.image_encoder2(x2)
-                image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
-                image_features_maps = self.image_encoder(image_features_maps)
-                return image_features_maps
-            elif x1 is not None and x2 is None:
+            if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
                 image_features_map1 = self.image_encoder(image_features_map1)
                 return image_features_map1
@@ -291,10 +323,11 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            B, C, H, W = image_features_maps.shape
-            pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
-            pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
-            pp = pp.view(B, 8 * 6, self.in_planes // 8)
+            pp = None
+            # B, C, H, W = image_features_maps.shape
+            # pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
+            # pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
+            # pp = pp.view(B, 8 * 6, self.in_planes // 8)
             return [features, image_features_proj], [cls_scores, cls_scores_proj], pp
 
         elif x1 is not None and x2 is None:
