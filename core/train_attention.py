@@ -51,11 +51,13 @@ def train_stage1_randomcolor(base, data_loader):
     for iter, data in enumerate(data_loader):
         rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
         rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
-        shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
+        # shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
 
         with torch.no_grad():
-            rgb_image_features = base.model(x1=rgb_img,shape_img=shape_img_rgb, get_image=True)
-            ir_image_features = base.model(x2=ir_img,shape_img=shape_img_ir, get_image=True)
+            # rgb_image_features = base.model(x1=rgb_img,shape_img=shape_img_rgb, get_image=True)
+            # ir_image_features = base.model(x2=ir_img,shape_img=shape_img_ir, get_image=True)
+            rgb_image_features = base.model(x1=rgb_img, get_image=True)
+            ir_image_features = base.model(x2=ir_img, get_image=True)
         rgb_text_features = base.model(label=rgb_target, get_text=True)
         loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
         loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
@@ -72,8 +74,8 @@ def train_stage1_randomcolor(base, data_loader):
 
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data, })
-        if (iter + 1) % 200 == 0:
-            print(f"Iteration: [{iter + 1}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
+        # if (iter + 1) % 200 == 0:
+        #     print(f"Iteration: [{iter + 1}/{len(data_loader)}] loss_i2t: {loss_i2t.data} loss_t2i: {loss_t2i.data}")
 
     return meter.get_val(), meter.get_str()
 
@@ -179,4 +181,64 @@ def train(base, loaders, text_features, config):
             print(f'Iteration: [{iter + 1}/{len(loader)}]  {meter.get_str()}')
     return meter.get_val(), meter.get_str()
 
+def train_2rgb(base, loaders, text_features, config):
+
+    base.set_train()
+    meter = MultiItemAverageMeter()
+    loader = loaders.get_train_loader()
+    for iter, (input1_0, input1_1, input2, label1, label2) in enumerate(loader):
+        rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
+        ir_imgs, ir_pids = input2, label2
+        rgb_imgs1, rgb_imgs2, rgb_pids = rgb_imgs1.to(base.device),  rgb_imgs2.to(base.device), \
+                                        rgb_pids.to(base.device).long()
+        ir_imgs, ir_pids = ir_imgs.to(base.device), ir_pids.to(base.device).long()
+
+        rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
+        pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
+
+        features, cls_score, pp = base.model(x1=rgb_imgs, x2=ir_imgs)
+
+        n = features[1].shape[0] // 3
+        rgb_attn_features = features[1].narrow(0, 0, n)
+        ir_attn_features = features[1].narrow(0, 2 * n, n)
+        rgb_logits = rgb_attn_features @ text_features.t()
+        ir_logits = ir_attn_features @ text_features.t()
+
+        ide_loss = base.pid_creiteron(cls_score[0], pids)
+        ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
+        triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
+        triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
+
+        rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
+        ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
+
+        loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        # loss_pp_euc = 0
+        # for i in range(pp.size(1)):
+        #     loss_pp_euc += base.criterion_pp_3(pp[:,i], pids) / pp.size(1)
+
+        loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map # + loss_pp_euc * 0.05
+
+        base.model_optimizer_stage3.zero_grad()
+        loss.backward()
+        base.model_optimizer_stage3.step()
+        meter.update({'pid_loss': ide_loss.data,
+                      'pid_loss_proj': ide_loss_proj.data,
+                      'triplet_loss': triplet_loss.data,
+                      'triplet_loss_proj': triplet_loss_proj.data,
+                      'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
+                      'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
+                      'loss_hcc_kl': loss_hcc_kl.data,
+                      'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      # 'loss_pp_euc': loss_pp_euc,
+                      })
+        # print(f"iter = {iter}")
+        # if (iter + 1) % 200 == 0:
+        #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
+        # if iter == 3:
+        #     break
+        # break
+    return meter.get_val(), meter.get_str()
 

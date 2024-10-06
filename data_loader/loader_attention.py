@@ -5,7 +5,7 @@ from data_loader.dataset_attention import SYSUData, RegDBData, TestData, process
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
-from tools.transforms import RGB_HSV, RandomColoring, RandomColoring_tensor
+# from tools.transforms import RGB_HSV, RandomColoring
 
 import torch.utils.data as data
 
@@ -20,7 +20,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability=0.5)])
         self.transform_color2 = transforms.Compose( [
@@ -29,7 +29,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize,
             ChannelRandomErasing(probability = 0.5),
             ChannelExchange(gray = 2)])
@@ -39,7 +39,7 @@ class Loader:
             transforms.RandomCrop((288, 144)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize,
             ChannelRandomErasing(probability=0.5),
             ChannelAdapGray(probability=0.5)])
@@ -54,13 +54,13 @@ class Loader:
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=True),
+            # RandomColoring(p=0.5, is_rgb=True),
             normalize])
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
-            RandomColoring(p=0.5, is_rgb=False),
+            # RandomColoring(p=0.5, is_rgb=False),
             normalize])
 
         self.dataset = config.dataset
@@ -98,7 +98,7 @@ class Loader:
             self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
-                                      transform2=self.transform_test_ir, transforms_test=self.transform_test)
+                                                   transform2=self.transform_test_ir)
 
             normal_samples_with_shape = SYSUDataNormalSamplesWithShap(self.sysu_data_path, transform1=self.transform_test,
                                                    transform2=self.transform_test)

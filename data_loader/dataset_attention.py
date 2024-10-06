@@ -21,6 +21,7 @@ class SYSUData(data.Dataset):
         self.transform3 = transform3
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
+        print("SYSU dataset loaded finished")
 
     def __getitem__(self, index):
 
@@ -32,14 +33,12 @@ class SYSUData(data.Dataset):
         # else:
         #     trans_rgb = self.transform2
 
+        img1_0 = self.transform1(img1)
+        img1_1 = self.transform2(img1)
         # img1 = trans_rgb(img1)
-        img1 = self.transform1(img1)
         img2 = self.transform3(img2)
 
-        return img1, img2, target1, target2
-
-    def __len__(self):
-        return len(self.train_color_label)
+        return img1_0, img1_1, img2, target1, target2
 
 class SYSUDataNormalSamplesWithShap(data.Dataset):
     def __init__(self, data_dir, transform1=None, transform2=None, colorIndex=None, thermalIndex=None):
@@ -77,20 +76,18 @@ class SYSUDataNormalSamplesWithShap(data.Dataset):
         return len(self.train_color_label)
 
 class SYSUDataNormalSamples(data.Dataset):
-    def __init__(self, data_dir, transform1=None, transform2=None, transforms_test = None, colorIndex=None, thermalIndex=None):
+    def __init__(self, data_dir, transform1=None, transform2=None, colorIndex=None, thermalIndex=None):
         train_color_image = np.load(data_dir + 'train_rgb_resized_img.npy')
         self.train_color_label = np.load(data_dir + 'train_rgb_resized_label.npy')
 
         train_thermal_image = np.load(data_dir + 'train_ir_resized_img.npy')
         self.train_thermal_label = np.load(data_dir + 'train_ir_resized_label.npy')
-        self.train_color_shape = np.load(data_dir + 'shape_rgb.npy')
-        self.train_thermal_shape = np.load(data_dir + 'shape_ir.npy')
+
         # RGB format
         self.train_color_image = train_color_image
         self.train_thermal_image = train_thermal_image
         self.transform1 = transform1
         self.transform2 = transform2
-        self.transforms_test = transforms_test
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
 
@@ -98,15 +95,11 @@ class SYSUDataNormalSamples(data.Dataset):
 
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
-        shape1 = self.train_color_shape[self.cIndex[index]]
-        shape2 = self.train_thermal_shape[self.tIndex[index]]
 
         img1 = self.transform1(img1)
         img2 = self.transform2(img2)
-        shape1 = self.transforms_test(shape1)
-        shape2 = self.transforms_test(shape2)
 
-        return img1, img2, target1, target2, shape1, shape2
+        return img1, img2, target1, target2
 
     def __len__(self):
         return len(self.train_color_label)
