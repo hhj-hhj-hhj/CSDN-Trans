@@ -172,7 +172,7 @@ def main(config):
     elif config.mode == 'test':
         # model.resume_model(config.resume_test_model)
         testModelPath = r'D:\PretrainModel\CSDN\models\testModel'
-        modelPath = os.path.join(testModelPath, 'model_108_kl3_kl3map_no_stop.pth')
+        modelPath = os.path.join(testModelPath, 'model_90_kl3+kl3map_k2=1.2.pth')
         model.model.load_state_dict(torch.load(modelPath))
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]

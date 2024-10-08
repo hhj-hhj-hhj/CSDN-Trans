@@ -165,7 +165,7 @@ class hcc_kl(nn.Module):
         for i in range(n // 2, n):
             loss.append(dist[i][:m // 2][mask[i][:m // 2]])
         loss1 = torch.cat(loss).mean()
-        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        # dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
         loss = []
         n, m = dist.shape
         for i in range(n):
@@ -190,21 +190,23 @@ class hcc_kl_3(nn.Module):
         hcen = x.reshape(3*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
 
         dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
-        loss = []
         n, m = dist.shape
         mid_n = n // 3 * 2
         mid_m = m // 3 * 2
-        for i in range(mid_n):
-            loss.append(dist[i][mid_m:][mask[i][mid_m:]])
-        for i in range(mid_n, n):
-            loss.append(dist[i][:mid_m][mask[i][:mid_m]])
-        loss1 = torch.cat(loss).mean()
-        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
-        loss = []
-        n, m = dist.shape
-        for i in range(n):
-            loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
-        loss2 = torch.cat(loss).mean()
+        # loss = []
+        # for i in range(mid_n):
+        #     loss.append(dist[i][mid_m:][mask[i][mid_m:]])
+        # for i in range(mid_n, n):
+        #     loss.append(dist[i][:mid_m][mask[i][:mid_m]])
+        # loss1 = torch.cat(loss).mean()
+        loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
+        # dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        # loss = []
+        # n, m = dist.shape
+        # for i in range(n):
+        #     loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
+        # loss2 = torch.cat(loss).mean()
+        loss2 = (margin - dist[mask == 0]).clamp(0).mean()
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
 
