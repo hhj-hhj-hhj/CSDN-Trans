@@ -7,9 +7,8 @@
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/base_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_attention.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/loader_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,26 +38,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;209&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/anaconda3/condabin/conda.bat&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GradCam.executor": "Run",
+    "Python.base_attention.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.main_attention.executor": "Run",
+    "Python.main_one_trans.executor": "Run",
+    "Python.main_test.executor": "Run",
+    "Python.main_trans.executor": "Debug",
+    "Python.model_trans.executor": "Run",
+    "Python.mutil_test.executor": "Run",
+    "Python.run_tSNE.executor": "Run",
+    "Python.test.executor": "Run",
+    "Python.train.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "209",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/anaconda3/condabin/conda.bat",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\hhjhhj\CSDN\data_loader" />
@@ -317,7 +317,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728185869789</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="attention">
+      <option name="closed" value="true" />
+      <created>1728186890631</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1728186890631</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

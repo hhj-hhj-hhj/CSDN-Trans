@@ -87,7 +87,7 @@ class Loader:
 
     def _loader(self):
         if self.dataset == 'sysu':
-            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform3=self.transform_thermal)
+            samples = SYSUData(self.sysu_data_path, transform1=self.transform_color1, transform2=self.transform_color2, transform3=self.transform_thermal)
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
