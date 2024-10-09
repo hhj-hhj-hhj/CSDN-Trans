@@ -210,6 +210,26 @@ class hcc_kl_3(nn.Module):
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
 
+class center_kl(nn.Module):
+    def __init__(self, margin_kl=6.0, k1=1.0, k2=1.0):
+        super(center_kl, self).__init__()
+        self.margin_kl = margin_kl
+        self.k1 = k1
+        self.k2 = k2
+
+    def forward(self, x, pids, xcen, pidscen):
+        margin = self.margin_kl
+        x = x.softmax(dim=-1)
+
+        dist, mask = compute_dist_kl(x, xcen, pids, pidscen)
+        n, m = dist.shape
+        mid_n = n // 2
+        mid_m = m // 2
+        loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
+        loss2 = (margin - dist[mask == 0]).clamp(0).mean()
+        loss_all = self.k1 * loss1 + self.k2 * loss2
+        return loss_all
+
 class ptcc(nn.Module):
     def __init__(self, margin_euc=0.3):
         super(ptcc, self).__init__()
