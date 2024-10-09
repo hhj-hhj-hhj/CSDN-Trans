@@ -196,9 +196,9 @@ class AttentionFusion(nn.Module):
         return new_feature_map
 
 
-class SelfAttentionFusion(nn.Module):
+class FeaturemapAttentionFusion(nn.Module):
     def __init__(self, in_channels):
-        super(SelfAttentionFusion, self).__init__()
+        super(FeaturemapAttentionFusion, self).__init__()
         self.in_channels = in_channels  # 设定通道数
         self.dropout_rate = 0.1  # 设定dropout率
         self.query_conv = nn.Sequential(
@@ -216,26 +216,25 @@ class SelfAttentionFusion(nn.Module):
             nn.Tanh(),
             nn.Dropout(self.dropout_rate)
         )
-        self.gamma = nn.Parameter(torch.zeros(1))  # 学习融合权重
-        # self.gamma = nn.Parameter(torch.tensor(0.5))  # 学习融合权重
+        self.fusion_conv = nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1)
 
     def forward(self, feature_shape, feature_orig):
-        batch_size, C, height, width = feature_orig.size()
+        B, C, H, W = feature_orig.size()
 
         # 计算 Q, K, V
-        Q = self.query_conv(feature_orig).view(batch_size, C, -1)  # (batch_size, C, H*W)
-        K = self.key_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
-        V = self.value_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
+        Q = self.query_conv(feature_shape).view(B, C, -1)  # (B, C, H*W)
+        K = self.key_conv(feature_orig).view(B, C, -1)  # (B, C, H*W)
+        V = self.value_conv(feature_orig).view(B, C, -1)  # (B, C, H*W)
 
         # 计算注意力权重
-        scaled_attention_logits = torch.bmm(Q, K.permute(0, 2, 1)) / (self.in_channels ** 0.5)
-        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (batch_size, H*W, H*W)
+        scaled_attention_logits = torch.div(torch.bmm(Q, K.permute(0, 2, 1)), (self.in_channels ** 0.5))
+        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (B, C, C)
 
         # 计算加权特征
-        attention_out = torch.bmm(attention_weights, V).view(batch_size, C, height, width)  # (batch_size, C, H, W)
-
+        attention_out = torch.bmm(attention_weights, V).view(B, C, H, W)  # (B, C, H, W)
+        attention_out = self.fusion_conv(attention_out)
         # 融合特征
-        fused_feature = self.gamma * attention_out + feature_orig
+        fused_feature = attention_out + feature_orig
         return fused_feature
 
 
@@ -264,18 +263,18 @@ class Model(nn.Module):
 
         self.prompt_learner = PromptLearner(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.image_attention_fusion = SelfAttentionFusion(self.in_planes)
-        self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
-
-    def get_normal_text_features(self, clip_model):
-        text_p = "A photo of a person"
-        text_n = "Backgrounds for people's photo"
-        text_tokens_p = clip.tokenize([text_p]).cuda()
-        text_tokens_n = clip.tokenize([text_n]).cuda()
-        with torch.no_grad():
-            text_features_p = clip_model.encode_text(text_tokens_p)
-            text_features_n = clip_model.encode_text(text_tokens_n)
-        return text_features_p, text_features_n
+        self.image_attention_fusion = FeaturemapAttentionFusion(self.in_planes)
+    #     self.text_features_p, self.text_features_n = self.get_normal_text_features(clip_model)
+    #
+    # def get_normal_text_features(self, clip_model):
+    #     text_p = "A photo of a person"
+    #     text_n = "Backgrounds for people's photo"
+    #     text_tokens_p = clip.tokenize([text_p]).cuda()
+    #     text_tokens_n = clip.tokenize([text_n]).cuda()
+    #     with torch.no_grad():
+    #         text_features_p = clip_model.encode_text(text_tokens_p)
+    #         text_features_n = clip_model.encode_text(text_tokens_n)
+    #     return text_features_p, text_features_n
 
     def forward(self, x1=None, x2=None, label=None, get_image=False, get_text=False, img_map=None,shape_map=None, \
                 fusion_map=None, get_map=False, get_atten=False, maps2feature=False):

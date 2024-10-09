@@ -198,14 +198,13 @@ class hcc_kl_3(nn.Module):
         #     loss.append(dist[i][mid_m:][mask[i][mid_m:]])
         # for i in range(mid_n, n):
         #     loss.append(dist[i][:mid_m][mask[i][:mid_m]])
-        # loss1 = torch.cat(loss).mean()
+        # loss1_2 = torch.cat(loss).mean()
         loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
-        # dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
         # loss = []
         # n, m = dist.shape
         # for i in range(n):
         #     loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
-        # loss2 = torch.cat(loss).mean()
+        # loss2_2 = torch.cat(loss).mean()
         loss2 = (margin - dist[mask == 0]).clamp(0).mean()
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
