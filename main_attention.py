@@ -63,43 +63,89 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        # print('Start the 0 Stage Training')
+        print('Start the 0 Stage Training')
+        print('Extracting Image Features')
+        visible_image_features = [[] for i in range(config.pid_num)]
+        infrared_image_features = [[] for i in range(config.pid_num)]
+        visible_len = []
+        infrared_len = []
+        visible_mean = []
+        infrared_mean = []
+
+        with torch.no_grad():
+            for i, data in enumerate(loaders.stage1_rgb_loader):
+                rgb_imgs, rgb_pids = data[0].to(model.device), data[1].to(model.device)
+                rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
+                for i, img_feat in zip(rgb_pids, rgb_image_features_proj):
+                    visible_image_features[i].append(img_feat.cpu())
+
+            for i, data in enumerate(loaders.stage1_ir_loader):
+                ir_imgs, ir_pids = data[0].to(model.device), data[1].to(model.device)
+                ir_image_features_proj = model.model(x1=ir_imgs, get_image=True)
+                for i, img_feat in zip(ir_pids, ir_image_features_proj):
+                    infrared_image_features[i].append(img_feat.cpu())
+            for i in range(config.pid_num):
+                visible_len.append(len(visible_image_features[i]))
+                infrared_len.append(len(infrared_image_features[i]))
+
+            visible_image_features_list = [torch.stack(visible_image_features[i], dim=0).cuda() for i in range(config.pid_num)]
+            infrared_image_features_list = [torch.stack(infrared_image_features[i], dim=0).cuda() for i in range(config.pid_num)]
+            visible_image_features_list = torch.cat(visible_image_features_list, dim=0)
+            infrared_image_features_list = torch.cat(infrared_image_features_list, dim=0)
+            # visible_image_features_list = visible_image_features_list.softmax(dim=-1)
+            # infrared_image_features_list = infrared_image_features_list.softmax(dim=-1)
+
+            rgb_pre, rgb_now = 0, 0
+            ir_pre, ir_now = 0, 0
+            for i in range(config.pid_num):
+                rgb_now += visible_len[i]
+                ir_now += infrared_len[i]
+                visible_ = visible_image_features_list[rgb_pre:rgb_now]
+                infrared_ = infrared_image_features_list[ir_pre:ir_now]
+                visible_mean.append(visible_.mean(dim=0))
+                infrared_mean.append(infrared_.mean(dim=0))
+                rgb_pre = rgb_now
+                ir_pre = ir_now
+
+
+            visible_image_features_list = torch.stack(visible_mean, dim=0)
+            infrared_image_features_list = torch.stack(infrared_mean, dim=0)
+
+        del  visible_image_features, infrared_image_features, visible_mean, infrared_mean, visible_len, infrared_len
+        pid_center = torch.tensor([i for i in range(config.pid_num)], dtype=torch.long).cuda()
+
+        print('Image Features Extracted, Start Training')
+
+        model._init_optimizer_stage2()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+
+            data_loader = loaders.get_train_normal_with_shape_loader()
+            model.model_lr_scheduler_stage2.step(current_epoch)
+
+            _, result = train_stage0(model, data_loader, visible_image_features_list, infrared_image_features_list, pid_center)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage2._get_lr
+                                                            (current_epoch)[0], result))
+
+        model_file_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_with_attention', 'model_stage0_with_attention.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 0 Stage Trained')
         #
-        # model._init_optimizer_stage2()
         #
-        # text_features_p = model.model.module.text_features_p
-        # text_features_n = model.model.module.text_features_n
-        # text_features = torch.cat([text_features_p, text_features_n], dim=0)
-        #
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     # if current_epoch == 10:
-        #     #     break
-        #     data_loader = loaders.get_train_normal_with_shape_loader()
-        #     model.model_lr_scheduler_stage2.step(current_epoch)
-        #
-        #     _, result = train_stage0(model, data_loader, text_features)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage2._get_lr
-        #                                                     (current_epoch)[0], result))
-        #
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage0.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # print('The 0 Stage Trained')
-        #
-        #
-        # print('Start the 1st Stage of Training')
-        # model._init_optimizer_stage1()
-        #
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # print('The 1st Stage of Trained')
+        print('Start the 1st Stage of Training')
+        model._init_optimizer_stage1()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        model_file_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_with_attention', 'model_stage1_with_attention.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 1st Stage of Trained')
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------
         # print('Start the 1st Stage of Training')
@@ -220,7 +266,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
-    parser.add_argument('--mode', type=str, default='test', help='train, test')
+    parser.add_argument('--mode', type=str, default='train', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')

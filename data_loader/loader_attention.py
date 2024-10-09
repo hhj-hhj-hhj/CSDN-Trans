@@ -1,7 +1,7 @@
 
 import torchvision.transforms as transforms
 from data_loader.dataset_attention import SYSUData, RegDBData, TestData, process_query_sysu, process_gallery_sysu, \
-    process_test_regdb, SYSUDataNormalSamples, SYSUDataNormalSamplesWithShap, Dataset, SYSUDataRGBNormalSamples, SYSUDataIRNormalSamples, \
+    process_test_regdb, SYSUDataNormalSamples, SYSUDataNormalSamplesWithShap, Dataset, SYSUDataRGBNormalSamples, SYSUDataIRNormalSamples, SYSU_RGB, SYSU_IR, \
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
@@ -91,11 +91,11 @@ class Loader:
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
-            rgb_samples = SYSUDataRGBNormalSamples(self.sysu_data_path)
-            ir_samples = SYSUDataIRNormalSamples(self.sysu_data_path)
+            # rgb_samples = SYSUDataRGBNormalSamples(self.sysu_data_path)
+            # ir_samples = SYSUDataIRNormalSamples(self.sysu_data_path)
 
-            self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
-            self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
+            self.stage1_rgb_loader = self.get_stage1_rgb_loader()
+            self.stage1_ir_loader = self.get_stage1_ir_loader()
 
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
                                                    transform2=self.transform_test_ir)
@@ -208,14 +208,12 @@ class Loader:
                                        sampler=normal_sampler, num_workers=self.num_workers, drop_last=True)
         return normal_train_loader
 
-    def get_stage1_rgb_loader(self, rgb_samples):
-        datset = Dataset(rgb_samples.samples, transform=self.transform_test)
-        train_loader = data.DataLoader(datset, batch_size=self.stage1_batch_size, num_workers=self.num_workers,
-                                       shuffle=True, drop_last=True)
+    def get_stage1_rgb_loader(self):
+        datset = SYSU_RGB(self.sysu_data_path, transform=self.transform_test)
+        train_loader = data.DataLoader(datset, batch_size=self.stage1_batch_size, num_workers=self.num_workers)
         return train_loader
 
-    def get_stage1_ir_loader(self, ir_samples):
-        datset = Dataset(ir_samples.samples, transform=self.transform_test)
-        train_loader = data.DataLoader(datset, batch_size=self.stage1_batch_size, num_workers=self.num_workers,
-                                       shuffle=True, drop_last=True)
+    def get_stage1_ir_loader(self):
+        datset = SYSU_IR(self.sysu_data_path, transform=self.transform_test)
+        train_loader = data.DataLoader(datset, batch_size=self.stage1_batch_size, num_workers=self.num_workers)
         return train_loader

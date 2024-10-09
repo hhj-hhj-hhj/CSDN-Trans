@@ -209,6 +209,18 @@ class hcc_kl_3(nn.Module):
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
 
+class center_ce(nn.Module):
+    def __init__(self):
+        super(center_ce, self).__init__()
+        self.ce = nn.CrossEntropyLoss()
+
+    def forward(self, x, xcen, pids):
+        logit = x @ xcen.t()
+
+        loss = self.ce(logit, pids)
+        return loss
+
+
 class ptcc(nn.Module):
     def __init__(self, margin_euc=0.3):
         super(ptcc, self).__init__()

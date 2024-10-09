@@ -2,44 +2,50 @@ import torch
 from tools import MultiItemAverageMeter
 
 
-def train_stage0(base, dataloader, text_features):
+def train_stage0(base, dataloader, rgb_mean_feature, ir_mean_feature, pid_center):
     base.set_train()
     meter = MultiItemAverageMeter()
 
     for iter, data in enumerate(dataloader):
         rgb_imgs, ir_imgs, label1, label2, shape_maps_rgb, shape_maps_ir = data
         rgb_imgs, ir_imgs = rgb_imgs.to(base.device), ir_imgs.to(base.device)
-        # label1, label2 = label1.to(base.device).long(), label2.to(base.device).long()
+        label1, label2 = label1.to(base.device).long(), label2.to(base.device).long()
         shape_maps_rgb, shape_maps_ir = shape_maps_rgb.to(base.device), shape_maps_ir.to(base.device)
 
-        imgs = torch.cat([rgb_imgs, ir_imgs], dim=0)
-
-        target_i = torch.tensor([0]).to(base.device).long()
-        target_i = target_i.repeat(2 * rgb_imgs.size(0))
-        shape_imgs = torch.cat([shape_maps_rgb, shape_maps_ir], dim=0)
+        # imgs = torch.cat([rgb_imgs, ir_imgs], dim=0)
+        #
+        # target_i = torch.tensor([0]).to(base.device).long()
+        # target_i = target_i.repeat(2 * rgb_imgs.size(0))
+        # shape_imgs = torch.cat([shape_maps_rgb, shape_maps_ir], dim=0)
 
         with torch.no_grad():
-            image_maps = base.model(x1=imgs, get_map=True)
-            shape_maps = base.model(x1=shape_imgs, get_map=True)
+            # image_maps = base.model(x1=imgs, get_map=True)
+            # shape_maps = base.model(x1=shape_imgs, get_map=True)
+            rgb_img_maps = base.model(x1=rgb_imgs, get_map=True)
+            ir_img_maps = base.model(x2=ir_imgs, get_map=True)
+            rgb_shape_maps = base.model(x1=shape_maps_rgb, get_map=True)
+            ir_shape_maps = base.model(x2=shape_maps_ir, get_map=True)
 
-        fusion_map = base.model(img_map=image_maps, shape_map=shape_maps, get_atten=True)
+        rgb_fusion_map = base.model(img_map=rgb_img_maps, shape_map=ir_shape_maps, get_atten=True)
+        ir_fusion_map = base.model(img_map=ir_img_maps, shape_map=rgb_shape_maps, get_atten=True)
 
         base.model.module.attnpool.requires_grad = False
-        image_features = base.model(fusion_map=fusion_map, maps2feature=True)
+        rgb_image_features = base.model(fusion_map=rgb_fusion_map, maps2feature=True)
+        ir_image_features = base.model(fusion_map=ir_fusion_map, maps2feature=True)
 
-        logit = image_features @ text_features.t()
-        loss_i2t = base.pid_creiteron(logit, target_i)
-        # loss_t2i = base.con_creiteron(text_features, image_features, target_t, target_i)
-        # loss_t2i = loss_i2t
+        loss_rgb_center_ce = base.criterion_center_ce(rgb_image_features, rgb_mean_feature, label1)
+        loss_ir_center_ce = base.criterion_center_ce(ir_image_features, ir_mean_feature, label2)
 
-        # loss = loss_i2t + loss_t2i
+        loss_center_ce = loss_rgb_center_ce + loss_ir_center_ce
+
         base.model_optimizer_stage2.zero_grad()
-        loss_i2t.backward()
+        loss_center_ce.backward()
         base.model_optimizer_stage2.step()
 
-        meter.update({'loss_i2t': loss_i2t.data,})
+        meter.update({'loss_rgb_center': loss_rgb_center_ce.data,
+                      'loss_ir_center': loss_ir_center_ce.data,})
         if (iter + 1) % 200 == 0:
-            print(f"Iteration: [{iter + 1}/{len(dataloader)}] loss_i2t : {loss_i2t}")
+            print(f"Iteration: [{iter + 1}/{len(dataloader)}] loss_rgb_center: {loss_rgb_center_ce.data:.4f} loss_ir_center: {loss_ir_center_ce.data:.4f}")
 
     return meter.get_val(), meter.get_str()
 
