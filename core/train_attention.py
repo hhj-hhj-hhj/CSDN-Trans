@@ -44,8 +44,8 @@ def train_stage0(base, dataloader, rgb_mean_feature, ir_mean_feature, pid_center
 
         meter.update({'loss_rgb_center': loss_rgb_center_ce.data,
                       'loss_ir_center': loss_ir_center_ce.data,})
-        if (iter + 1) % 200 == 0:
-            print(f"Iteration: [{iter + 1}/{len(dataloader)}] loss_rgb_center: {loss_rgb_center_ce.data:.4f} loss_ir_center: {loss_ir_center_ce.data:.4f}")
+        # if (iter + 1) % 200 == 0:
+        #     print(f"Iteration: [{iter + 1}/{len(dataloader)}] loss_rgb_center: {loss_rgb_center_ce.data:.4f} loss_ir_center: {loss_ir_center_ce.data:.4f}")
 
     return meter.get_val(), meter.get_str()
 
@@ -55,22 +55,30 @@ def train_stage1_randomcolor(base, data_loader):
     meter = MultiItemAverageMeter()
     # iter_list = torch.randperm(num_image).to(base.device)
     for iter, data in enumerate(data_loader):
-        rgb_img, ir_img = data[0].to(base.device), data[1].to(base.device)
-        rgb_target, ir_target = data[2].to(base.device).long(), data[3].to(base.device).long()
-        # shape_img_rgb, shape_img_ir = data[4].to(base.device), data[5].to(base.device)
+        rgb_imgs, ir_imgs, label1, label2, shape_maps_rgb, shape_maps_ir = data
+        rgb_imgs, ir_imgs = rgb_imgs.to(base.device), ir_imgs.to(base.device)
+        label1, label2 = label1.to(base.device).long(), label2.to(base.device).long()
+        shape_maps_rgb, shape_maps_ir = shape_maps_rgb.to(base.device), shape_maps_ir.to(base.device)
 
         with torch.no_grad():
-            # rgb_image_features = base.model(x1=rgb_img,shape_img=shape_img_rgb, get_image=True)
-            # ir_image_features = base.model(x2=ir_img,shape_img=shape_img_ir, get_image=True)
-            rgb_image_features = base.model(x1=rgb_img, get_image=True)
-            ir_image_features = base.model(x2=ir_img, get_image=True)
-        rgb_text_features = base.model(label=rgb_target, get_text=True)
-        loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
-        loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
+            rgb_img_maps = base.model(x1=rgb_imgs, get_map=True)
+            ir_img_maps = base.model(x2=ir_imgs, get_map=True)
+            rgb_shape_maps = base.model(x1=shape_maps_rgb, get_map=True)
+            ir_shape_maps = base.model(x2=shape_maps_ir, get_map=True)
+            rgb_fusion_map = base.model(img_map=rgb_img_maps, shape_map=rgb_shape_maps, get_atten=True)
+            ir_fusion_map = base.model(img_map=ir_img_maps, shape_map=ir_shape_maps, get_atten=True)
+            rgb_image_features = base.model(fusion_map=rgb_fusion_map, maps2feature=True)
+            ir_image_features = base.model(fusion_map=ir_fusion_map, maps2feature=True)
+
+        rgb_text_features = base.model(label=label1, get_text=True)
+        ir_text_features = base.model(label=label2, get_text=True)
+
+        loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, label1, label1)
+        loss_i2t_ir = base.con_creiteron(ir_image_features, ir_text_features, label2, label2)
         loss_i2t = loss_i2t_rgb + loss_i2t_ir
 
-        loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
-        loss_t2i_ir = base.con_creiteron(rgb_text_features, ir_image_features, ir_target, ir_target)
+        loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, label1, label1)
+        loss_t2i_ir = base.con_creiteron(rgb_text_features, ir_image_features, label2, label2)
         loss_t2i = loss_t2i_rgb + loss_t2i_ir
 
         loss = loss_i2t + loss_t2i

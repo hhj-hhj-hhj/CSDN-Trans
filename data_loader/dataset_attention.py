@@ -102,6 +102,9 @@ class SYSUDataNormalSamplesWithShap(data.Dataset):
         shape1 = self.transform1(shape1)
         shape2 = self.transform2(shape2)
 
+        # if random.uniform(0, 1) > 0.2:
+        #     shape1, shap2 = shape2, shape1
+
         return img1, img2, target1, target2, shape1, shape2
 
     def __len__(self):

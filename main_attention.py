@@ -137,7 +137,7 @@ def main(config):
         model._init_optimizer_stage1()
 
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-            data_all_loader = loaders.get_train_normal_loader()
+            data_all_loader = loaders.get_train_normal_with_shape_loader()
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage1_randomcolor(model, data_all_loader)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
