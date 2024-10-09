@@ -216,26 +216,25 @@ class SelfAttentionFusion(nn.Module):
             nn.Tanh(),
             nn.Dropout(self.dropout_rate)
         )
-        self.gamma = nn.Parameter(torch.zeros(1))  # 学习融合权重
-        # self.gamma = nn.Parameter(torch.tensor(0.5))  # 学习融合权重
+        self.fusion = nn.Conv2d(self.in_channels, self.in_channels, kernel_size=1)
 
     def forward(self, feature_shape, feature_orig):
-        batch_size, C, height, width = feature_orig.size()
+        B, C, H, W = feature_orig.size()
 
         # 计算 Q, K, V
-        Q = self.query_conv(feature_orig).view(batch_size, C, -1)  # (batch_size, C, H*W)
-        K = self.key_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
-        V = self.value_conv(feature_shape).view(batch_size, C, -1)  # (batch_size, C, H*W)
+        Q = self.query_conv(feature_shape).view(B, C, -1)  # (B, C, H*W)
+        K = self.key_conv(feature_orig).view(B, C, -1)  # (B, C, H*W)
+        V = self.value_conv(feature_orig).view(B, C, -1)  # (B, C, H*W)
 
         # 计算注意力权重
-        scaled_attention_logits = torch.bmm(Q, K.permute(0, 2, 1)) / (self.in_channels ** 0.5)
-        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (batch_size, H*W, H*W)
+        scaled_attention_logits = torch.div(torch.bmm(Q, K.permute(0, 2, 1)), (self.in_channels ** 0.5))
+        attention_weights = torch.softmax(scaled_attention_logits, dim=-1)  # (B, C, C)
 
         # 计算加权特征
-        attention_out = torch.bmm(attention_weights, V).view(batch_size, C, height, width)  # (batch_size, C, H, W)
-
+        attention_out = torch.bmm(attention_weights, V)  # (B, C, H * W)
+        attention_out = self.fusion(attention_out).view(B, C, H, W) # (B, C, H, W)
         # 融合特征
-        fused_feature = self.gamma * attention_out + feature_orig
+        fused_feature = attention_out + feature_orig
         return fused_feature
 
 
