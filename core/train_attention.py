@@ -26,8 +26,8 @@ def train_stage0(base, dataloader, rgb_mean_feature, ir_mean_feature, pid_center
             rgb_shape_maps = base.model(x1=shape_maps_rgb, get_map=True)
             ir_shape_maps = base.model(x2=shape_maps_ir, get_map=True)
 
-        rgb_fusion_map = base.model(img_map=rgb_img_maps, shape_map=ir_shape_maps, get_atten=True)
-        ir_fusion_map = base.model(img_map=ir_img_maps, shape_map=rgb_shape_maps, get_atten=True)
+        rgb_fusion_map = base.model(img_map=rgb_img_maps, shape_map=rgb_shape_maps, get_atten=True)
+        ir_fusion_map = base.model(img_map=ir_img_maps, shape_map=ir_shape_maps, get_atten=True)
 
         base.model.module.attnpool.requires_grad = False
         rgb_image_features = base.model(fusion_map=rgb_fusion_map, maps2feature=True)

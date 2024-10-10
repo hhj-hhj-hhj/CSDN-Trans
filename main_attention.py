@@ -286,8 +286,8 @@ if __name__ == '__main__':
                         help='milestones for the learning rate decay')
 
     parser.add_argument('--stage1_batch-size', default=32, type=int, metavar='B', help='training batch size')
-    parser.add_argument('--stage1_learning_rate', type=float, default=0.0003)
-    parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
+    parser.add_argument('--stage1_learning_rate', type=float, default=0.00035)
+    parser.add_argument('--stage2_learning_rate', type=float, default=0.00035)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)
     parser.add_argument('--stage1_warmup_lr_init', type=float, default=0.00001)
