@@ -295,10 +295,11 @@ class Model(nn.Module):
         # self.prompt_learner1 = PromptLearner1(num_classes, clip_model.dtype, clip_model.token_embedding)
         # self.prompt_learner2 = PromptLearner2(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.attention_fusion = AttentionFusion(1024)
+        # self.attention_fusion = AttentionFusion(1024)
 
     def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, get_image=False, get_text=False,
-                get_fusion_text=False):
+                # get_fusion_text=False
+                ):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
@@ -330,19 +331,18 @@ class Model(nn.Module):
                 prompts2 = self.prompt_learner(label2, mode='ir')
                 text_features2 = self.text_encoder(prompts2, self.prompt_learner.ir_tokenized_prompts)
                 return text_features2
-            elif label1 is not None and label2 is not None:
-                label = torch.cat((label1, label2), dim=0)
+            elif label is not None:
                 prompts_common = self.prompt_learner(label, mode='common')
                 text_features_common = self.text_encoder(prompts_common, self.prompt_learner.tokenized_prompts)
                 return text_features_common
 
-        if get_fusion_text == True:
-            prompts1 = self.prompt_learner1(label)
-            text_features1 = self.text_encoder(prompts1, self.prompt_learner1.tokenized_prompts)
-            prompts2 = self.prompt_learner2(label)
-            text_features2 = self.text_encoder(prompts2, self.prompt_learner2.tokenized_prompts)
-            text_features = self.attention_fusion(text_features1, text_features2)
-            return text_features
+        # if get_fusion_text == True:
+        #     prompts1 = self.prompt_learner1(label)
+        #     text_features1 = self.text_encoder(prompts1, self.prompt_learner1.tokenized_prompts)
+        #     prompts2 = self.prompt_learner2(label)
+        #     text_features2 = self.text_encoder(prompts2, self.prompt_learner2.tokenized_prompts)
+        #     text_features = self.attention_fusion(text_features1, text_features2)
+        #     return text_features
 
         if x1 is not None and x2 is not None:
 
@@ -354,12 +354,12 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            pp = None
+            # pp = None
             # B, C, H, W = image_features_maps.shape
             # pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
             # pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
             # pp = pp.view(B, 8 * 6, self.in_planes // 8)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], pp
+            return [features, image_features_proj], [cls_scores, cls_scores_proj]
 
         elif x1 is not None and x2 is None:
 
