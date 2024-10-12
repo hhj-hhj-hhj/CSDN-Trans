@@ -73,13 +73,21 @@ def train_stage1_randomcolor(base, data_loader):
         rgb_text_features = base.model(label=label1, get_text=True)
         ir_text_features = base.model(label=label2, get_text=True)
 
-        loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, label1, label1)
-        loss_i2t_ir = base.con_creiteron(ir_image_features, ir_text_features, label2, label2)
-        loss_i2t = loss_i2t_rgb + loss_i2t_ir
+        # loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, label1, label1)
+        # loss_t2i_ir = base.con_creiteron(ir_text_features, ir_image_features, label2, label2)
+        # loss_t2i = loss_t2i_rgb + loss_t2i_ir
+        #
+        # loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, label1, label1)
+        # loss_i2t_ir = base.con_creiteron(ir_image_features, ir_text_features, label2, label2)
+        # loss_i2t = loss_i2t_rgb + loss_i2t_ir
 
-        loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, label1, label1)
-        loss_t2i_ir = base.con_creiteron(rgb_text_features, ir_image_features, label2, label2)
-        loss_t2i = loss_t2i_rgb + loss_t2i_ir
+
+        image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
+        text_features = torch.cat([rgb_text_features, ir_text_features], dim=0)
+        target = torch.cat([label1, label2], dim=0)
+        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
+        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
+
 
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage1.zero_grad()
