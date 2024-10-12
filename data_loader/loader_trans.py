@@ -93,11 +93,11 @@ class Loader:
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
-            rgb_samples = SYSUDataRGBNormalSamples(self.sysu_data_path)
-            ir_samples = SYSUDataIRNormalSamples(self.sysu_data_path)
+            # rgb_samples = SYSUDataRGBNormalSamples(self.sysu_data_path)
+            # ir_samples = SYSUDataIRNormalSamples(self.sysu_data_path)
 
-            self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
-            self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
+            # self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
+            # self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
             normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
                                       transform2=self.transform_test_ir)
