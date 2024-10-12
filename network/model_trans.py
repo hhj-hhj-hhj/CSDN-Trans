@@ -330,8 +330,7 @@ class Model(nn.Module):
                 prompts2 = self.prompt_learner(label2, mode='ir')
                 text_features2 = self.text_encoder(prompts2, self.prompt_learner.ir_tokenized_prompts)
                 return text_features2
-            elif label1 is not None and label2 is not None:
-                label = torch.cat((label1, label2), dim=0)
+            elif label is not None:
                 prompts_common = self.prompt_learner(label, mode='common')
                 text_features_common = self.text_encoder(prompts_common, self.prompt_learner.tokenized_prompts)
                 return text_features_common
