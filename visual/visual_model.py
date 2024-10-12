@@ -326,4 +326,89 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
 
     return model
 
+def is_same(a, b):
+    for i in range(len(a)):
+        if not torch.all(a[i] == b[i]):
+            print(f'index {i} is not same')
+
+class PromptLearner_share(nn.Module):
+    def __init__(self, num_class, dtype, token_embedding):
+        super().__init__()
+        rgb_ctx_init = "A visible photo of a X X X X person."
+        ir_ctx_init = "A infrared photo of a X X X X person."
+        ctx_init = "A photo of a X X X X person."
+        ctx_dim = 512
+
+        rgb_n_ctx = 5
+        ir_n_ctx = 5
+        n_ctx = 4
+
+        rgb_tokenized_prompts = clip.tokenize(rgb_ctx_init).cuda()
+        ir_tokenized_prompts = clip.tokenize(ir_ctx_init).cuda()
+        tokenized_prompts = clip.tokenize(ctx_init).cuda()
+        with torch.no_grad():
+            rgb_embedding = token_embedding(rgb_tokenized_prompts).type(dtype)
+            ir_embedding = token_embedding(ir_tokenized_prompts).type(dtype)
+            embedding = token_embedding(tokenized_prompts).type(dtype)
+        print(f'embeeding shape: {embedding.shape}')
+        self.rgb_tokenized_prompts = rgb_tokenized_prompts
+        self.ir_tokenized_prompts = ir_tokenized_prompts
+        self.tokenized_prompts = tokenized_prompts  # torch.Tensor
+
+        n_cls_ctx = 4
+        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=dtype)
+        nn.init.normal_(cls_vectors, std=0.02)
+        self.cls_ctx = nn.Parameter(cls_vectors)
+
+        self.register_buffer("rgb_token_prefix", rgb_embedding[:, :rgb_n_ctx + 1, :])
+        self.register_buffer("ir_token_prefix", ir_embedding[:, :ir_n_ctx + 1, :])
+        self.register_buffer("token_prefix", embedding[:, :n_ctx + 1, :])
+        self.register_buffer("rgb_token_suffix", rgb_embedding[:, rgb_n_ctx + 1 + n_cls_ctx:, :])
+        self.register_buffer("ir_token_suffix", ir_embedding[:, ir_n_ctx + 1 + n_cls_ctx:, :])
+        self.register_buffer("token_suffix", embedding[:, n_ctx + 1 + n_cls_ctx:, :])
+        self.num_class = num_class
+        self.n_cls_ctx = n_cls_ctx
+
+    def forward(self, label, mode = None):
+        cls_ctx = self.cls_ctx[label]
+        b = label.shape[0]
+        if mode == 'rgb':
+            prefix = self.rgb_token_prefix.expand(b, -1, -1)
+            suffix = self.rgb_token_suffix.expand(b, -1, -1)
+        elif mode == 'ir':
+            prefix = self.ir_token_prefix.expand(b, -1, -1)
+            suffix = self.ir_token_suffix.expand(b, -1, -1)
+        else:
+            prefix = self.token_prefix.expand(b, -1, -1)
+            suffix = self.token_suffix.expand(b, -1, -1)
+
+        prompts = torch.cat(
+            [
+                prefix,  # (b, rgb_n_ctx/ir_n_ctx/n_ctx, dim)
+                cls_ctx,  # (b, n_cls_ctx, dim)
+                suffix,  # (b, *, dim)
+            ],
+            dim=1,
+        )
+        return prompts
+
+clip_model = load_clip_to_cpu('RN50', 18, 9, 16)
+clip_model.to("cuda")
+prompt = PromptLearner_share(395, clip_model.dtype, clip_model.token_embedding)
+
+            # print(f'a[{i}]: {a[i]}')
+            # print(f'b[{i}]: {b[i]}')
+        # else:
+        #     print(f'index {i} is same')
+print('test prefix')
+is_same(prompt.rgb_token_prefix[0], prompt.ir_token_prefix[0])
+print('test suffix')
+is_same(prompt.rgb_token_suffix[0], prompt.ir_token_suffix[0])
+
+# prompt.rgb_token_prefix = prompt.rgb_token_prefix.expand(2, -1, -1)
+# print(prompt.rgb_token_prefix.shape)
+# print(prompt.rgb_token_prefix[0]==prompt.rgb_token_prefix[1])
+
+
+
 
