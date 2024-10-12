@@ -4,8 +4,9 @@ import cv2
 import numpy as np
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
-from visual.visual_base import Base
+# from visual.visual_base import Base
 from PIL import Image
+from visual.visual_base_attention import Base
 # from torchvision.models import resnet50
 # model = resnet50(pretrained=True)
 
@@ -17,19 +18,18 @@ import ast
 # 使用预训练模型
 def main(config):
     base = Base(config)
-    base._init_optimizer_stage2()
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"E:\hhj\SYSU-MM01\cam1\0001\0001.jpg"
+    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0002.jpg"
     image = Image.open(image_path)
 
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_91_only3.pth'
     # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_106.pth'
-    # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_86_one_prompt.pth'
+    model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_with_attention.pth'
 
-    # model_trans.load_state_dict(torch.load(model_path), strict=False)
+    model_trans.load_state_dict(torch.load(model_path), strict=False)
 
     import torchvision.transforms as transforms
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])

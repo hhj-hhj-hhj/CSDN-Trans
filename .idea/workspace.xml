@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="attention loss">
+    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="with attention">
+      <change afterPath="$PROJECT_DIR$/visual/visual_base_attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/visual/visual_model_attention.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GradCam.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/dataset_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/dataset_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/loader_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,16 +55,18 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Python.GradCam.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
     &quot;Python.a.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.model_attention.executor&quot;: &quot;Run&quot;,
     &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
     &quot;Python.run_tSNE_trans.executor&quot;: &quot;Run&quot;,
     &quot;Python.visual_model.executor&quot;: &quot;Run&quot;,
+    &quot;Python.visual_model_attention.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Users/HHJ/PycharmProjects/CSDN/Plots&quot;,
@@ -166,7 +174,9 @@
       <workItem from="1728181251616" duration="8982000" />
       <workItem from="1728196620176" duration="199000" />
       <workItem from="1728351397671" duration="10560000" />
-      <workItem from="1728374295553" duration="4743000" />
+      <workItem from="1728374295553" duration="25554000" />
+      <workItem from="1728524709321" duration="25033000" />
+      <workItem from="1728698632378" duration="336000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -432,7 +442,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728372793843</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="attentionFusion">
+      <option name="closed" value="true" />
+      <created>1728443336559</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1728443336560</updated>
+    </task>
+    <task id="LOCAL-00035" summary="with attention">
+      <option name="closed" value="true" />
+      <created>1728457530112</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1728457530112</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -457,7 +483,9 @@
     <MESSAGE value="one_prompt_kl3+kl3map_k1=k2=1.0" />
     <MESSAGE value="attention" />
     <MESSAGE value="attention loss" />
-    <option name="LAST_COMMIT_MESSAGE" value="attention loss" />
+    <MESSAGE value="attentionFusion" />
+    <MESSAGE value="with attention" />
+    <option name="LAST_COMMIT_MESSAGE" value="with attention" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -467,19 +495,31 @@
           <line>307</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main_attention.py</url>
+          <line>119</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main_attention.py</url>
+          <line>226</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CSDN$GradCam.coverage" NAME="GradCam 覆盖结果" MODIFIED="1727671143652" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSDN$model_attention.coverage" NAME="model_attention 覆盖结果" MODIFIED="1728540893164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/network" />
+    <SUITE FILE_PATH="coverage/CSDN$main_test.coverage" NAME="main_test 覆盖结果" MODIFIED="1726798300608" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSDN$visual_model_attention.coverage" NAME="visual_model_attention 覆盖结果" MODIFIED="1728541089474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visual" />
+    <SUITE FILE_PATH="coverage/CSDN$main_attention.coverage" NAME="main_attention 覆盖结果" MODIFIED="1728528713202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSDN$a.coverage" NAME="a 覆盖结果" MODIFIED="1722347628337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools" />
+    <SUITE FILE_PATH="coverage/CSDN$GradCam.coverage" NAME="GradCam 覆盖结果" MODIFIED="1728625507098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$run_tSNE_trans.coverage" NAME="run_tSNE_trans 覆盖结果" MODIFIED="1726210399481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$run_tSNE.coverage" NAME="run_tSNE 覆盖结果" MODIFIED="1726205191864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CSDN$main_test.coverage" NAME="main_test 覆盖结果" MODIFIED="1726798300608" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$main_one_trans.coverage" NAME="main_one_trans 覆盖结果" MODIFIED="1728373454787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$visual_model.coverage" NAME="visual_model 覆盖结果" MODIFIED="1727147759791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visual" />
     <SUITE FILE_PATH="coverage/CSDN$main_trans.coverage" NAME="main_trans 覆盖结果" MODIFIED="1725538946440" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSDN$main.coverage" NAME="main 覆盖结果" MODIFIED="1725523321708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CSDN$main_attention.coverage" NAME="main_attention 覆盖结果" MODIFIED="1728190032600" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CSDN$a.coverage" NAME="a 覆盖结果" MODIFIED="1722347628337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools" />
   </component>
 </project>

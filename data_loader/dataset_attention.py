@@ -40,6 +40,38 @@ class SYSUData(data.Dataset):
 
         return img1_0, img1_1, img2, target1, target2
 
+class SYSU_RGB(data.Dataset):
+    def __init__(self, data_dir, transform=None):
+        train_color_image = np.load(data_dir + 'train_rgb_resized_img.npy')
+        train_color_label = np.load(data_dir + 'train_rgb_resized_label.npy')
+        self.train_color_image = train_color_image
+        self.train_color_label = train_color_label
+        self.transform = transform
+        print("SYSU dataset loaded finished")
+
+    def __getitem__(self, index):
+        img, target = self.train_color_image[index], self.train_color_label[index]
+        img = self.transform(img)
+        return img, target
+    def __len__(self):
+        return len(self.train_color_label)
+
+class SYSU_IR(data.Dataset):
+    def __init__(self, data_dir, transform=None):
+        train_thermal_image = np.load(data_dir + 'train_ir_resized_img.npy')
+        train_thermal_label = np.load(data_dir + 'train_ir_resized_label.npy')
+        self.train_thermal_image = train_thermal_image
+        self.train_thermal_label = train_thermal_label
+        self.transform = transform
+        print("SYSU dataset loaded finished")
+
+    def __getitem__(self, index):
+        img, target = self.train_thermal_image[index], self.train_thermal_label[index]
+        img = self.transform(img)
+        return img, target
+    def __len__(self):
+        return len(self.train_thermal_label)
+
 class SYSUDataNormalSamplesWithShap(data.Dataset):
     def __init__(self, data_dir, transform1=None, transform2=None, colorIndex=None, thermalIndex=None):
         train_color_image = np.load(data_dir + 'train_rgb_resized_img.npy')
@@ -69,6 +101,8 @@ class SYSUDataNormalSamplesWithShap(data.Dataset):
         img2 = self.transform2(img2)
         shape1 = self.transform1(shape1)
         shape2 = self.transform2(shape2)
+        # if random.uniform(0, 1) > 0.5:
+        #     shape1, shap2 = shape2, shape1
 
         return img1, img2, target1, target2, shape1, shape2
 
