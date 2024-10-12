@@ -79,8 +79,8 @@ def main(config):
         # torch.save(model.model.state_dict(), model_file_path)
         # print('The 1st Stage of Trained')
 
-        print('Start the 1st Stage of Training')
-        print('Extracting Image Features')
+        logger('Start the 1st Stage of Training')
+        logger('Extracting Image Features')
 
         visible_image_features = []
         visible_labels = []
@@ -107,7 +107,7 @@ def main(config):
             num_image = visible_labels_list.shape[0]
             i_ter = num_image // batch
         del visible_labels, visible_image_features, infrared_labels, infrared_image_features
-        print('Visible Image Features Extracted, Start Training')
+        logger('Image Features Extracted, Start Training')
 
         model._init_optimizer_stage1()
 
@@ -121,11 +121,11 @@ def main(config):
 
         model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_one_prompt_2i2t.pth')
         torch.save(model.model.state_dict(), model_file_path)
-        print('The 1st Stage of Trained')
+        logger('The 1st Stage of Trained')
 
 
-        print('Start the 3st Stage Training')
-        print('Extracting Text Features')
+        logger('Start the 3st Stage Training')
+        logger('Extracting Text Features')
 
         num_classes = model.model.module.num_classes
         batch = config.batch_size
@@ -144,7 +144,7 @@ def main(config):
                 text_feature = model.model(label1=l_list, get_text=True)
                 text_features.append(text_feature.cpu())
             text_features = torch.cat(text_features, 0).to(model.device)
-        print('Text Features Extracted, Start Training')
+        logger('Text Features Extracted, Start Training')
 
         model._init_optimizer_stage3()
 
