@@ -172,7 +172,7 @@ class PromptLearner_share(nn.Module):
             rgb_embedding = token_embedding(rgb_tokenized_prompts).type(dtype)
             ir_embedding = token_embedding(ir_tokenized_prompts).type(dtype)
             embedding = token_embedding(tokenized_prompts).type(dtype)
-        print(f'embeeding shape: {embedding.shape}')
+        # print(f'embeeding shape: {embedding.shape}')
         self.rgb_tokenized_prompts = rgb_tokenized_prompts
         self.ir_tokenized_prompts = ir_tokenized_prompts
         self.tokenized_prompts = tokenized_prompts  # torch.Tensor
