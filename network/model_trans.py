@@ -291,8 +291,9 @@ class Model(nn.Module):
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
 
-        self.prompt_learner1 = PromptLearner1(num_classes, clip_model.dtype, clip_model.token_embedding)
-        self.prompt_learner2 = PromptLearner2(num_classes, clip_model.dtype, clip_model.token_embedding)
+        self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
+        # self.prompt_learner1 = PromptLearner1(num_classes, clip_model.dtype, clip_model.token_embedding)
+        # self.prompt_learner2 = PromptLearner2(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
         self.attention_fusion = AttentionFusion(1024)
 
@@ -310,15 +311,29 @@ class Model(nn.Module):
                 image_features2_proj = self.attnpool(image_features_map2)[0]
                 return image_features2_proj
 
+        # if get_text == True:
+        #     if label1 is not None and label2 is None:
+        #         prompts1 = self.prompt_learner1(label1)
+        #         text_features1 = self.text_encoder(prompts1, self.prompt_learner1.tokenized_prompts)
+        #         return text_features1
+        #     if label2 is not None and label1 is None:
+        #         prompts2 = self.prompt_learner2(label2)
+        #         text_features2 = self.text_encoder(prompts2, self.prompt_learner2.tokenized_prompts)
+        #         return text_features2
+
         if get_text == True:
             if label1 is not None and label2 is None:
-                prompts1 = self.prompt_learner1(label1)
-                text_features1 = self.text_encoder(prompts1, self.prompt_learner1.tokenized_prompts)
+                prompts1 = self.prompt_learner(label1, mode='rgb')
+                text_features1 = self.text_encoder(prompts1, self.prompt_learner.rgb_tokenized_prompts)
                 return text_features1
             if label2 is not None and label1 is None:
-                prompts2 = self.prompt_learner2(label2)
-                text_features2 = self.text_encoder(prompts2, self.prompt_learner2.tokenized_prompts)
+                prompts2 = self.prompt_learner(label2, mode='ir')
+                text_features2 = self.text_encoder(prompts2, self.prompt_learner.ir_tokenized_prompts)
                 return text_features2
+            else:
+                prompts_common = self.prompt_learner(label, mode='common')
+                text_features_common = self.text_encoder(prompts_common, self.prompt_learner.tokenized_prompts)
+                return text_features_common
 
         if get_fusion_text == True:
             prompts1 = self.prompt_learner1(label)
