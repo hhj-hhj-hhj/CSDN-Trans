@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="PromptLeatner_share">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -426,7 +429,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728708999990</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="PromptLeatner_share">
+      <option name="closed" value="true" />
+      <created>1728711042092</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1728711042092</updated>
+    </task>
+    <task id="LOCAL-00045" summary="PromptLeatner_share">
+      <option name="closed" value="true" />
+      <created>1728711571845</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1728711571845</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
