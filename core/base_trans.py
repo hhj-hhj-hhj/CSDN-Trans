@@ -73,7 +73,7 @@ class Base:
 
         self.criterion_hcc_euc = hcc_euc()
         self.criterion_hcc_kl = hcc_kl()
-        self.criterion_hcc_kl_3 = hcc_kl_3()
+        self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
         self.criterion_pp = ptcc()
         self.criterion_pp_3 = ptcc_3()
 
@@ -81,16 +81,16 @@ class Base:
         params = []
         keys = []
         for key, value in self.model.named_parameters():
-            if 'prompt_learner1' in key:
+            if 'prompt_learner' in key:
                 lr = self.stage1_learning_rate
                 weight_decay = self.stage1_weight_decay
                 params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
                 keys += [[key]]
-            if 'prompt_learner2' in key:
-                lr = self.stage1_learning_rate
-                weight_decay = self.stage1_weight_decay
-                params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-                keys += [[key]]
+            # if 'prompt_learner2' in key:
+            #     lr = self.stage1_learning_rate
+            #     weight_decay = self.stage1_weight_decay
+            #     params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
+            #     keys += [[key]]
 
         self.model_optimizer_stage1 = getattr(torch.optim, 'Adam')(params)
         self.model_lr_scheduler_stage1 = create_scheduler(self.model_optimizer_stage1,
@@ -118,15 +118,15 @@ class Base:
         params = []
         keys = []
         for key, value in self.model.named_parameters():
-            if 'prompt_learner1' in key:
+            if 'prompt_learner' in key:
                 value.requires_grad_(False)
                 continue
-            if 'prompt_learner2' in key:
-                value.requires_grad_(False)
-                continue
-            if 'attention_fusion' in key:
-                value.requires_grad_(False)
-                continue
+            # if 'prompt_learner2' in key:
+            #     value.requires_grad_(False)
+            #     continue
+            # if 'attention_fusion' in key:
+            #     value.requires_grad_(False)
+            #     continue
             if 'text_encoder' in key:
                 value.requires_grad_(False)
                 continue
