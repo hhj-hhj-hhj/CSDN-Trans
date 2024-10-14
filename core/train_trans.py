@@ -100,8 +100,10 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
         loss.backward()
         base.model_optimizer_stage1.step()
 
-        meter.update({'loss_i2t': loss_i2t.data,
-                      'loss_t2i': loss_t2i.data,})
+        meter.update({'rgb_loss_i2t': rgb_loss_i2t.data,
+                      'ir_loss_i2t': ir_loss_i2t.data,
+                      'rgb_loss_t2i': rgb_loss_t2i.data,
+                      'ir_loss_t2i': ir_loss_t2i.data,})
         # if (i + 1) % 200 == 0:
         #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
 
