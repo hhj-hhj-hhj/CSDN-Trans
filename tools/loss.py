@@ -254,18 +254,29 @@ class compute_modal_contrastive_loss(nn.Module):
 
         # 类别掩码，标识哪些样本是正样本对
         mask = pids.expand(n2, n1).t().eq(pidc.expand(n1, n2))
-
         # 取负的距离作为相似度
         sim = -dist / self.temperature
+        sim_t = sim.t()
+        mask_t = mask.t()
 
         # 对比损失，从模态1到模态2
-        loss_i2t = -torch.log(torch.exp(sim[mask]) / torch.exp(sim).sum(dim=1)).mean()
+        sim_max, _ = torch.max(sim, dim=1, keepdim=True)
+        sim = sim - sim_max.detach()
+        exp_sim = torch.exp(sim)
+        loss_1 = sim - torch.log(exp_sim.sum(dim=1, keepdim=True))
+        loss_1 = (loss_1 * mask).sum(1) / mask.sum(1)
+        loss_1 = -loss_1.mean()
 
         # 对比损失，从模态2到模态1
-        loss_t2i = -torch.log(torch.exp(sim[mask]) / torch.exp(sim).sum(dim=0)).mean()
+        sim_t_max, _ = torch.max(sim_t, dim=1, keepdim=True)
+        sim_t = sim_t - sim_t_max.detach()
+        exp_sim_t = torch.exp(sim_t)
+        loss_2 = sim_t - torch.log(exp_sim_t.sum(dim=1, keepdim=True))
+        loss_2 = (loss_2 * mask_t).sum(1) / mask_t.sum(1)
+        loss_2 = -loss_2.mean()
 
         # 总损失为两者的平均
-        loss = (loss_i2t + loss_t2i) / 2
+        loss = loss_1 + loss_2
         return loss
 
 class ptcc(nn.Module):

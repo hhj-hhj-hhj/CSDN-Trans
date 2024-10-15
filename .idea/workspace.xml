@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="PromptLeatner_share">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="modal_contrastive">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,27 +36,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
-    &quot;Python.base_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;209&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/anaconda3/condabin/conda.bat&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GradCam.executor": "Run",
+    "Python.base_attention.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.main_attention.executor": "Run",
+    "Python.main_one_trans.executor": "Run",
+    "Python.main_test.executor": "Run",
+    "Python.main_trans.executor": "Debug",
+    "Python.model_trans.executor": "Run",
+    "Python.mutil_test.executor": "Run",
+    "Python.run_tSNE.executor": "Run",
+    "Python.test.executor": "Run",
+    "Python.train.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "209",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/anaconda3/condabin/conda.bat",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\hhjhhj\CSDN\data_loader" />
@@ -445,7 +443,39 @@
       <option name="project" value="LOCAL" />
       <updated>1728711571845</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="PromptLeatner_share">
+      <option name="closed" value="true" />
+      <created>1728813625003</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1728813625003</updated>
+    </task>
+    <task id="LOCAL-00047" summary="PromptLeatner_share_with_clothes">
+      <option name="closed" value="true" />
+      <created>1728892717788</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1728892717788</updated>
+    </task>
+    <task id="LOCAL-00048" summary="PromptLeatner_share_with_clothes">
+      <option name="closed" value="true" />
+      <created>1728893531457</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1728893531457</updated>
+    </task>
+    <task id="LOCAL-00049" summary="modal_contrastive">
+      <option name="closed" value="true" />
+      <created>1728979699175</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1728979699175</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -462,7 +492,9 @@
     <MESSAGE value="print 2 logger" />
     <MESSAGE value="close single loader" />
     <MESSAGE value="PromptLeatner_share" />
-    <option name="LAST_COMMIT_MESSAGE" value="PromptLeatner_share" />
+    <MESSAGE value="PromptLeatner_share_with_clothes" />
+    <MESSAGE value="modal_contrastive" />
+    <option name="LAST_COMMIT_MESSAGE" value="modal_contrastive" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
