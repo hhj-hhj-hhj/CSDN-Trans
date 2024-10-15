@@ -214,8 +214,10 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        # loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        # loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        loss_hcc_kl = base.modal_contrastive(cls_score[1], pids)
+        loss_hcc_kl_map = base.modal_contrastive(cls_score[0], pids)
         # loss_pp_euc = 0
         # for i in range(pp.size(1)):
         #     loss_pp_euc += base.criterion_pp_3(pp[:,i], pids) / pp.size(1)

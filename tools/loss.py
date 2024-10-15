@@ -220,6 +220,53 @@ class center_ce(nn.Module):
         loss = self.ce(logit, pids)
         return loss
 
+class compute_modal_contrastive_loss(nn.Module):
+    def __init__(self, temperature=1.0):
+        super(compute_modal_contrastive_loss, self).__init__()
+        self.temperature = temperature
+
+    def forward(self,x, pids):
+        x = x.softmax(dim=-1)
+
+        p = len(pids.unique())
+        c = x.shape[-1]
+        pidc = pids.reshape(3 * p, -1)[:, 0]  # pid编号
+        xc = x.reshape(3 * p, -1, c).mean(dim=1)  # 每个pid对应的中心，C维
+        """
+        x1: 模态1的特征矩阵 (n1, c)
+        x2: 模态2的特征矩阵 (n2, c)
+        p1: 模态1的类别标签
+        p2: 模态2的类别标签
+        temperature: 控制相似度缩放的温度参数
+        """
+        n1, c = x.shape
+        n2, c = xc.shape
+
+        # 计算 KL 散度
+        pr1 = x.expand(n2, n1, c).detach()
+        pr2 = xc.expand(n1, n2, c).detach()
+        x = x.clamp(1e-9).log().expand(n2, n1, c)
+        xc = xc.clamp(1e-9).log().expand(n1, n2, c)
+
+        # 计算 KL 散度作为距离度量
+        dist = (pr2 * xc.detach() - pr2 * x.permute(1, 0, 2)).sum(dim=2) + \
+               (pr1 * x.detach() - pr1 * xc.permute(1, 0, 2)).sum(dim=2).t()
+
+        # 类别掩码，标识哪些样本是正样本对
+        mask = pids.expand(n2, n1).t().eq(pidc.expand(n1, n2))
+
+        # 取负的距离作为相似度
+        sim = -dist / self.temperature
+
+        # 对比损失，从模态1到模态2
+        loss_i2t = -torch.log(torch.exp(sim[mask]) / torch.exp(sim).sum(dim=1)).mean()
+
+        # 对比损失，从模态2到模态1
+        loss_t2i = -torch.log(torch.exp(sim[mask]) / torch.exp(sim).sum(dim=0)).mean()
+
+        # 总损失为两者的平均
+        loss = (loss_i2t + loss_t2i) / 2
+        return loss
 
 class ptcc(nn.Module):
     def __init__(self, margin_euc=0.3):

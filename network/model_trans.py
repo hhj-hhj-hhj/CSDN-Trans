@@ -375,8 +375,8 @@ class Model(nn.Module):
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
 
-        # self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
-        self.prompt_learner = PromptLearner_share_with_cloth(num_classes, clip_model.dtype, clip_model.token_embedding)
+        self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
+        # self.prompt_learner = PromptLearner_share_with_cloth(num_classes, clip_model.dtype, clip_model.token_embedding)
         # self.prompt_learner1 = PromptLearner1(num_classes, clip_model.dtype, clip_model.token_embedding)
         # self.prompt_learner2 = PromptLearner2(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
