@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="modal_contrastive">
+      <change afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_loader/dataset_cross.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_loader/loader_cross.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +50,7 @@
     "Python.base_attention.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
-    "Python.main_one_trans.executor": "Run",
+    "Python.main_one_trans.executor": "Debug",
     "Python.main_test.executor": "Run",
     "Python.main_trans.executor": "Debug",
     "Python.model_trans.executor": "Run",
@@ -82,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00001" summary="209">
-      <option name="closed" value="true" />
-      <created>1726326404504</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1726326404504</updated>
     </task>
     <task id="LOCAL-00002" summary="main_one_trans">
       <option name="closed" value="true" />
@@ -475,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728979699175</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="modal_contrastive">
+      <option name="closed" value="true" />
+      <created>1728989610487</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1728989610488</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -508,6 +516,11 @@
           <url>file://$PROJECT_DIR$/core/train_attention.py</url>
           <line>91</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main_one_trans.py</url>
+          <line>94</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
