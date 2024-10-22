@@ -74,84 +74,42 @@ class Classifier2(nn.Module):
         bn_features = self.BN(features.squeeze())
         cls_score = self.classifier(bn_features)
         return cls_score, self.l2_norm(features)
-
-class PromptLearner1(nn.Module):
-    def __init__(self, num_class, dtype, token_embedding):
+class PromptLearner_part(nn.Module):
+    def __init__(self, dtype, token_embedding):
         super().__init__()
-        ctx_init = "A photo of a X X X X person."
-        ctx_dim = 512
-        ctx_init = ctx_init.replace("_", " ")
-        n_ctx = 4
+        ctx_init = "A photo of a X X X X person's "
+        part_list = ['hair', 'face', 'arms', 'legs', 'shoes', 'upper-clothes', 'pants']
 
-        tokenized_prompts = clip.tokenize(ctx_init).cuda()
+        tokenized_prompts_list = [clip.tokenize(ctx_init + part).cuda() for part in part_list]
         with torch.no_grad():
-            embedding = token_embedding(tokenized_prompts).type(dtype)
-        self.tokenized_prompts = tokenized_prompts  # torch.Tensor
+            embedding_list = [token_embedding(tokenized_prompts).type(dtype) for tokenized_prompts in tokenized_prompts_list]
 
-        n_cls_ctx = 4
-        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=dtype)
-        nn.init.normal_(cls_vectors, std=0.02)
-        self.cls_ctx = nn.Parameter(cls_vectors)
+        self.tokenized_prompts_list = tokenized_prompts_list
+        self.num_parts = len(part_list)
 
-        self.register_buffer("token_prefix", embedding[:, :n_ctx + 1, :])
-        self.register_buffer("token_suffix", embedding[:, n_ctx + 1 + n_cls_ctx:, :])
-        self.num_class = num_class
-        self.n_cls_ctx = n_cls_ctx
+        for i, embedding in enumerate(embedding_list):
+            self.register_buffer(f"token_prefix_{i}", embedding[:, :4, :])
+            self.register_buffer(f"token_suffix_{i}", embedding[:, 8:, :])
 
-    def forward(self, label):
-        cls_ctx = self.cls_ctx[label]
-        b = label.shape[0]
-        prefix = self.token_prefix.expand(b, -1, -1)
-        suffix = self.token_suffix.expand(b, -1, -1)
+    def forward(self, cls_ctx):
+        b = cls_ctx.shape[0]
+        prompts = []
+        for i in range(self.num_parts):
+            prefix = getattr(self, f"token_prefix_{i}").expand(b, -1, -1)
+            suffix = getattr(self, f"token_suffix_{i}").expand(b, -1, -1)
+            prompt = torch.cat(
+                [
+                    prefix,  # (b, 4, dim)
+                    cls_ctx,  # (b, 4, dim)
+                    suffix,  # (b, *, dim)
+                ],
+                dim=1,
+            )
+            prompts.append(prompt)
+        prompts = torch.stack(prompts, dim=0)
+        # prompts = torch.transpose(prompts, 0, 1)
+        return prompts # (num_parts, b, *, dim)
 
-        prompts = torch.cat(
-            [
-                prefix,  # (n_cls, 1, dim)
-                cls_ctx,  # (n_cls, n_ctx, dim)
-                suffix,  # (n_cls, *, dim)
-            ],
-            dim=1,
-        )
-        return prompts
-
-class PromptLearner2(nn.Module):
-    def __init__(self, num_class, dtype, token_embedding):
-        super().__init__()
-        ctx_init = "A photo of a X X X X person."
-        ctx_dim = 512
-        ctx_init = ctx_init.replace("_", " ")
-        n_ctx = 4
-
-        tokenized_prompts = clip.tokenize(ctx_init).cuda()
-        with torch.no_grad():
-            embedding = token_embedding(tokenized_prompts).type(dtype)
-        self.tokenized_prompts = tokenized_prompts  # torch.Tensor
-
-        n_cls_ctx = 4
-        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=dtype)
-        nn.init.normal_(cls_vectors, std=0.02)
-        self.cls_ctx = nn.Parameter(cls_vectors)
-
-        self.register_buffer("token_prefix", embedding[:, :n_ctx + 1, :])
-        self.register_buffer("token_suffix", embedding[:, n_ctx + 1 + n_cls_ctx:, :])
-        self.num_class = num_class
-        self.n_cls_ctx = n_cls_ctx
-
-    def forward(self, label):
-        cls_ctx = self.cls_ctx[label]
-        b = label.shape[0]
-        prefix = self.token_prefix.expand(b, -1, -1)
-        suffix = self.token_suffix.expand(b, -1, -1)
-
-        prompts = torch.cat(
-            [
-                prefix,  # (n_cls, 1, dim)
-                cls_ctx,  # (n_cls, n_ctx, dim)
-                suffix,  # (n_cls, *, dim)
-            ],
-            dim=1,
-        )
-        return prompts
 
 class PromptLearner_share(nn.Module):
     def __init__(self, num_class, dtype, token_embedding):
@@ -191,16 +149,18 @@ class PromptLearner_share(nn.Module):
         self.num_class = num_class
         self.n_cls_ctx = n_cls_ctx
 
-    def forward(self, label, mode = None):
+    def forward(self, label, mode=None):
         cls_ctx = self.cls_ctx[label]
         b = label.shape[0]
-        if mode == 'rgb':
+        if mode == 'get_cls_ctx':
+            return cls_ctx
+        elif mode == 'rgb':
             prefix = self.rgb_token_prefix.expand(b, -1, -1)
             suffix = self.rgb_token_suffix.expand(b, -1, -1)
         elif mode == 'ir':
             prefix = self.ir_token_prefix.expand(b, -1, -1)
             suffix = self.ir_token_suffix.expand(b, -1, -1)
-        else:
+        elif mode == 'common':
             prefix = self.token_prefix.expand(b, -1, -1)
             suffix = self.token_suffix.expand(b, -1, -1)
 
@@ -320,6 +280,50 @@ class TextEncoder(nn.Module):
         return x
 
 
+class CrossAttention(nn.Module):
+    def __init__(self, D=2048, D_o=2048, K=7):
+        super(CrossAttention, self).__init__()
+        self.D = D
+        self.D_text = 1024
+        self.D_h = self.D
+        self.D_o = D_o
+        self.K = K
+
+        self.theta_K = nn.Linear(self.D, self.D_h)
+        self.theta_Q = nn.Linear(self.D_text, self.D_h)
+        self.theta_V = nn.Linear(self.D, self.D_h)
+
+        self.softmax = nn.Softmax(dim=-1)
+
+        self.mlp = nn.Sequential(
+            nn.Linear(self.D_h, self.D_h),
+            nn.LayerNorm(self.D_h),
+            nn.ReLU(),
+            nn.Linear(self.D_h, self.D_h),
+        )
+        # self.conv = nn.Conv1d(D_h, D_h, kernel_size=1)
+        self.proj = nn.Linear(self.D_h, self.D_o)
+
+    def forward(self, feature, part):
+        B, D, H, W = feature.size()
+        feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, N)
+        _, _, N = feature.size()
+        _, K, _ = part.size() # (B, K, D_text)
+
+        K_c = self.theta_K(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
+        Q_c = self.theta_Q(part)  # (B, K, D_text) -> (B, K, D_h)
+        V_c = self.theta_V(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
+
+        A_v = self.softmax(torch.matmul(Q_c, K_c.transpose(2, 1)) / (self.D_h ** 0.5))  # (B, K, N)
+
+        F_p = torch.matmul(A_v, V_c)  # (B, K, N) x (B, N, D_h) -> (B, K, D_h)
+        F_p = self.mlp(F_p) + F_p  # (B, K, D_h)
+        # F_p = self.conv(F_p.permute(0, 2, 1)).permute(0, 2, 1)  # (B, K, D_h) -> (B, K, D_h)
+        F_p = self.proj(F_p)  # (B, K, D_h) -> (B, K, D_o)
+
+        A_v = A_v.view(B, K, H, W)
+        return F_p, A_v
+
 class Model(nn.Module):
     def __init__(self, num_classes, img_h, img_w):
         super(Model, self).__init__()
@@ -344,12 +348,11 @@ class Model(nn.Module):
         self.classifier2 = Classifier2(self.num_classes)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        # self.attention_fusion = AttentionFusion(1024)
+        self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes, K=self.prompt_part.num_parts)
 
-    def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, get_image=False, get_text=False,
-                # get_fusion_text=False
-                ):
+    def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
@@ -386,7 +389,17 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            return [features, image_features_proj], [cls_scores, cls_scores_proj]
+            cls_ctx = self.prompt_learner(self.classifier.cls_ctx[label], mode='get_cls_ctx')
+            prompts = self.prompt_part(cls_ctx)
+            text_features_part = []
+            for i in range(self.prompt_part.num_parts):
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+
+            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
+            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+
+            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, attention_weight
 
         elif x1 is not None and x2 is None:
 
