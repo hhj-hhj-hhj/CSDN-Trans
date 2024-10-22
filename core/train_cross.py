@@ -211,7 +211,7 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) / (attention_weight.size(-1) * attention_weight.size(-2))
+        atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
 
         loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
         loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
@@ -237,8 +237,8 @@ def train_2rgb(base, loaders, text_features, config):
         # print(f"iter = {iter}")
         # if (iter + 1) % 20 == 0:
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
-        if iter == 200:
-            break
+        # if iter == 2:
+        #     break
         # break
     return meter.get_val(), meter.get_str()
 

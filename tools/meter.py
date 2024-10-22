@@ -56,7 +56,7 @@ class MultiItemAverageMeter:
             result += ': '
             result += str(value)
             result += ';  '
-            if i % 3 == 2:
-                result += '\n\t\t'
+            if i % 4 == 3:
+                result += '\n\t\t\t'
 
         return result
