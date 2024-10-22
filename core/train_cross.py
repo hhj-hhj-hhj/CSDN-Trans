@@ -192,18 +192,21 @@ def train_2rgb(base, loaders, text_features, config):
         ir_attn_features = features[1].narrow(0, 2 * n, n)
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
+        num_part = part_features.size(0)
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
         ide_loss_part = 0
-        for i in range(part_features.size(0)):
+        for i in range(num_part):
             ide_loss_part += base.pid_creiteron(part_features[i], pids)
+        ide_loss_part /= num_part
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
         triplet_loss_part = 0
-        for i in range(part_features.size(0)):
+        for i in range(num_part):
             triplet_loss_part += base.tri_creiteron(part_features[i], pids)
+        triplet_loss_part /= num_part
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
@@ -229,12 +232,13 @@ def train_2rgb(base, loaders, text_features, config):
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 20 == 0:
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
-        # if iter == 3:
-        #     break
+        if iter == 200:
+            break
         # break
     return meter.get_val(), meter.get_str()
 

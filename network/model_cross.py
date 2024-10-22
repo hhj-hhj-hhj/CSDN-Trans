@@ -4,6 +4,7 @@ import torchvision
 import torch.nn as nn
 from .gem_pool import GeneralizedMeanPoolingP
 
+
 class Normalize(nn.Module):
     def __init__(self, power=2):
         super(Normalize, self).__init__()
@@ -13,6 +14,7 @@ class Normalize(nn.Module):
         norm = x.pow(self.power).sum(1, keepdim=True).pow(1. / self.power)
         out = x.div(norm)
         return out
+
 
 def weights_init_kaiming(m):
     classname = m.__class__.__name__
@@ -32,12 +34,14 @@ def weights_init_kaiming(m):
             nn.init.constant_(m.weight, 1.0)
             nn.init.constant_(m.bias, 0.0)
 
+
 def weights_init_classifier(m):
     classname = m.__class__.__name__
     if classname.find('Linear') != -1:
         nn.init.normal_(m.weight, std=0.001)
         if m.bias:
             nn.init.constant_(m.bias, 0.0)
+
 
 class Classifier(nn.Module):
     def __init__(self, pid_num):
@@ -58,6 +62,7 @@ class Classifier(nn.Module):
         cls_score = self.classifier(bn_features)
         return features, cls_score, self.l2_norm(bn_features)
 
+
 class Classifier2(nn.Module):
     def __init__(self, pid_num):
         super(Classifier2, self, ).__init__()
@@ -74,6 +79,8 @@ class Classifier2(nn.Module):
         bn_features = self.BN(features.squeeze())
         cls_score = self.classifier(bn_features)
         return cls_score, self.l2_norm(features)
+
+
 class PromptLearner_part(nn.Module):
     def __init__(self, dtype, token_embedding):
         super().__init__()
@@ -82,7 +89,8 @@ class PromptLearner_part(nn.Module):
 
         tokenized_prompts_list = [clip.tokenize(ctx_init + part).cuda() for part in part_list]
         with torch.no_grad():
-            embedding_list = [token_embedding(tokenized_prompts).type(dtype) for tokenized_prompts in tokenized_prompts_list]
+            embedding_list = [token_embedding(tokenized_prompts).type(dtype) for tokenized_prompts in
+                              tokenized_prompts_list]
 
         self.tokenized_prompts_list = tokenized_prompts_list
         self.num_parts = len(part_list)
@@ -108,7 +116,7 @@ class PromptLearner_part(nn.Module):
             prompts.append(prompt)
         prompts = torch.stack(prompts, dim=0)
         # prompts = torch.transpose(prompts, 0, 1)
-        return prompts # (num_parts, b, *, dim)
+        return prompts  # (num_parts, b, *, dim)
 
 
 class PromptLearner_share(nn.Module):
@@ -174,6 +182,7 @@ class PromptLearner_share(nn.Module):
         )
         return prompts
 
+
 class PromptLearner_share_with_cloth(nn.Module):
     def __init__(self, num_class, dtype, token_embedding):
         super().__init__()
@@ -212,10 +221,12 @@ class PromptLearner_share_with_cloth(nn.Module):
         self.register_buffer("ir_token_prefix", ir_embedding[:, :ir_n_ctx + 1, :])
         self.register_buffer("token_prefix", embedding[:, :n_ctx + 1, :])
 
-        self.register_buffer("rgb_token_mid", rgb_embedding[:, rgb_n_ctx + n_cls_ctx + 1: rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1, :])
+        self.register_buffer("rgb_token_mid",
+                             rgb_embedding[:, rgb_n_ctx + n_cls_ctx + 1: rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1, :])
         self.register_buffer("token_mid", embedding[:, n_ctx + n_cls_ctx + 1: n_ctx + n_cls_ctx + mid_n_ctx + 1, :])
 
-        self.register_buffer("rgb_token_suffix", rgb_embedding[:, rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1 + cloth_cls_ctx:, :])
+        self.register_buffer("rgb_token_suffix",
+                             rgb_embedding[:, rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1 + cloth_cls_ctx:, :])
         self.register_buffer("ir_token_suffix", ir_embedding[:, ir_n_ctx + 1 + n_cls_ctx:, :])
         self.register_buffer("token_suffix", embedding[:, n_ctx + n_cls_ctx + mid_n_ctx + 1 + cloth_cls_ctx:, :])
         self.num_class = num_class
@@ -257,6 +268,7 @@ class PromptLearner_share_with_cloth(nn.Module):
             dim=1,
         )
         return prompts
+
 
 class TextEncoder(nn.Module):
     def __init__(self, clip_model):
@@ -308,7 +320,7 @@ class CrossAttention(nn.Module):
         B, D, H, W = feature.size()
         feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, N)
         _, _, N = feature.size()
-        _, K, _ = part.size() # (B, K, D_text)
+        _, K, _ = part.size()  # (B, K, D_text)
 
         K_c = self.theta_K(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
         Q_c = self.theta_Q(part)  # (B, K, D_text) -> (B, K, D_h)
@@ -323,6 +335,7 @@ class CrossAttention(nn.Module):
 
         A_v = A_v.view(B, K, H, W)
         return F_p, A_v
+
 
 class Model(nn.Module):
     def __init__(self, num_classes, img_h, img_w):
@@ -395,18 +408,21 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            cls_ctx = self.prompt_learner(label=label, mode='get_cls_ctx')
-            prompts = self.prompt_part(cls_ctx)
             text_features_part = []
-            for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+            with torch.no_grad():
+                cls_ctx = self.prompt_learner(label=label, mode='get_cls_ctx')
+                prompts = self.prompt_part(cls_ctx)
+                for i in range(self.prompt_part.num_parts):
+                    text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
 
-            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
+            part_features, attention_weight = self.cross_attention(image_features_maps,
+                                                                   text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
             part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
-            _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
+            _, attention_weight_flip = self.cross_attention(image_features_maps_flip,
+                                                            text_features_part)  # (b, num_parts, H, W)
             return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, attention_weight, attention_weight_flip
 
         elif x1 is not None and x2 is None:
@@ -429,7 +445,10 @@ class Model(nn.Module):
 
             return torch.cat([test_features2, test_features2_proj], dim=1)
 
+
 from .clip import clip
+
+
 def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_size):
     url = clip._MODELS[backbone_name]
     model_path = clip._download(url)
