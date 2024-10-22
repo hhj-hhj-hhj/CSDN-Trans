@@ -136,6 +136,7 @@ def main(config):
         text_features = []
         with torch.no_grad():
             for i in range(i_ter):
+                # print(f'iter =  {i}')
                 if i + 1 != i_ter:
                     l_list = torch.arange(i * batch, (i + 1) * batch)
                 else:
@@ -156,22 +157,22 @@ def main(config):
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 
-            if current_epoch + 1 >= 1 and (current_epoch + 1) % config.eval_epoch == 0:
-                cmc, mAP, mINP = test(model, loaders, config)
-                rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
-                if cmc[0] + mAP > best_rank1 + best_mAP:
-                    is_best_rank = True
-                    best_rank1 = cmc[0]
-                    best_mAP = mAP
-                else:
-                    is_best_rank = False
-                # is_best_rank = (cmc[0] >= best_rank1)
-                # best_rank1 = max(cmc[0], best_rank1)
-                model.save_model(current_epoch, is_best_rank)
-                logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
-                                                                                            config.dataset,
-                                                                                            mINP, mAP, rank_1_10_20))
-                print(f'now best result: {best_rank1} {best_mAP}')
+            # if current_epoch + 1 >= 1 and (current_epoch + 1) % config.eval_epoch == 0:
+            #     cmc, mAP, mINP = test(model, loaders, config)
+            #     rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
+            #     if cmc[0] + mAP > best_rank1 + best_mAP:
+            #         is_best_rank = True
+            #         best_rank1 = cmc[0]
+            #         best_mAP = mAP
+            #     else:
+            #         is_best_rank = False
+            #     # is_best_rank = (cmc[0] >= best_rank1)
+            #     # best_rank1 = max(cmc[0], best_rank1)
+            #     model.save_model(current_epoch, is_best_rank)
+            #     logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
+            #                                                                                 config.dataset,
+            #                                                                                 mINP, mAP, rank_1_10_20))
+            #     print(f'now best result: {best_rank1} {best_mAP}\n')
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)

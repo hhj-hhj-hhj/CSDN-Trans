@@ -255,9 +255,9 @@ class ptcc_3(nn.Module):
         loss = torch.cat(loss).mean()
         return loss
 
+class EuclideanLoss(nn.Module):
+    def __init__(self):
+        super(EuclideanLoss, self).__init__()
 
-
-
-
-
-
+    def forward(self, input, target):
+        return torch.norm(input - target, p=2)

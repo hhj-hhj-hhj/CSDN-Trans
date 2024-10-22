@@ -4,9 +4,12 @@ import random
 import numpy as np
 import torch.utils.data as data
 from PIL import Image
+import torchvision.transforms as transforms
+
 
 class SYSUData(data.Dataset):
-    def __init__(self, data_dir, transform1=None, transform2=None, transform3=None, colorIndex=None, thermalIndex=None):
+    def __init__(self, data_dir, transform1_1=None, transform1_2=None, transform2_1=None, transform2_2=None,
+                 transform3_1=None, transform3_2=None, colorIndex=None, thermalIndex=None):
         train_color_image = np.load(data_dir + 'train_rgb_resized_img.npy')
         self.train_color_label = np.load(data_dir + 'train_rgb_resized_label.npy')
 
@@ -16,32 +19,41 @@ class SYSUData(data.Dataset):
         # RGB format
         self.train_color_image = train_color_image
         self.train_thermal_image = train_thermal_image
-        self.transform1 = transform1
-        self.transform2 = transform2
-        self.transform3 = transform3
+        self.transform1_1 = transform1_1
+        self.transform1_2 = transform1_2
+        self.transform2_1 = transform2_1
+        self.transform2_2 = transform2_2
+        self.transform3_1 = transform3_1
+        self.transform3_2 = transform3_2
+
+        self.horizontal_flip = transforms.RandomHorizontalFlip(p=1)
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
         print("SYSU dataset loaded finished")
 
-    def __getitem__(self, index):
+    def get_flip(self, img, transform1, transform2):
+        img_0 = transform1(img)
+        img_0_flip = self.horizontal_flip(img_0)
+        img_0 = transform2(img_0)
+        img_0_flip = transform2(img_0_flip)
+        if random.uniform(0, 1) > 0.5:
+            img_0_flip, img_0 = img_0, img_0_flip
 
+        return img_0, img_0_flip
+
+    def __getitem__(self, index):
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
-        # if random.uniform(0, 1) > 0.5:
-        #     trans_rgb = self.transform1
-        # else:
-        #     trans_rgb = self.transform2
+        rgb_1, rgb_1_flip = self.get_flip(img1, self.transform1_1, self.transform1_2)
+        rgb_2, rgb_2_flip = self.get_flip(img1, self.transform2_1, self.transform2_2)
+        ir_1, ir_1_flip = self.get_flip(img2, self.transform3_1, self.transform3_2)
 
-        img1_0 = self.transform1(img1)
-        img1_1 = self.transform2(img1)
-        # img1 = trans_rgb(img1)
-        img2 = self.transform3(img2)
-
-        return img1_0, img1_1, img2, target1, target2
+        return rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, target1, target2
 
     def __len__(self):
         return len(self.train_color_label)
+
 
 class SYSUDataNormalSamples(data.Dataset):
     def __init__(self, data_dir, transform1=None, transform2=None, colorIndex=None, thermalIndex=None):
@@ -60,7 +72,6 @@ class SYSUDataNormalSamples(data.Dataset):
         self.tIndex = thermalIndex
 
     def __getitem__(self, index):
-
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
@@ -71,6 +82,7 @@ class SYSUDataNormalSamples(data.Dataset):
 
     def __len__(self):
         return len(self.train_color_label)
+
 
 class SYSUDataRGBNormalSamples:
     def __init__(self, data_dir):
@@ -89,6 +101,7 @@ class SYSUDataRGBNormalSamples:
             samples.append([self.train_color_image[i], self.train_color_label[i]])
 
         return samples
+
 
 class SYSUDataIRNormalSamples:
     def __init__(self, data_dir):
@@ -162,6 +175,7 @@ class RegDBData(data.Dataset):
     def __len__(self):
         return len(self.train_color_label)
 
+
 class RegDBDataNormalSamples(data.Dataset):
     def __init__(self, data_dir, trial, transform1=None, transform2=None, colorIndex=None, thermalIndex=None):
         train_color_list = data_dir + 'idx/train_visible_{}'.format(trial) + '.txt'
@@ -212,6 +226,7 @@ class RegDBDataNormalSamples(data.Dataset):
     def __len__(self):
         return len(self.train_color_label)
 
+
 class RegDBDataRGBSamples(data.Dataset):
     def __init__(self, data_dir, trial):
         train_color_list = data_dir + 'idx/train_visible_{}'.format(trial) + '.txt'
@@ -239,6 +254,7 @@ class RegDBDataRGBSamples(data.Dataset):
             samples.append([self.train_color_image[i], self.train_color_label[i]])
 
         return samples
+
 
 class RegDBDataIRSamples(data.Dataset):
     def __init__(self, data_dir, trial):
@@ -268,6 +284,7 @@ class RegDBDataIRSamples(data.Dataset):
 
         return samples
 
+
 class TestData(data.Dataset):
     def __init__(self, test_img_file, test_label, transform=None, img_size=(224, 224)):
         test_image = []
@@ -289,6 +306,7 @@ class TestData(data.Dataset):
     def __len__(self):
         return len(self.test_image)
 
+
 def load_data(input_data_path):
     with open(input_data_path) as f:
         data_file_list = open(input_data_path, 'rt').read().splitlines()
@@ -298,11 +316,11 @@ def load_data(input_data_path):
 
     return file_image, file_label
 
-def process_query_sysu(data_path, mode='all', relabel=False):
 
+def process_query_sysu(data_path, mode='all', relabel=False):
     if mode == 'all':
         ir_cameras = ['cam3', 'cam6']
-    elif mode =='indoor':
+    elif mode == 'indoor':
         ir_cameras = ['cam3', 'cam6']
 
     file_path = os.path.join(data_path, 'exp/test_id.txt')
@@ -330,8 +348,8 @@ def process_query_sysu(data_path, mode='all', relabel=False):
 
     return query_img, np.array(query_id), np.array(query_cam)
 
-def process_gallery_sysu(data_path, mode='all', trial=0, relabel=False, gall_mode='single'):
 
+def process_gallery_sysu(data_path, mode='all', trial=0, relabel=False, gall_mode='single'):
     random.seed(trial)
 
     if mode == 'all':
@@ -389,6 +407,7 @@ def process_test_regdb(img_dir, trial=1, modal='visible'):
         file_label = [int(s.split(' ')[1]) for s in data_file_list]
 
     return file_image, np.array(file_label)
+
 
 class Dataset:
 

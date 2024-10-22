@@ -352,7 +352,7 @@ class Model(nn.Module):
         self.text_encoder = TextEncoder(clip_model)
         self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes, K=self.prompt_part.num_parts)
 
-    def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
+    def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
@@ -385,11 +385,17 @@ class Model(nn.Module):
             image_features_map2 = self.image_encoder2(x2)
             image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = self.image_encoder(image_features_maps)
+
+            image_features_map1_flip = self.image_encoder1(x1_flip)
+            image_features_map2_flip = self.image_encoder2(x2_flip)
+            image_features_maps_flip = torch.cat([image_features_map1_flip, image_features_map2_flip], dim=0)
+            image_features_maps_flip = self.image_encoder(image_features_maps_flip)
+
             image_features_proj = self.attnpool(image_features_maps)[0]
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            cls_ctx = self.prompt_learner(self.classifier.cls_ctx[label], mode='get_cls_ctx')
+            cls_ctx = self.prompt_learner(label=label, mode='get_cls_ctx')
             prompts = self.prompt_part(cls_ctx)
             text_features_part = []
             for i in range(self.prompt_part.num_parts):
@@ -399,7 +405,9 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
 
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, attention_weight
+            part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
+            _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, attention_weight, attention_weight_flip
 
         elif x1 is not None and x2 is None:
 
