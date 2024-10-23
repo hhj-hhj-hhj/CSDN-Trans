@@ -184,7 +184,7 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, part_features, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
+        features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
         attention_weight_flip_flip = attention_weight_flip.flip(dims=[-1])
 
         n = features[1].shape[0] // 3
@@ -198,7 +198,7 @@ def train_2rgb(base, loaders, text_features, config):
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
         ide_loss_part = 0
         for i in range(num_part):
-            ide_loss_part += base.pid_creiteron(part_features[i], pids)
+            ide_loss_part += base.pid_creiteron(cls_scores_part[i], pids)
         ide_loss_part /= num_part
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)

@@ -260,4 +260,6 @@ class EuclideanLoss(nn.Module):
         super(EuclideanLoss, self).__init__()
 
     def forward(self, input, target):
-        return torch.norm(input - target, p=2)
+        flip_loss = torch.norm(input - target, p=2, dim=(-2,-1))
+        loss = flip_loss.mean()
+        return loss

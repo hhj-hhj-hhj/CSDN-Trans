@@ -80,6 +80,23 @@ class Classifier2(nn.Module):
         cls_score = self.classifier(bn_features)
         return cls_score, self.l2_norm(features)
 
+class Classifier_part(nn.Module):
+    def __init__(self, pid_num):
+        super(Classifier_part, self, ).__init__()
+        self.pid_num = pid_num
+        self.BN = nn.BatchNorm1d(2048)
+        self.BN.apply(weights_init_kaiming)
+
+        self.classifier = nn.Linear(2048, self.pid_num, bias=False)
+        self.classifier.apply(weights_init_classifier)
+
+        self.l2_norm = Normalize(2)
+
+    def forward(self, features):
+        bn_features = self.BN(features.squeeze())
+        cls_score = self.classifier(bn_features)
+        return cls_score
+
 
 class PromptLearner_part(nn.Module):
     def __init__(self, dtype, token_embedding):
@@ -359,6 +376,7 @@ class Model(nn.Module):
         self.attnpool = clip_model.visual.attnpool
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
+        self.classifier_part = Classifier_part(self.num_classes)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding)
@@ -418,12 +436,12 @@ class Model(nn.Module):
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
 
-            part_features, attention_weight = self.cross_attention(image_features_maps,
-                                                                   text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
+            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
+            cls_scores_part = self.classifier_part(part_features.view(-1,part_features.size(-1))).view(part_features.size(0), part_features.size(1), -1) # (b, num_parts, num_classes)
             part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
-            _, attention_weight_flip = self.cross_attention(image_features_maps_flip,
-                                                            text_features_part)  # (b, num_parts, H, W)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, attention_weight, attention_weight_flip
+            cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
+            _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, attention_weight, attention_weight_flip
 
         elif x1 is not None and x2 is None:
 

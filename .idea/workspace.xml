@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="cross attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,10 +44,11 @@
     "Python.base_attention.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Run",
+    "Python.main_cross.executor": "Debug",
     "Python.main_one_trans.executor": "Debug",
     "Python.main_test.executor": "Run",
     "Python.main_trans.executor": "Debug",
+    "Python.model_cross.executor": "Debug",
     "Python.model_trans.executor": "Run",
     "Python.mutil_test.executor": "Run",
     "Python.run_tSNE.executor": "Run",
@@ -85,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00007" summary="visual">
-      <option name="closed" value="true" />
-      <created>1727051602508</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1727051602508</updated>
     </task>
     <task id="LOCAL-00008" summary="attention">
       <option name="closed" value="true" />
@@ -478,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729601983417</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="cross attention">
+      <option name="closed" value="true" />
+      <created>1729603786918</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1729603786918</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -522,6 +524,11 @@
           <url>file://$PROJECT_DIR$/core/train_cross.py</url>
           <line>221</line>
           <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tools/loss.py</url>
+          <line>262</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
