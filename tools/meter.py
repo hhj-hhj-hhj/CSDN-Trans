@@ -51,7 +51,9 @@ class MultiItemAverageMeter:
         result = ''
         keys, values = self.get_val()
 
-        for key, value in zip(keys, values):
+        for i, key, value in enumerate(zip(keys, values)):
+            if i % 3 == 2:
+                result += '\n\t'
             result += key
             result += ': '
             result += str(value)

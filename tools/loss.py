@@ -165,7 +165,7 @@ class hcc_kl(nn.Module):
         for i in range(n // 2, n):
             loss.append(dist[i][:m // 2][mask[i][:m // 2]])
         loss1 = torch.cat(loss).mean()
-        # dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
+        dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
         loss = []
         n, m = dist.shape
         for i in range(n):
@@ -198,34 +198,13 @@ class hcc_kl_3(nn.Module):
         #     loss.append(dist[i][mid_m:][mask[i][mid_m:]])
         # for i in range(mid_n, n):
         #     loss.append(dist[i][:mid_m][mask[i][:mid_m]])
-        # loss1 = torch.cat(loss).mean()
+        # loss1_2 = torch.cat(loss).mean()
         loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
-        # dist, mask = compute_dist_kl(x, hcen, pids, pidhc)
         # loss = []
         # n, m = dist.shape
         # for i in range(n):
         #     loss.append((margin - dist[i][mask[i] == 0]).clamp(0))
-        # loss2 = torch.cat(loss).mean()
-        loss2 = (margin - dist[mask == 0]).clamp(0).mean()
-        loss_all = self.k1 * loss1 + self.k2 * loss2
-        return loss_all
-
-class center_kl(nn.Module):
-    def __init__(self, margin_kl=6.0, k1=1.0, k2=1.0):
-        super(center_kl, self).__init__()
-        self.margin_kl = margin_kl
-        self.k1 = k1
-        self.k2 = k2
-
-    def forward(self, x, pids, xcen, pidscen):
-        margin = self.margin_kl
-        x = x.softmax(dim=-1)
-
-        dist, mask = compute_dist_kl(x, xcen, pids, pidscen)
-        n, m = dist.shape
-        mid_n = n // 2
-        mid_m = m // 2
-        loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
+        # loss2_2 = torch.cat(loss).mean()
         loss2 = (margin - dist[mask == 0]).clamp(0).mean()
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
@@ -276,9 +255,10 @@ class ptcc_3(nn.Module):
         loss = torch.cat(loss).mean()
         return loss
 
+class EuclideanLoss(nn.Module):
+    def __init__(self):
+        super(EuclideanLoss, self).__init__()
 
-
-
-
-
-
+    def forward(self, input, target):
+        flip_loss = torch.norm(input - target, p=2, dim=(-2,-1)).mean()
+        return flip_loss

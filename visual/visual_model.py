@@ -146,53 +146,34 @@ class AttentionFusion(nn.Module):
     def __init__(self, embed_dim):
         super(AttentionFusion, self).__init__()
         self.dropout_rate = 0.1
-        self.in_channels = embed_dim
-        self.in_channels_qkv = embed_dim
+        self.embed_dim = embed_dim
+        self.embed_dim_qkv = embed_dim
 
-        self.embedding_q = nn.Sequential(
-            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
-            nn.Tanh(),
-            nn.Dropout(self.dropout_rate)
-        )
-        self.embedding_k = nn.Sequential(
-            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
-            nn.Tanh(),
-            nn.Dropout(self.dropout_rate)
-        )
-        self.embedding_v = nn.Sequential(
-            nn.Conv2d(self.in_channels, self.in_channels_qkv, kernel_size=1),
-            nn.Tanh(),
-            nn.Dropout(self.dropout_rate)
-        )
-        self.embedding_common = nn.Conv2d(self.in_channels_qkv, self.in_channels, kernel_size=1)
-        self.softmax = nn.Softmax(dim=-1)
-        self.gamma = nn.Parameter(torch.zeros(1))  # 学习的标量，用于控制注意力机制的输出
+        self.embedding_q = nn.Sequential(nn.Linear(self.embed_dim, self.embed_dim_qkv),
+                                         nn.Tanh(), nn.Dropout(self.dropout_rate))
+        self.embedding_k = nn.Sequential(nn.Linear(self.embed_dim, self.embed_dim_qkv),
+                                         nn.Tanh(), nn.Dropout(self.dropout_rate))
+        self.embedding_v = nn.Sequential(nn.Linear(self.embed_dim, self.embed_dim_qkv),
+                                         nn.Tanh(), nn.Dropout(self.dropout_rate))
+        self.embedding_common = nn.Sequential(nn.Linear(self.embed_dim_qkv, self.embed_dim))
+        self.softmax = nn.Softmax(dim=1)
 
     def q_k_v_product_attention(self, q_emb, k_emb, v_emb):
-        # Flatten the spatial dimensions for batch matrix multiplication
-        batch_size, channels, height, width = q_emb.size()
-        q_flat = q_emb.view(batch_size, channels, -1)
-        k_flat = k_emb.view(batch_size, channels, -1).permute(0, 2, 1)
-        v_flat = v_emb.view(batch_size, channels, -1)
-
-        # Compute attention weights
-        weights = torch.bmm(q_flat, k_flat)
-        weights = torch.div(weights, (self.in_channels_qkv ** 0.5))
+        weights = torch.bmm(q_emb, k_emb.permute(0, 2, 1))
+        weights = torch.div(weights, (self.embed_dim_qkv ** 0.5))
         weights = self.softmax(weights)
-
-        # Weighted sum of values
-        new_v_flat = torch.bmm(weights, v_flat)
-        new_v_emb = new_v_flat.view(batch_size, channels, height, width)
+        new_v_emb = weights.bmm(v_emb)
         return new_v_emb
 
-    def forward(self, shape_map, img_map):
-        q_emb = self.embedding_q(shape_map)
-        k_emb = self.embedding_k(img_map)
-        v_emb = self.embedding_v(img_map)
+    def forward(self, text_features1, text_features2):
+        batch_size = text_features1.size(0)
+        q_emb = self.embedding_q(text_features1.unsqueeze(1))
+        k_emb = self.embedding_k(text_features2.unsqueeze(1))
+        v_emb = self.embedding_v(text_features2.unsqueeze(1))
         new_v_emb = self.q_k_v_product_attention(q_emb, k_emb, v_emb)
-        new_feature_map = self.embedding_common(new_v_emb)
-        new_feature_map = self.gamma * new_feature_map + img_map
-        return new_feature_map
+        new_text_features = self.embedding_common(new_v_emb)
+        new_text_features = new_text_features.view(batch_size, self.embed_dim) + text_features1
+        return new_text_features
 
 class SelfAttentionFusion(nn.Module):
     def __init__(self, in_channels):
@@ -427,9 +408,9 @@ class PromptLearner_share_with_cloth(nn.Module):
         self.cls_ctx = nn.Parameter(cls_vectors)
         self.cloth_cls_ctx = nn.Parameter(cloth_cls_vectors)
 
-        print('embedding 对比')
-        print(f'embedding shape: {embedding.shape}')
-        is_same(rgb_embedding[0], ir_embedding[0])
+        # print('embedding 对比')
+        # print(f'embedding shape: {embedding.shape}')
+        # is_same(rgb_embedding[0], ir_embedding[0])
 
         self.register_buffer("rgb_token_prefix", rgb_embedding[:, :rgb_n_ctx + 1, :])
         self.register_buffer("ir_token_prefix", ir_embedding[:, :ir_n_ctx + 1, :])
@@ -484,16 +465,23 @@ class PromptLearner_share_with_cloth(nn.Module):
 
 clip_model = load_clip_to_cpu('RN50', 18, 9, 16)
 clip_model.to("cuda")
-prompt = PromptLearner_share_with_cloth(395, clip_model.dtype, clip_model.token_embedding).cuda()
-
+prompter = PromptLearner_share(395, clip_model.dtype, clip_model.token_embedding).cuda()
+text_encoder = TextEncoder(clip_model).cuda()
 label = torch.tensor([0], device='cuda')
-rgb = prompt(label=label, mode='rgb')[0]
-ir = prompt(label=label, mode='ir')[0]
-normal = prompt(label=label, mode='common')[0]
-print('---------------')
-is_same(rgb, normal)
-print('---------------')
-is_same(rgb[6:10], normal[5:9])
-
+prompt_rgb = prompter(label, mode='rgb')
+prompt_ir = prompter(label, mode='ir')
+text_features1 = text_encoder(prompt_rgb, prompter.rgb_tokenized_prompts)
+text_features2 = text_encoder(prompt_ir, prompter.ir_tokenized_prompts)
+att = AttentionFusion(1024).cuda()
+fusion = att(text_features1, text_features2)
+print('hello')
+# rgb = prompt(label=label, mode='rgb')[0]
+# ir = prompt(label=label, mode='ir')[0]
+# normal = prompt(label=label, mode='common')[0]
+# print('---------------')
+# nor_rgb = torch.cat((rgb[:6], rgb[10:12], rgb[16:]))
+# nor_normal = torch.cat((normal[:3], normal[2:5], normal[9:11], normal[15:]))
+#
+# is_same(nor_rgb, nor_normal)
 
 

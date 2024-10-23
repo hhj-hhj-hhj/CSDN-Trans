@@ -57,6 +57,11 @@ def main(config):
     img = cv2.resize(img, (config.img_w, config.img_h))
 
     visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
+    print(visualization.shape)
+    print(img.shape)
+    # print(img)
+    # print(visualization)
+    # print(visualization - img)
 
     plt.imshow(visualization)
     plt.axis('off')
