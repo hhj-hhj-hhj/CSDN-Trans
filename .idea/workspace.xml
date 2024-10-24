@@ -4,22 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="3share prompt with clothes">
-      <change afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loader/dataset_cross.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loader/loader_cross.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="cross attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GradCam.py" beforeDir="false" afterPath="$PROJECT_DIR$/GradCam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loader/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/meter.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/meter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visual/visual_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/visual/visual_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visual/visual_model_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/visual/visual_model_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,34 +49,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
-    &quot;Python.a.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_one_trans.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.model.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.model_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
-    &quot;Python.run_tSNE_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.visual_model.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.visual_model_attention.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Users/HHJ/PycharmProjects/Self-Correction-Human-Parsing&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GradCam.executor": "Run",
+    "Python.a.executor": "Run",
+    "Python.main.executor": "Debug",
+    "Python.main_attention.executor": "Run",
+    "Python.main_one_trans.executor": "Debug",
+    "Python.main_test.executor": "Run",
+    "Python.main_trans.executor": "Run",
+    "Python.model.executor": "Debug",
+    "Python.model_attention.executor": "Run",
+    "Python.run_tSNE.executor": "Run",
+    "Python.run_tSNE_trans.executor": "Run",
+    "Python.visual_model.executor": "Debug",
+    "Python.visual_model_attention.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Users/HHJ/PycharmProjects/YYDS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Users\HHJ\PycharmProjects\CSDN\tools" />
@@ -197,7 +186,7 @@
       <workItem from="1729493674979" duration="9858000" />
       <workItem from="1729578947121" duration="3927000" />
       <workItem from="1729583718658" duration="17178000" />
-      <workItem from="1729664892921" duration="4330000" />
+      <workItem from="1729664892921" duration="19535000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -503,7 +492,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728893837242</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="cross attention">
+      <option name="closed" value="true" />
+      <created>1729669570976</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1729669570976</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -532,7 +529,8 @@
     <MESSAGE value="with attention" />
     <MESSAGE value="common text" />
     <MESSAGE value="3share prompt with clothes" />
-    <option name="LAST_COMMIT_MESSAGE" value="3share prompt with clothes" />
+    <MESSAGE value="cross attention" />
+    <option name="LAST_COMMIT_MESSAGE" value="cross attention" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -551,11 +549,6 @@
           <url>file://$PROJECT_DIR$/network/model.py</url>
           <line>201</line>
           <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
-          <line>103</line>
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/visual/visual_model_attention.py</url>

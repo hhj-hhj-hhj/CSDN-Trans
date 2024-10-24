@@ -196,17 +196,19 @@ def train_2rgb(base, loaders, text_features, config):
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
-        ide_loss_part = 0
-        for i in range(num_part):
-            ide_loss_part += base.pid_creiteron(cls_scores_part[i], pids)
-        ide_loss_part /= num_part
+        # ide_loss_part = 0
+        # for i in range(num_part):
+        #     ide_loss_part += base.pid_creiteron(cls_scores_part[i], pids)
+        # ide_loss_part /= num_part
+        ide_loss_part = base.pid_creiteron(cls_scores_part, pids)
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
-        triplet_loss_part = 0
-        for i in range(num_part):
-            triplet_loss_part += base.tri_creiteron(part_features[i], pids)
-        triplet_loss_part /= num_part
+        # triplet_loss_part = 0
+        # for i in range(num_part):
+        #     triplet_loss_part += base.tri_creiteron(part_features[i], pids)
+        # triplet_loss_part /= num_part
+        triplet_loss_part = base.tri_creiteron(part_features, pids)
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
