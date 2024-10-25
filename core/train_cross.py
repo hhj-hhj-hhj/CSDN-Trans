@@ -239,8 +239,8 @@ def train_2rgb(base, loaders, text_features, config):
         # print(f"iter = {iter}")
         # if (iter + 1) % 20 == 0:
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
-        if iter == 2:
-            break
+        # if iter == 2:
+        #     break
         # break
     return meter.get_val(), meter.get_str()
 
