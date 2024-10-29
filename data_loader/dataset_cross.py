@@ -26,30 +26,35 @@ class SYSUData(data.Dataset):
         self.transform3_1 = transform3_1
         self.transform3_2 = transform3_2
 
-        self.horizontal_flip = transforms.RandomHorizontalFlip(p=1)
+        self.horizontal_flip = transforms.RandomHorizontalFlip(p=0.5)
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
         print("SYSU dataset loaded finished")
 
     def get_flip(self, img, transform1, transform2):
         img_0 = transform1(img)
-        img_0_flip = self.horizontal_flip(img_0)
+        # img_0_flip = self.horizontal_flip(img_0)
+        img_0 = self.horizontal_flip(img_0)
         img_0 = transform2(img_0)
-        img_0_flip = transform2(img_0_flip)
-        if random.uniform(0, 1) > 0.5:
-            img_0_flip, img_0 = img_0, img_0_flip
+        # img_0_flip = transform2(img_0_flip)
+        # if random.uniform(0, 1) > 0.5:
+        #     img_0_flip, img_0 = img_0, img_0_flip
 
-        return img_0, img_0_flip
+        return img_0#, None #,img_0_flip
 
     def __getitem__(self, index):
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
-        rgb_1, rgb_1_flip = self.get_flip(img1, self.transform1_1, self.transform1_2)
-        rgb_2, rgb_2_flip = self.get_flip(img1, self.transform2_1, self.transform2_2)
-        ir_1, ir_1_flip = self.get_flip(img2, self.transform3_1, self.transform3_2)
+        # rgb_1, rgb_1_flip = self.get_flip(img1, self.transform1_1, self.transform1_2)
+        # rgb_2, rgb_2_flip = self.get_flip(img1, self.transform2_1, self.transform2_2)
+        # ir_1, ir_1_flip = self.get_flip(img2, self.transform3_1, self.transform3_2)
+        rgb_1 = self.get_flip(img1, self.transform1_1, self.transform1_2)
+        rgb_2 = self.get_flip(img1, self.transform2_1, self.transform2_2)
+        ir_1 = self.get_flip(img2, self.transform3_1, self.transform3_2)
 
-        return rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, target1, target2
+        # return rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, target1, target2
+        return rgb_1, rgb_2, ir_1, target1, target2
 
     def __len__(self):
         return len(self.train_color_label)

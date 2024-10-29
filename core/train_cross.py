@@ -174,18 +174,21 @@ def train_2rgb(base, loaders, text_features, config):
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
-    for iter, (rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, rgb_pids, ir_pids) in enumerate(loader):
+    # for iter, (rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, rgb_pids, ir_pids) in enumerate(loader):
+    for iter, (rgb_1, rgb_2, ir_1, rgb_pids, ir_pids) in enumerate(loader):
         # rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
         # ir_imgs, ir_pids = input2, label2
-        rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip = rgb_1.to(base.device), rgb_1_flip.to(base.device), rgb_2.to(base.device), rgb_2_flip.to(base.device), ir_1.to(base.device), ir_1_flip.to(base.device)
+        # rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip = rgb_1.to(base.device), rgb_1_flip.to(base.device), rgb_2.to(base.device), rgb_2_flip.to(base.device), ir_1.to(base.device), ir_1_flip.to(base.device)
+        rgb_1, rgb_2, ir_1 = rgb_1.to(base.device), rgb_2.to(base.device), ir_1.to(base.device)
         rgb_pids, ir_pids = rgb_pids.to(base.device).long(), ir_pids.to(base.device).long()
 
         rgb_imgs = torch.cat([rgb_1, rgb_2], dim=0)
-        rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
+        # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
-        attention_weight_flip_flip = attention_weight_flip.flip(dims=[-1])
+        # features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
+        features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        # attention_weight_flip_flip = attention_weight_flip.flip(dims=[-1])
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
@@ -213,13 +216,13 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
+        # atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
 
         loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
         loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map + atten_loss
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map # + atten_loss
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -234,11 +237,11 @@ def train_2rgb(base, loaders, text_features, config):
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      'atten_loss': atten_loss.data
+                      # 'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
-        # if (iter + 1) % 20 == 0:
-        #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
+        if (iter + 1) % 200 == 0:
+            print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}\n')
         # if iter == 2:
         #     break
         # break

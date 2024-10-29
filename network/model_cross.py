@@ -441,11 +441,11 @@ class Model(nn.Module):
             image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = self.image_encoder(image_features_maps)
 
-            with torch.no_grad():
-                image_features_map1_flip = self.image_encoder1(x1_flip)
-                image_features_map2_flip = self.image_encoder2(x2_flip)
-                image_features_maps_flip = torch.cat([image_features_map1_flip, image_features_map2_flip], dim=0)
-                image_features_maps_flip = self.image_encoder(image_features_maps_flip)
+            # with torch.no_grad():
+            # image_features_map1_flip = self.image_encoder1(x1_flip)
+            # image_features_map2_flip = self.image_encoder2(x2_flip)
+            # image_features_maps_flip = torch.cat([image_features_map1_flip, image_features_map2_flip], dim=0)
+            # image_features_maps_flip = self.image_encoder(image_features_maps_flip)
 
             image_features_proj = self.attnpool(image_features_maps)[0]
             features, cls_scores, _ = self.classifier(image_features_maps)
@@ -470,8 +470,8 @@ class Model(nn.Module):
             cls_scores_part = self.classifier_part(part_features)  # (b, num_classes)
             # part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
             # cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
-            _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, attention_weight, attention_weight_flip
+            # _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, attention_weight, None # attention_weight_flip
 
         elif x1 is not None and x2 is None:
 

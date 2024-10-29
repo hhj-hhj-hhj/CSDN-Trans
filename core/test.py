@@ -10,8 +10,8 @@ def test(base, loader, config):
     base.set_eval()
     print('Extracting Query Feature...')
     ptr = 0
-    # query_feat = np.zeros((loader.n_query, 3072))
-    query_feat = np.zeros((loader.n_query, 5120))
+    query_feat = np.zeros((loader.n_query, 3072))
+    # query_feat = np.zeros((loader.n_query, 5120))
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)
@@ -30,8 +30,8 @@ def test(base, loader, config):
         for i in range(10):
             ptr = 0
             gall_loader = loader.gallery_loaders[i]
-            # gall_feat = np.zeros((loader.n_gallery, 3072))
-            gall_feat = np.zeros((loader.n_gallery, 5120))
+            gall_feat = np.zeros((loader.n_gallery, 3072))
+            # gall_feat = np.zeros((loader.n_gallery, 5120))
             with torch.no_grad():
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)

@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="cross attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader/dataset_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader/dataset_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +45,7 @@
     "Python.GradCam.executor": "Run",
     "Python.base_attention.executor": "Run",
     "Python.base_cross.executor": "Run",
+    "Python.dataset_cross.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
     "Python.main_cross.executor": "Run",
@@ -88,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00011" summary="attention">
-      <option name="closed" value="true" />
-      <created>1727147486627</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1727147486627</updated>
     </task>
     <task id="LOCAL-00012" summary="attention">
       <option name="closed" value="true" />
@@ -481,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729756754965</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="cross attention">
+      <option name="closed" value="true" />
+      <created>1729823506211</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1729823506211</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
