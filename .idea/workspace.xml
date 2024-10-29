@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="cross attention">
+    <list default="true" id="3b7dfd49-7a8a-4ff5-aa11-9e911033ea33" name="更改" comment="clothes 3prompt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +184,7 @@
       <workItem from="1729578947121" duration="3927000" />
       <workItem from="1729583718658" duration="17178000" />
       <workItem from="1729664892921" duration="31080000" />
-      <workItem from="1730099176164" duration="3708000" />
+      <workItem from="1730099176164" duration="5273000" />
     </task>
     <task id="LOCAL-00001" summary="特征可视化">
       <option name="closed" value="true" />
@@ -507,7 +506,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729757100113</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="clothes 3prompt">
+      <option name="closed" value="true" />
+      <created>1730185882360</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1730185882360</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -537,7 +544,8 @@
     <MESSAGE value="common text" />
     <MESSAGE value="3share prompt with clothes" />
     <MESSAGE value="cross attention" />
-    <option name="LAST_COMMIT_MESSAGE" value="cross attention" />
+    <MESSAGE value="clothes 3prompt" />
+    <option name="LAST_COMMIT_MESSAGE" value="clothes 3prompt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
