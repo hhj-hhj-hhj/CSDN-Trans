@@ -220,9 +220,10 @@ def train_2rgb(base, loaders, text_features, config):
 
         loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
         loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map # + atten_loss
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map + loss_kl_part # + atten_loss
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -237,6 +238,7 @@ def train_2rgb(base, loaders, text_features, config):
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      'loss_kl_part': loss_kl_part.data,
                       # 'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
