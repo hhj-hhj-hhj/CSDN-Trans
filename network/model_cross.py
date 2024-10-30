@@ -96,7 +96,7 @@ class Classifier_part(nn.Module):
     def forward(self, features):
         bn_features = self.BN(features.squeeze())
         cls_score = self.classifier(bn_features)
-        return cls_score
+        return cls_score, self.l2_norm(features)
 
 
 class PromptLearner_part(nn.Module):
@@ -354,8 +354,8 @@ class CrossAttention(nn.Module):
             nn.ReLU(),
             nn.Linear(self.D_h, self.D_h),
         )
-        # self.conv = nn.Conv1d(D_h, D_h, kernel_size=1)
-        self.proj = nn.Linear(self.D_h, self.D_o)
+        self.conv = nn.Conv1d(self.D_h, self.D_o, kernel_size=1)
+        # self.proj = nn.Linear(self.D_h, self.D_o)
 
     def forward(self, feature, part):
         B, D, H, W = feature.size()
@@ -371,8 +371,8 @@ class CrossAttention(nn.Module):
 
         F_p = torch.matmul(A_v, V_c)  # (B, K, N) x (B, N, D_h) -> (B, K, D_h)
         F_p = self.mlp(F_p) + F_p  # (B, K, D_h)
-        # F_p = self.conv(F_p.permute(0, 2, 1)).permute(0, 2, 1)  # (B, K, D_h) -> (B, K, D_h)
-        F_p = self.proj(F_p)  # (B, K, D_h) -> (B, K, D_o)
+        F_p = self.conv(F_p.permute(0, 2, 1)).permute(0, 2, 1).contiguous()  # (B, K, D_h) -> (B, K, D_o)
+        # F_p = self.proj(F_p)  # (B, K, D_h) -> (B, K, D_o)
 
         A_v = A_v.view(B, K, H, W)
         return F_p, A_v
@@ -467,7 +467,7 @@ class Model(nn.Module):
 
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
             part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
-            cls_scores_part = self.classifier_part(part_features)  # (b, num_classes)
+            cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
             # part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
             # cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
             # _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
@@ -490,6 +490,7 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
             part_features = part_features.view(part_features.size(0), -1)
+            _, part_features = self.classifier_part(part_features)
 
             return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
         elif x1 is None and x2 is not None:
@@ -509,6 +510,7 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
             part_features = part_features.view(part_features.size(0), -1)
+            _, part_features = self.classifier_part(part_features)
             return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
 
 

@@ -64,20 +64,20 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        print('Start the 1st Stage of Training')
-
-        model._init_optimizer_stage1()
-
-        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-            data_all_loader = loaders.get_train_normal_loader()
-            model.model_lr_scheduler_stage1.step(current_epoch)
-            _, result = train_stage1_randomcolor(model, data_all_loader)
-            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-                                                            model.model_lr_scheduler_stage1._get_lr
-                                                            (current_epoch)[0], result))
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        print('The 1st Stage of Trained')
+        # print('Start the 1st Stage of Training')
+        #
+        # model._init_optimizer_stage1()
+        #
+        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+        #     data_all_loader = loaders.get_train_normal_loader()
+        #     model.model_lr_scheduler_stage1.step(current_epoch)
+        #     _, result = train_stage1_randomcolor(model, data_all_loader)
+        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+        #                                                     model.model_lr_scheduler_stage1._get_lr
+        #                                                     (current_epoch)[0], result))
+        # # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        # # torch.save(model.model.state_dict(), model_file_path)
+        # print('The 1st Stage of Trained')
 
         logger('Start the 1st Stage of Training')
         logger('Extracting Image Features')
@@ -206,13 +206,13 @@ if __name__ == '__main__':
                         help='milestones for the learning rate decay')
 
     parser.add_argument('--stage1_batch-size', default=32, type=int, metavar='B', help='training batch size')
-    parser.add_argument('--stage1_learning_rate', type=float, default=0.0003)
+    parser.add_argument('--stage1_learning_rate', type=float, default=0.00035)
     parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)
     parser.add_argument('--stage1_warmup_lr_init', type=float, default=0.00001)
-    parser.add_argument('--stage1_warmup_epochs', type=int, default=5)
-    parser.add_argument('--stage1_train_epochs', type=int, default=60)
+    parser.add_argument('--stage1_warmup_epochs', type=int, default=8)
+    parser.add_argument('--stage1_train_epochs', type=int, default=90)
 
     parser.add_argument('--lambda1', type=float, default=0.15)
     parser.add_argument('--lambda2', type=float, default=0.05)

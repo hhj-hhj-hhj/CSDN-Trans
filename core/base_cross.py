@@ -108,10 +108,10 @@ class Base:
             lr = self.learning_rate
             if 'classifier' in key:
                 lr = self.learning_rate * 2
-            if 'classifier_part' in key:
-                lr = self.learning_rate * 2
-            if 'cross_attention' in key:
-                lr = self.learning_rate * 4
+            # if 'classifier_part' in key:
+            #     lr = self.learning_rate * 2
+            # if 'cross_attention' in key:
+            #     lr = self.learning_rate * 2
 
             params += [{'params': [value], 'lr': lr, 'weight_decay': self.weight_decay}]
             keys += [[key]]
