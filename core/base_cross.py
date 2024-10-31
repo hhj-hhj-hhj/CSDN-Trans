@@ -100,8 +100,8 @@ class Base:
             if 'prompt_learner' in key:
                 value.requires_grad_(False)
                 continue
-            if 'prompt_part' in key:
-                value.requires_grad_(False)
+            # if 'prompt_part' in key:
+            #     value.requires_grad_(False)
             if 'text_encoder' in key:
                 value.requires_grad_(False)
                 continue

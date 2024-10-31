@@ -102,38 +102,38 @@ class Classifier_part(nn.Module):
 class PromptLearner_part(nn.Module):
     def __init__(self, dtype, token_embedding):
         super().__init__()
-        ctx_init = "A photo of a X X X X person's "
-        part_list = ['hair', 'neck', 'face', 'arms', 'hands', 'legs', 'feet', 'shoes', 'upper-clothes', 'pants']
+        ctx_init = "A photo of a person's X."
+        pre_ctx = 6
 
-        tokenized_prompts_list = [clip.tokenize(ctx_init + part).cuda() for part in part_list]
+        tokenized_prompts = clip.tokenize(ctx_init).cuda()
+        self.tokenized_prompts = tokenized_prompts
         with torch.no_grad():
-            embedding_list = [token_embedding(tokenized_prompts).type(dtype) for tokenized_prompts in
-                              tokenized_prompts_list]
+            embedding = token_embedding(tokenized_prompts).type(dtype)
 
-        self.tokenized_prompts_list = tokenized_prompts_list
+        part_list = torch.empty(8, 1, 512, dtype=dtype)
+        nn.init.normal_(part_list, std=0.02)
+        self.part_list = nn.Parameter(part_list)
         self.num_parts = len(part_list)
 
-        for i, embedding in enumerate(embedding_list):
-            self.register_buffer(f"token_prefix_{i}", embedding[:, :4, :])
-            self.register_buffer(f"token_suffix_{i}", embedding[:, 8:, :])
+        self.register_buffer(f"token_prefix", embedding[:, :pre_ctx + 1, :])
+        self.register_buffer(f"token_suffix", embedding[:, pre_ctx + 1 + 1:, :])
 
-    def forward(self, cls_ctx):
-        b = cls_ctx.shape[0]
+    def forward(self, b):
         prompts = []
         for i in range(self.num_parts):
-            prefix = getattr(self, f"token_prefix_{i}").expand(b, -1, -1)
-            suffix = getattr(self, f"token_suffix_{i}").expand(b, -1, -1)
+            prefix = self.token_prefix.expand(b, -1, -1)
+            cls_ctx = self.part_list[i].expand(b, -1, -1)
+            suffix = self.token_suffix.expand(b, -1, -1)
             prompt = torch.cat(
                 [
-                    prefix,  # (b, 4, dim)
-                    cls_ctx,  # (b, 4, dim)
+                    prefix,  # (b, 7, dim)
+                    cls_ctx,  # (b, 1, dim)
                     suffix,  # (b, *, dim)
                 ],
                 dim=1,
             )
             prompts.append(prompt)
         prompts = torch.stack(prompts, dim=0)
-        # prompts = torch.transpose(prompts, 0, 1)
         return prompts  # (num_parts, b, *, dim)
 
 class PromptLearner_part_without_cls(nn.Module):
@@ -398,7 +398,7 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        self.prompt_part = PromptLearner_part_without_cls(clip_model.dtype, clip_model.token_embedding)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
         self.classifier_part = Classifier_part(self.num_classes, self.prompt_part.num_parts * self.in_planes // 8)
@@ -460,7 +460,8 @@ class Model(nn.Module):
 
             prompts = self.prompt_part(label.size(0))
             for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
@@ -484,7 +485,8 @@ class Model(nn.Module):
             text_features_part = []
             prompts = self.prompt_part(x1.size(0))
             for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
@@ -504,7 +506,8 @@ class Model(nn.Module):
             text_features_part = []
             prompts = self.prompt_part(x2.size(0))
             for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
