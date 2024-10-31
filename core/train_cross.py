@@ -242,8 +242,8 @@ def train_2rgb(base, loaders, text_features, config):
                       # 'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
-        if (iter + 1) % 200 == 0:
-            print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}\n')
+        # if (iter + 1) % 200 == 0:
+        #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}\n')
         # if iter == 2:
         #     break
         # break

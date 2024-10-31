@@ -2,7 +2,7 @@ import copy
 import torch
 import torchvision
 import torch.nn as nn
-from .gem_pool import GeneralizedMeanPoolingP
+from.gem_pool import GeneralizedMeanPoolingP
 
 
 class Normalize(nn.Module):
@@ -121,9 +121,9 @@ class PromptLearner_part(nn.Module):
     def forward(self, b):
         prompts = []
         for i in range(self.num_parts):
-            prefix = self.token_prefix.expand(b, -1, -1)
-            cls_ctx = self.part_list[i].expand(b, -1, -1)
-            suffix = self.token_suffix.expand(b, -1, -1)
+            prefix = self.token_prefix
+            cls_ctx = self.part_list[i:i+1]
+            suffix = self.token_suffix
             prompt = torch.cat(
                 [
                     prefix,  # (b, 7, dim)
@@ -465,6 +465,7 @@ class Model(nn.Module):
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
 
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
             part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
@@ -490,6 +491,7 @@ class Model(nn.Module):
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(x1.size(0), -1, -1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
             part_features = part_features.view(part_features.size(0), -1)
             _, part_features = self.classifier_part(part_features)
@@ -511,6 +513,7 @@ class Model(nn.Module):
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(x2.size(0), -1, -1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
             part_features = part_features.view(part_features.size(0), -1)
             _, part_features = self.classifier_part(part_features)
