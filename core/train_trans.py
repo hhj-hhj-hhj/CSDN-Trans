@@ -203,6 +203,10 @@ def train_2rgb(base, loaders, text_features, config):
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
         ir_attn_features = features[1].narrow(0, 2 * n, n)
+
+        rgb_g_features = features[0].narrow(0, 0, n)
+        ir_g_features = features[0].narrow(0, 2 * n, n)
+
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
 
@@ -214,16 +218,13 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
-        # loss_hcc_kl = base.modal_contrastive(cls_score[1], pids)
-        # loss_hcc_kl_map = base.modal_contrastive(cls_score[0], pids)
-        # loss_pp_euc = 0
-        # for i in range(pp.size(1)):
-        #     loss_pp_euc += base.criterion_pp_3(pp[:,i], pids) / pp.size(1)
+        modal_loss = base.modal_contrastive(rgb_attn_features, ir_attn_features, rgb_pids) + base.modal_contrastive(rgb_g_features, ir_g_features, rgb_pids)
+
+        # loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        # loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
 
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map # + loss_pp_euc * 0.05
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + modal_loss #+ loss_hcc_kl + loss_hcc_kl_map
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -234,15 +235,15 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      'loss_hcc_kl': loss_hcc_kl.data,
-                      'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      # 'loss_pp_euc': loss_pp_euc,
+                      # 'loss_hcc_kl': loss_hcc_kl.data,
+                      # 'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      'modal_loss': modal_loss.data
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 20 == 0:
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
-        # if iter == 3:
-        #     break
+        if iter == 3:
+            break
         # break
     return meter.get_val(), meter.get_str()
 

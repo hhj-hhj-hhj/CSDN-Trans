@@ -5,7 +5,7 @@ import torch.nn as nn
 from bisect import bisect_right
 from network.model_trans import Model
 from network.lr import CosineLRScheduler
-from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl, hcc_kl_3, ptcc, ptcc_3
+from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl, hcc_kl_3, ptcc, ptcc_3, ContrastiveLoss
 
 def create_scheduler(optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range = None):
 
@@ -71,11 +71,8 @@ class Base:
         self.soft_pid_creiteron = CrossEntropyLabelSmooth()
         self.tri_creiteron = TripletLoss_WRT()
 
-        self.criterion_hcc_euc = hcc_euc()
-        self.criterion_hcc_kl = hcc_kl()
         self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
-        self.criterion_pp = ptcc()
-        self.criterion_pp_3 = ptcc_3()
+        self.modal_contrastive = ContrastiveLoss()
 
     def _init_optimizer_stage1(self):
         params = []
