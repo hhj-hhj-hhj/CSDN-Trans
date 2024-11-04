@@ -255,6 +255,7 @@ class ptcc_3(nn.Module):
         loss = torch.cat(loss).mean()
         return loss
 
+
 class ContrastiveLoss(torch.nn.Module):
     def __init__(self, temperature=1.0):
         super(ContrastiveLoss, self).__init__()
@@ -295,6 +296,10 @@ class ContrastiveLoss(torch.nn.Module):
             st = i * num_perid
             ed = st + num_perid
             mask[st:ed, st:ed] = 1  # 构造 mask，表示正样本对的位置
+
+        for i in range(p):
+            st = i * num_perid
+            ed = st + num_perid
             # 构造 mask，表示正样本对的位置
             mask_v2i = mask[st:ed, :]
             mask_i2v = mask.T[st:ed, :]
@@ -303,19 +308,17 @@ class ContrastiveLoss(torch.nn.Module):
 
             # 计算 Lv2ice
             lv2ice_numerator = (mask_v2i * exp_sim_v2i[st:ed]).sum(dim=1)
-            lv2ice_denominator = (mask_v2v * exp_sim_v2v[st:ed]).sum(dim=1) + (mask_v2i * exp_sim_v2i[st:ed]).sum(dim=1)
+            lv2ice_denominator = (mask_v2v * exp_sim_v2v[st:ed]).sum(dim=1) + lv2ice_numerator
             lv2ice = -torch.log(lv2ice_numerator / lv2ice_denominator)
             lv2ice = lv2ice / mask_v2i.sum(1)
             loss_v2i[st:ed] += lv2ice
 
             # 计算 Li2vce
             li2vce_numerator = (mask_i2v * exp_sim_i2v[st:ed]).sum(dim=1)
-            li2vce_denominator = (mask_i2i * exp_sim_i2i[st:ed]).sum(dim=1) + (mask_i2v * exp_sim_i2v[st:ed]).sum(dim=1)
+            li2vce_denominator = (mask_i2i * exp_sim_i2i[st:ed]).sum(dim=1) + li2vce_numerator
             li2vce = -torch.log(li2vce_numerator / li2vce_denominator)
             li2vce = li2vce / mask_i2v.sum(1)
             loss_i2v[st:ed] += li2vce
-
-            mask[st:ed, st:ed] = 0  # 恢复 mask
 
         # 总损失
         loss_v2i = loss_v2i.mean()

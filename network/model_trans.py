@@ -436,15 +436,15 @@ class Model(nn.Module):
             image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = self.image_encoder(image_features_maps)
             image_features_proj = self.attnpool(image_features_maps)[0]
-            features, cls_scores, _ = self.classifier(image_features_maps)
-            cls_scores_proj, _ = self.classifier2(image_features_proj)
+            features, cls_scores, features_bn = self.classifier(image_features_maps)
+            cls_scores_proj, image_features_proj_bn = self.classifier2(image_features_proj)
 
             # pp = None
             # B, C, H, W = image_features_maps.shape
             # pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
             # pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
             # pp = pp.view(B, 8 * 6, self.in_planes // 8)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj]
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], [features_bn, image_features_proj_bn]
 
         elif x1 is not None and x2 is None:
 
