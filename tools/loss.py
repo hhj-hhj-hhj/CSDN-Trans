@@ -262,3 +262,71 @@ class EuclideanLoss(nn.Module):
     def forward(self, input, target):
         flip_loss = torch.norm(input - target, p=2, dim=(-2,-1)).mean()
         return flip_loss
+
+
+class ContrastiveLoss(torch.nn.Module):
+    def __init__(self, temperature=1.0):
+        super(ContrastiveLoss, self).__init__()
+        self.temperature = temperature
+
+    def forward(self, f_v, f_i, labels):
+        """
+        Args:
+            f_v: 可见光图像特征，形状为 (B, C)，B 是批量大小
+            f_i: 红外图像特征，形状为 (B, C)
+            labels: 图像的标签，形状为 (B,)
+        """
+        B, D = f_v.shape
+        # 计算相似度矩阵
+        sim_v2i = torch.matmul(f_v, f_i.T) / self.temperature
+        sim_v2v = torch.matmul(f_v, f_v.T) / self.temperature
+        sim_i2i = torch.matmul(f_i, f_i.T) / self.temperature
+
+        # 数值稳定性处理
+        sim_v2i = sim_v2i - torch.max(sim_v2i, dim=1, keepdim=True)[0].detach()
+        sim_v2v = sim_v2v - torch.max(sim_v2v, dim=1, keepdim=True)[0].detach()
+        sim_i2i = sim_i2i - torch.max(sim_i2i, dim=1, keepdim=True)[0].detach()
+
+        # 指数距离
+        exp_sim_v2i = torch.exp(sim_v2i)
+        exp_sim_v2v = torch.exp(sim_v2v)
+        exp_sim_i2v = torch.exp(sim_v2i.T)  # 转置来对应公式中的 i2v
+        exp_sim_i2i = torch.exp(sim_i2i)
+
+        p = len(labels.unique())
+        num_perid = B // p
+        mask = torch.zeros((B, B), device=f_v.device, dtype=torch.bool)
+
+        loss_v2i = torch.zeros(B, device=f_v.device, dtype=torch.float32)
+        loss_i2v = torch.zeros(B, device=f_v.device, dtype=torch.float32)
+
+        for i in range(p):
+            st = i * num_perid
+            ed = st + num_perid
+            mask_clone = mask.clone()
+            mask_clone[st:ed, st:ed] = 1  # 构造 mask，表示正样本对的位置
+            # 构造 mask，表示正样本对的位置
+            mask_v2i = mask[st:ed, :]
+            mask_i2v = mask.T[st:ed, :]
+            mask_v2v = torch.logical_not(mask_v2i)
+            mask_i2i = torch.logical_not(mask_i2v)
+
+            # 计算 Lv2ice
+            lv2ice_numerator = (mask_v2i * exp_sim_v2i[st:ed]).sum(dim=1)
+            lv2ice_denominator = (mask_v2v * exp_sim_v2v[st:ed]).sum(dim=1) + (mask_v2i * exp_sim_v2i[st:ed]).sum(dim=1)
+            lv2ice = -torch.log(lv2ice_numerator / lv2ice_denominator)
+            lv2ice = lv2ice / mask_v2i.sum(1)
+            loss_v2i[st:ed] += lv2ice
+
+            # 计算 Li2vce
+            li2vce_numerator = (mask_i2v * exp_sim_i2v[st:ed]).sum(dim=1)
+            li2vce_denominator = (mask_i2i * exp_sim_i2i[st:ed]).sum(dim=1) + (mask_i2v * exp_sim_i2v[st:ed]).sum(dim=1)
+            li2vce = -torch.log(li2vce_numerator / li2vce_denominator)
+            li2vce = li2vce / mask_i2v.sum(1)
+            loss_i2v[st:ed] += li2vce
+
+        # 总损失
+        loss_v2i = loss_v2i.mean()
+        loss_i2v = loss_i2v.mean()
+        loss = loss_v2i + loss_i2v
+        return loss

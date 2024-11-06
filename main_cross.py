@@ -64,21 +64,6 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        # print('Start the 1st Stage of Training')
-        #
-        # model._init_optimizer_stage1()
-        #
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # print('The 1st Stage of Trained')
-
         # logger('Start the 1st Stage of Training')
         # logger('Extracting Image Features')
         #
@@ -118,8 +103,14 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        #
-        # model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_3share_prompt_with_clothes.pth')
+        # model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models', 'model_106.pth')
+        # trained_model_state_dict = torch.load(model_path)
+        # model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        # for k, v in trained_model_state_dict.items():
+        #     print(k)
+            # break
+        # print(f'Load the prompt_learner1 end')
+        # model_file_path = os.path.join(model.save_model_path, 'backup_cross/model_stage1_3share_prompt_cross.pth')
         # torch.save(model.model.state_dict(), model_file_path)
         # logger('The 1st Stage of Trained')
 
@@ -160,18 +151,18 @@ def main(config):
                 cmc, mAP, mINP = test(model, loaders, config)
                 rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
                 if cmc[0] + mAP > best_rank1 + best_mAP:
-                    is_best_rank = True
+                    is_best_result = True
                     best_rank1 = cmc[0]
                     best_mAP = mAP
                 else:
-                    is_best_rank = False
-                # is_best_rank = (cmc[0] >= best_rank1)
+                    is_best_result = False
+                # is_best_result = (cmc[0] >= best_rank1)
                 # best_rank1 = max(cmc[0], best_rank1)
-                model.save_model(current_epoch, is_best_rank)
+                model.save_model(current_epoch, is_best_result)
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
                                                                                             mINP, mAP, rank_1_10_20))
-                print(f'now best result: {best_rank1} {best_mAP}')
+                print(f'now best result: {best_rank1} {best_mAP}\n')
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
@@ -192,7 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
-    parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
+    parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')

@@ -46,7 +46,6 @@ class Base:
         self.img_w = config.img_w
 
         self.stage1_learning_rate = config.stage1_learning_rate
-        self.stage2_learning_rate = config.stage2_learning_rate
         self.stage1_weight_decay = config.stage1_weight_decay
         self.stage1_train_epochs = config.stage1_train_epochs
         self.stage1_lr_min = config.stage1_lr_min
@@ -87,30 +86,9 @@ class Base:
                 weight_decay = self.stage1_weight_decay
                 params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
                 keys += [[key]]
-            # if 'prompt_learner2' in key:
-            #     lr = self.stage1_learning_rate
-            #     weight_decay = self.stage1_weight_decay
-            #     params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-            #     keys += [[key]]
 
         self.model_optimizer_stage1 = getattr(torch.optim, 'Adam')(params)
         self.model_lr_scheduler_stage1 = create_scheduler(self.model_optimizer_stage1,
-                                                 num_epochs=self.stage1_train_epochs, lr_min=self.stage1_lr_min,
-                                                 warmup_lr_init=self.stage1_warmup_lr_init,
-                                                 warmup_t=self.stage1_warmup_epochs, noise_range=None)
-
-    def _init_optimizer_stage2(self):
-        params = []
-        keys = []
-        for key, value in self.model.named_parameters():
-            if 'attention_fusion' in key:
-                lr = self.stage2_learning_rate
-                weight_decay = self.stage1_weight_decay
-                params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-                keys += [[key]]
-
-        self.model_optimizer_stage2 = getattr(torch.optim, 'Adam')(params)
-        self.model_lr_scheduler_stage2 = create_scheduler(self.model_optimizer_stage2,
                                                  num_epochs=self.stage1_train_epochs, lr_min=self.stage1_lr_min,
                                                  warmup_lr_init=self.stage1_warmup_lr_init,
                                                  warmup_t=self.stage1_warmup_epochs, noise_range=None)
@@ -122,14 +100,19 @@ class Base:
             if 'prompt_learner' in key:
                 value.requires_grad_(False)
                 continue
-            if 'prompt_part' in key:
-                value.requires_grad_(False)
+            # if 'prompt_part' in key:
+            #     value.requires_grad_(False)
             if 'text_encoder' in key:
                 value.requires_grad_(False)
                 continue
             lr = self.learning_rate
             if 'classifier' in key:
                 lr = self.learning_rate * 2
+            # if 'classifier_part' in key:
+            #     lr = self.learning_rate * 2
+            # if 'cross_attention' in key:
+            #     lr = self.learning_rate * 2
+
             params += [{'params': [value], 'lr': lr, 'weight_decay': self.weight_decay}]
             keys += [[key]]
 
