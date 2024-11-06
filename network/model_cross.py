@@ -334,7 +334,7 @@ class TextEncoder(nn.Module):
 
 
 class CrossAttention(nn.Module):
-    def __init__(self, D=2048, D_o=2048, K=8):
+    def __init__(self, D=2048, D_o=2048, K=8, spatial_dim=162):  # 添加 spatial_dim 参数, 162=18*9
         super(CrossAttention, self).__init__()
         self.D = D
         self.D_text = 1024
@@ -342,40 +342,54 @@ class CrossAttention(nn.Module):
         self.D_o = D_o
         self.K = K
 
+        # 可学习的位置编码，包含空间维度和一个额外的分类标记位置
+        self.positional_embedding = nn.Parameter(torch.randn(spatial_dim, self.D) / self.D ** 0.5) # (HW, D)
+
         self.theta_K = nn.Linear(self.D, self.D_h)
         self.theta_Q = nn.Linear(self.D_text, self.D_h)
         self.theta_V = nn.Linear(self.D, self.D_h)
 
+        mlp_dim = self.D_h + self.D // 2
         self.softmax = nn.Softmax(dim=-1)
-
         self.mlp = nn.Sequential(
-            nn.Linear(self.D_h, self.D_h),
-            nn.LayerNorm(self.D_h),
-            nn.ReLU(),
-            nn.Linear(self.D_h, self.D_h),
+            nn.Linear(self.D_h, mlp_dim),  # 将维度扩展到 4 倍
+            nn.LayerNorm(mlp_dim),         # LayerNorm 正则化
+            nn.ReLU(),                          # 激活函数
+            nn.Linear(mlp_dim, self.D_h),  # 还原到 D_h 维度
+            nn.Dropout(0.1)                     # 可选的 Dropout 层
         )
-        self.conv = nn.Conv1d(self.D_h, self.D_o, kernel_size=1)
-        # self.proj = nn.Linear(self.D_h, self.D_o)
+
+        self.proj = nn.Linear(self.D_h, self.D_o)
 
     def forward(self, feature, part):
         B, D, H, W = feature.size()
-        feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, N)
-        _, _, N = feature.size()
-        _, K, _ = part.size()  # (B, K, D_text)
+        _, K, _ = part.size() # (B, K, D_text)
+        feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, HW)
+        feature = feature.transpose(1, 2)  # (B, HW, D)
 
-        K_c = self.theta_K(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
-        Q_c = self.theta_Q(part)  # (B, K, D_text) -> (B, K, D_h)
-        V_c = self.theta_V(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
+        # 只为part添加cls token
+        part_cls_token = part.mean(dim=1, keepdim=True)  # (B, 1, D_text)
+        part = torch.cat([part_cls_token, part], dim=1)  # (B, K+1, D_text)
 
-        A_v = self.softmax(torch.matmul(Q_c, K_c.transpose(2, 1)) / (self.D_h ** 0.5))  # (B, K, N)
+        # 添加位置编码
+        feature = feature + self.positional_embedding[None, :, :].to(feature.dtype)  # (B, HW, D)
 
-        F_p = torch.matmul(A_v, V_c)  # (B, K, N) x (B, N, D_h) -> (B, K, D_h)
-        F_p = self.mlp(F_p) + F_p  # (B, K, D_h)
-        F_p = self.conv(F_p.permute(0, 2, 1)).permute(0, 2, 1).contiguous()  # (B, K, D_h) -> (B, K, D_o)
-        # F_p = self.proj(F_p)  # (B, K, D_h) -> (B, K, D_o)
+        K_c = self.theta_K(feature)  # (B, HW, D) -> (B, HW, D_h)
+        Q_c = self.theta_Q(part)  # (B, K+1, D_text) -> (B, K+1, D_h)
+        V_c = self.theta_V(feature)  # (B, HW, D) -> (B, HW, D_h)
 
-        A_v = A_v.view(B, K, H, W)
-        return F_p, A_v
+        A_v = self.softmax(torch.matmul(Q_c, K_c.transpose(2, 1)) / (self.D_h ** 0.5))  # (B, K+1, HW)
+
+        F_p = torch.matmul(A_v, V_c)  # (B, K+1, HW) x (B, HW, D_h) -> (B, K+1, D_h)
+        F_p = self.mlp(F_p) + F_p  # (B, K+1, D_h)
+
+        F_p = self.proj(F_p)  # (B, K+1, D_h) -> (B, K+1, D_o)
+
+        A_v = A_v.view(B, K+1, H, W)  # 重塑为 (B, K+1, H, W)
+
+        # 返回结果，包括分类标记的特征
+        return F_p, A_v # (B, K+1, D_o), (B, K+1, H, W)
+
 
 
 class Model(nn.Module):
@@ -405,7 +419,7 @@ class Model(nn.Module):
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes // 8, K=self.prompt_part.num_parts)
+        self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes, K=self.prompt_part.num_parts)
 
     def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
         if get_image == True:
@@ -467,8 +481,9 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
 
-            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
-            part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
+            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts + 1, D_o), (b, num_parts + 1, H, W)
+            part_features = part_features[:, 0, :]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
+            # part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
             cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
             # part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
             # cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
@@ -493,7 +508,8 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             text_features_part = text_features_part.expand(x1.size(0), -1, -1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
-            part_features = part_features.view(part_features.size(0), -1)
+            part_features = part_features[:, 0, :]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
+            # part_features = part_features.view(part_features.size(0), -1)
             _, part_features = self.classifier_part(part_features)
 
             return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
@@ -515,7 +531,8 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             text_features_part = text_features_part.expand(x2.size(0), -1, -1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
-            part_features = part_features.view(part_features.size(0), -1)
+            part_features = part_features[:, 0, :] # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
+            # part_features = part_features.view(part_features.size(0), -1)
             _, part_features = self.classifier_part(part_features)
             return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
 

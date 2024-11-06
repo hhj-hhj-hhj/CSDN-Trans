@@ -6,10 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="modal_contrastive">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +48,7 @@
     "Python.dataset_cross.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Debug",
+    "Python.main_cross.executor": "Run",
     "Python.main_one_trans.executor": "Run",
     "Python.main_test.executor": "Run",
     "Python.main_trans.executor": "Debug",
@@ -90,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00018" summary="attention">
-      <option name="closed" value="true" />
-      <created>1727151517457</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1727151517457</updated>
     </task>
     <task id="LOCAL-00019" summary="attention">
       <option name="closed" value="true" />
@@ -483,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730710269193</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="modal_contrastive">
+      <option name="closed" value="true" />
+      <created>1730719232814</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1730719232814</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -223,13 +223,13 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        modal_loss = base.modal_contrastive(rgb_bn_features, ir_bn_features, rgb_pids) + base.modal_contrastive(rgb_g_bn_features, ir_g_bn_features, rgb_pids)
+        # modal_loss = base.modal_contrastive(rgb_bn_features, ir_bn_features, rgb_pids) + base.modal_contrastive(rgb_g_bn_features, ir_g_bn_features, rgb_pids)
 
-        # loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        # loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
 
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + modal_loss #+ loss_hcc_kl + loss_hcc_kl_map
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss  + loss_hcc_kl + loss_hcc_kl_map
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -240,9 +240,9 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_proj': triplet_loss_proj.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      # 'loss_hcc_kl': loss_hcc_kl.data,
-                      # 'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      'modal_loss': modal_loss.data
+                      'loss_hcc_kl': loss_hcc_kl.data,
+                      'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      # 'modal_loss': modal_loss.data
                       })
         # print(f"iter = {iter}")
         if (iter + 1) % 200 == 0:
