@@ -45,6 +45,8 @@ def main(config):
     logger('\n' * 3)
     logger(config)
 
+    logger('Start Time: {})'.format(time_now()))
+
     if config.mode == 'train':
         if config.resume_train_epoch >= 0:
             model.resume_model(config.resume_train_epoch)
