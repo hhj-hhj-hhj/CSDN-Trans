@@ -101,10 +101,12 @@ class Classifier_part(nn.Module):
 
 
 class PromptLearner_part(nn.Module):
-    def __init__(self, dtype, token_embedding, num_part=16):
+    def __init__(self, dtype, token_embedding, num_part=None):
         super().__init__()
-        ctx_init = "A photo of a person's X."
-        pre_ctx = 6
+        # ctx_init = "A photo of a person's X."
+        ctx_init = "A person's X."
+        # pre_ctx = 6
+        pre_ctx = 3
 
         tokenized_prompts = clip.tokenize(ctx_init).cuda()
         self.tokenized_prompts = tokenized_prompts
@@ -456,7 +458,7 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=16)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=12)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
         self.classifier_part = Classifier_part(self.num_classes, self.in_planes)

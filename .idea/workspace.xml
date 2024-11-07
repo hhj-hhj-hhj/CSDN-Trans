@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="cross attention">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,32 +36,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GradCam.executor": "Run",
-    "Python.base_attention.executor": "Run",
-    "Python.base_cross.executor": "Run",
-    "Python.dataset_cross.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Run",
-    "Python.main_one_trans.executor": "Run",
-    "Python.main_test.executor": "Run",
-    "Python.main_trans.executor": "Debug",
-    "Python.model_cross.executor": "Debug",
-    "Python.model_trans.executor": "Run",
-    "Python.mutil_test.executor": "Run",
-    "Python.run_tSNE.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.train.executor": "Run",
-    "Python.train_cross.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "209",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/anaconda3/condabin/conda.bat",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dataset_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.model_cross.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_cross.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;209&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/anaconda3/condabin/conda.bat&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\hhjhhj\CSDN\data_loader" />
@@ -88,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00020" summary="attention">
-      <option name="closed" value="true" />
-      <created>1727248393088</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1727248393088</updated>
     </task>
     <task id="LOCAL-00021" summary="one prompt">
       <option name="closed" value="true" />
@@ -481,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730890122208</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="cross attention">
+      <option name="closed" value="true" />
+      <created>1730967123449</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1730967123449</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -527,11 +526,6 @@
           <url>file://$PROJECT_DIR$/tools/loss.py</url>
           <line>294</line>
           <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
-          <line>435</line>
-          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
