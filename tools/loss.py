@@ -235,7 +235,7 @@ class IPC(nn.Module):
 
 
 class IPD_v2(nn.Module):
-    def __init__(self, t=0.1):
+    def __init__(self, t=1):
         super(IPD_v2, self).__init__()
         self.t = t
         self.min_loss = 1e-6
@@ -252,13 +252,12 @@ class IPD_v2(nn.Module):
         xcen = torch.stack(xcen, dim=0)
         loss = 0
         for i in range(xcen.shape[1]):
-            sim_matrix = F.cosine_similarity(xcen[:, i, :].unsqueeze(1), xcen[:, i, :].unsqueeze(0),
-                                             dim=-1) / self.t  # K, K
+            sim_matrix = F.cosine_similarity(xcen[:, i, :].unsqueeze(1), xcen[:, i, :].unsqueeze(0), dim=-1) / self.t  # K, K
 
             exp_sim = torch.exp(sim_matrix)
             denominator = exp_sim.sum(dim=1)
-            step_loss = -(sim_matrix.diagonal() - torch.log(denominator))
-            step_loss = step_loss.clamp(min=self.min_loss)
+            # print(sim_matrix.diagonal())
+            step_loss = -(sim_matrix.diagonal() - torch.log(denominator).clamp(min=1 + self.min_loss))
             loss += step_loss.mean()
 
         loss /= xcen.shape[1]
