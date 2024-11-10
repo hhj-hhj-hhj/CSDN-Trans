@@ -187,22 +187,18 @@ def train_2rgb(base, loaders, text_features, config):
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
         # features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
-        features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
-        # attention_weight_flip_flip = attention_weight_flip.flip(dims=[-1])
+        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
         ir_attn_features = features[1].narrow(0, 2 * n, n)
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
-        num_part = part_features.size(0)
+        num_part = per_part_features.size(0)
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
-        # ide_loss_part = 0
-        # for i in range(num_part):
-        #     ide_loss_part += base.pid_creiteron(cls_scores_part[i], pids)
-        # ide_loss_part /= num_part
+
         ide_loss_part = base.pid_creiteron(cls_scores_part, pids)
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
@@ -218,12 +214,12 @@ def train_2rgb(base, loaders, text_features, config):
 
         # atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
 
-        loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
-        loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
+        # loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        # loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map + loss_kl_part # + atten_loss
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss #+ loss_hcc_kl + loss_hcc_kl_map + loss_kl_part # + atten_loss
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -236,16 +232,16 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      'loss_hcc_kl': loss_hcc_kl.data,
-                      'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      'loss_kl_part': loss_kl_part.data,
+                      # 'loss_hcc_kl': loss_hcc_kl.data,
+                      # 'loss_hcc_kl_map': loss_hcc_kl_map.data,
+                      # 'loss_kl_part': loss_kl_part.data,
                       # 'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 200 == 0:
         #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}\n')
-        # if iter == 2:
-        #     break
+        if iter == 2:
+            break
         # break
     return meter.get_val(), meter.get_str()
 

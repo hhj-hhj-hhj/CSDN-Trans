@@ -12,7 +12,7 @@ class Normalize(nn.Module):
         self.power = power
 
     def forward(self, x):
-        norm = x.pow(self.power).sum(1, keepdim=True).pow(1. / self.power)
+        norm = x.pow(self.power).sum(-1, keepdim=True).pow(1. / self.power)
         out = x.div(norm)
         return out
 
@@ -398,7 +398,7 @@ class MultiCrossAttention(nn.Module):
         super().__init__()
         text_dim = 1024
         self.positional_embedding = nn.Parameter(torch.randn(spacial_dim + 1, embed_dim) / embed_dim ** 0.5)
-        self.text_positional_embedding = nn.Parameter(torch.randn(num_part + 1, text_dim) / text_dim ** 0.5)
+        # self.text_positional_embedding = nn.Parameter(torch.randn(num_part + 1, text_dim) / text_dim ** 0.5)
         self.text_proj = nn.Linear(text_dim, embed_dim)
         self.k_proj = nn.Linear(embed_dim, embed_dim)
         self.q_proj = nn.Linear(embed_dim, embed_dim)
@@ -412,7 +412,7 @@ class MultiCrossAttention(nn.Module):
         x = x + self.positional_embedding[:, None, :].to(x.dtype)  # (HW+1)NC
         text = text.permute(1, 0, 2)  # NLD -> LND
         text = torch.cat([text.mean(dim=0, keepdim=True), text], dim=0)  # (L+1)ND
-        text = text + self.text_positional_embedding[:, None, :].to(text.dtype)  # (L+1)ND
+        # text = text + self.text_positional_embedding[:, None, :].to(text.dtype)  # (L+1)ND
         text = self.text_proj(text)  # (L+1)ND -> (L+1)NC
 
         x, attn = F.multi_head_attention_forward( # (L+1)NC, N(L+1)(HW+1)
@@ -447,6 +447,7 @@ class Model(nn.Module):
         self.h_resolution = int((img_h - 16) // 16 + 1)
         self.w_resolution = int((img_w - 16) // 16 + 1)
         self.vision_stride_size = 16
+        self.l2_norm = Normalize(2)
         clip_model = load_clip_to_cpu('RN50', self.h_resolution, self.w_resolution, self.vision_stride_size)
         clip_model.to("cuda")
 
@@ -466,6 +467,7 @@ class Model(nn.Module):
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
         self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.in_planes, num_part=self.prompt_part.num_parts)
+        # self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes)
 
     def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
         if get_image == True:
@@ -529,13 +531,15 @@ class Model(nn.Module):
 
             # part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts + 1, D_o), (b, num_parts + 1, H, W)
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (num_parts + 1, b, D_o)
+            per_part_features = part_features[1:]  # (num_parts, b, D_o)
+            per_part_features = self.l2_norm(per_part_features)
             part_features = part_features[0]  # (num_parts + 1, b, D_o) -> (b, D_o), 只取cls token的特征
             # part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
             cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
             # part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
             # cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
             # _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, attention_weight, None # attention_weight_flip
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, per_part_features
 
         elif x1 is not None and x2 is None:
 
@@ -543,7 +547,8 @@ class Model(nn.Module):
             image_features_map1 = self.image_encoder(image_features_map1)
             image_features1_proj = self.attnpool(image_features_map1)[0]
             _, _, test_features1 = self.classifier(image_features_map1)
-            _, test_features1_proj = self.classifier2(image_features1_proj)
+            # _, test_features1_proj = self.classifier2(image_features1_proj)
+            test_features1_proj = self.l2_norm(image_features1_proj)
 
             text_features_part = []
             prompts = self.prompt_part(x1.size(0))
@@ -557,7 +562,8 @@ class Model(nn.Module):
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
             part_features = part_features[0]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
             # part_features = part_features.view(part_features.size(0), -1)
-            _, part_features = self.classifier_part(part_features)
+            # _, part_features = self.classifier_part(part_features)
+            part_features = self.l2_norm(part_features)
 
             return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
         elif x1 is None and x2 is not None:
@@ -580,7 +586,9 @@ class Model(nn.Module):
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
             part_features = part_features[0] # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
             # part_features = part_features.view(part_features.size(0), -1)
-            _, part_features = self.classifier_part(part_features)
+            # _, part_features = self.classifier_part(part_features)
+            part_features = self.l2_norm(part_features)
+
             return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
 
 
