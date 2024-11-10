@@ -572,8 +572,8 @@ class Model(nn.Module):
             image_features_map2 = self.image_encoder(image_features_map2)
             image_features2_proj = self.attnpool(image_features_map2)[0]
             _, _, test_features2 = self.classifier(image_features_map2)
-            _, test_features2_proj = self.classifier2(image_features2_proj)
-
+            # _, test_features2_proj = self.classifier2(image_features2_proj)
+            test_features2_proj = self.l2_norm(image_features2_proj)
             text_features_part = []
             prompts = self.prompt_part(x2.size(0))
             for i in range(self.prompt_part.num_parts):

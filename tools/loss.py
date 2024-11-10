@@ -1,3 +1,4 @@
+import torch.nn.functional as F
 import torch.nn as nn
 import torch
 
@@ -209,120 +210,48 @@ class hcc_kl_3(nn.Module):
         loss_all = self.k1 * loss1 + self.k2 * loss2
         return loss_all
 
-class ptcc(nn.Module):
-    def __init__(self, margin_euc=0.3):
-        super(ptcc, self).__init__()
-        self.margin_euc = margin_euc
+# Intra-part Consistency Loss
+class IPC(nn.Module):
+    def __init__(self):
+        super(IPC, self).__init__()
 
     def forward(self, x, pids):
+        num_pid = len(pids.unique())
+        d = x.shape[-1]
+        pidcen = pids.reshape(num_pid, -1)[:, 0]
+        xcen = x.reshape(3 * num_pid, -1, d).mean(dim=1)
+        per_mode = x.shape[0] // 3
+        per_mode_cen = xcen.shape[0] // 3
 
-        p = len(pids.unique())
-        c = x.shape[-1]
-        pidhc = pids.reshape(2*p, -1)[:, 0]# pid编号
-        hcen = x.reshape(2*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
+        loss = 0
+        for i in range(3):
+            st = i * per_mode
+            ed = st + per_mode
+            st_cen = i * per_mode_cen
+            ed_cen = st_cen + per_mode_cen
+            dist, mask = compute_dist_euc(x[st:ed], xcen[st_cen:ed_cen], pids, pidcen)
+            loss += dist.masked_select(mask).mean()
+        return loss / 3
 
-        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
-        loss = []
-        n, m = dist.shape
-        for i in range(n // 2):
-            loss.append(dist[i][m // 2:][mask[i][m // 2:]])
-        for i in range(n // 2, n):
-            loss.append(dist[i][:m // 2][mask[i][:m // 2]])
-        loss = torch.cat(loss).mean()
-        return loss
+class IPD(nn.Module):
+    def __init__(self, t=0.1):
+        super(IPD, self).__init__()
+        self.t = t
 
-class ptcc_3(nn.Module):
-    def __init__(self, margin_euc=0.3):
-        super(ptcc_3, self).__init__()
-        self.margin_euc = margin_euc
+    def forward(self, x):
+        K, B, D = x.shape
+        per_mode = B // 3
+        loss = 0
+        for i in range(3):
+            st = i*per_mode
+            ed = st + per_mode
+            xcen = x[:, st:ed, :] # K, per_mode, D
+            xcen = xcen.mean(dim=1) # K, D
+            sim_matrix = F.cosine_similarity(xcen[:, None, :], xcen[None, :, :], dim=-1) / self.t # K, K
+            exp_sim = torch.exp(sim_matrix)
+            denominator = exp_sim.sum(dim=1)
+            step_loss = -(sim_matrix.diagonal() - torch.log(denominator))
+            loss += step_loss.mean()
 
-    def forward(self, x, pids):
-
-        p = len(pids.unique())
-        c = x.shape[-1]
-        pidhc = pids.reshape(3*p, -1)[:, 0]# pid编号
-        hcen = x.reshape(3*p, -1, c).mean(dim=1)# 每个pid对应的中心，C维
-
-        dist, mask = compute_dist_euc(x, hcen, pids, pidhc)
-        loss = []
-        n, m = dist.shape
-        mid_n = n // 3 * 2
-        mid_m = m // 3 * 2
-        for i in range(mid_n):
-            loss.append(dist[i][mid_m:][mask[i][mid_m:]])
-        for i in range(mid_n, n):
-            loss.append(dist[i][:mid_m][mask[i][:mid_m]])
-        loss = torch.cat(loss).mean()
-        return loss
-
-
-class ContrastiveLoss(torch.nn.Module):
-    def __init__(self, temperature=1.0):
-        super(ContrastiveLoss, self).__init__()
-        self.temperature = temperature
-
-    def forward(self, f_v, f_i, labels):
-        """
-        Args:
-            f_v: 可见光图像特征，形状为 (B, C)，B 是批量大小
-            f_i: 红外图像特征，形状为 (B, C)
-            labels: 图像的标签，形状为 (B,)
-        """
-        B, D = f_v.shape
-        # 计算相似度矩阵
-        sim_v2i = torch.matmul(f_v, f_i.T) / self.temperature
-        sim_v2v = torch.matmul(f_v, f_v.T) / self.temperature
-        sim_i2i = torch.matmul(f_i, f_i.T) / self.temperature
-
-        # 数值稳定性处理
-        sim_v2i = sim_v2i - torch.max(sim_v2i, dim=1, keepdim=True)[0].detach()
-        sim_v2v = sim_v2v - torch.max(sim_v2v, dim=1, keepdim=True)[0].detach()
-        sim_i2i = sim_i2i - torch.max(sim_i2i, dim=1, keepdim=True)[0].detach()
-
-        # 指数距离
-        exp_sim_v2i = torch.exp(sim_v2i)
-        exp_sim_v2v = torch.exp(sim_v2v)
-        exp_sim_i2v = torch.exp(sim_v2i.T)  # 转置来对应公式中的 i2v
-        exp_sim_i2i = torch.exp(sim_i2i)
-
-        p = len(labels.unique())
-        num_perid = B // p
-        mask = torch.zeros((B, B), device=f_v.device, dtype=torch.bool)
-
-        loss_v2i = torch.zeros(B, device=f_v.device, dtype=torch.float32)
-        loss_i2v = torch.zeros(B, device=f_v.device, dtype=torch.float32)
-
-        for i in range(p):
-            st = i * num_perid
-            ed = st + num_perid
-            mask[st:ed, st:ed] = 1  # 构造 mask，表示正样本对的位置
-
-        for i in range(p):
-            st = i * num_perid
-            ed = st + num_perid
-            # 构造 mask，表示正样本对的位置
-            mask_v2i = mask[st:ed, :]
-            mask_i2v = mask.T[st:ed, :]
-            mask_v2v = torch.logical_not(mask_v2i)
-            mask_i2i = torch.logical_not(mask_i2v)
-
-            # 计算 Lv2ice
-            lv2ice_numerator = (mask_v2i * exp_sim_v2i[st:ed]).sum(dim=1)
-            lv2ice_denominator = (mask_v2v * exp_sim_v2v[st:ed]).sum(dim=1) + lv2ice_numerator
-            lv2ice = -torch.log(lv2ice_numerator / lv2ice_denominator)
-            lv2ice = lv2ice / mask_v2i.sum(1)
-            loss_v2i[st:ed] += lv2ice
-
-            # 计算 Li2vce
-            li2vce_numerator = (mask_i2v * exp_sim_i2v[st:ed]).sum(dim=1)
-            li2vce_denominator = (mask_i2i * exp_sim_i2i[st:ed]).sum(dim=1) + li2vce_numerator
-            li2vce = -torch.log(li2vce_numerator / li2vce_denominator)
-            li2vce = li2vce / mask_i2v.sum(1)
-            loss_i2v[st:ed] += li2vce
-
-        # 总损失
-        loss_v2i = loss_v2i.mean()
-        loss_i2v = loss_i2v.mean()
-        loss = loss_v2i + loss_i2v
-        return loss
+        return loss / 3
 
