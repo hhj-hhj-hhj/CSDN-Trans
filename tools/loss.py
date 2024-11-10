@@ -264,26 +264,31 @@ class IPD_v2(nn.Module):
         return loss
 
 class IPD(nn.Module):
-    def __init__(self, t=0.1):
+    def __init__(self, margin=0.3):
         super(IPD, self).__init__()
-        self.t = t
+        self.margin = margin
 
     def forward(self, x, pids):
         K, B, D = x.shape
-        per_mode = B // 3
+        num_pid = len(pids.unique())
+        x = x.reshape(K, 3 * num_pid, -1, D)
+        xcen = []
+        for i in range(K):
+            center = torch.cat([x[i][:num_pid], x[i][num_pid:2 * num_pid], x[i][2 * num_pid:]], dim=1)
+            center = center.mean(dim=1)
+            xcen.append(center)
+        xcen = torch.stack(xcen, dim=0)
+        xcen = F.normalize(xcen, p=2, dim=-1)
         loss = 0
-        for i in range(3):
-            st = i*per_mode
-            ed = st + per_mode
-            xcen = x[:, st:ed, :] # K, per_mode, D
-            xcen = xcen.mean(dim=1) # K, D
-            sim_matrix = F.cosine_similarity(xcen[:, None, :], xcen[None, :, :], dim=-1) / self.t # K, K
-            exp_sim = torch.exp(sim_matrix)
-            denominator = exp_sim.sum(dim=1)
-            step_loss = -(sim_matrix.diagonal() - torch.log(denominator))
+        label = torch.tensor([i for i in range (K)]).cuda()
+        for i in range(xcen.shape[1]):
+            x_i = xcen[:, i, :]
+            dist, mask = compute_dist_euc(x_i, x_i, label, label)
+            step_loss = (self.margin - dist.masked_select(~mask)).clamp(min=0)
             loss += step_loss.mean()
 
-        return loss / 3
+        loss /= xcen.shape[1]
+        return loss
 
 class IPC_v2(nn.Module):
     def __init__(self):
