@@ -233,12 +233,38 @@ class IPC(nn.Module):
             loss += dist.masked_select(mask).mean()
         return loss / 3
 
+class IPD_v2(nn.Module):
+    def __init__(self, t=0.1):
+        super(IPD_v2, self).__init__()
+        self.t = t
+
+    def forward(self, x, pids):
+        K, B, D = x.shape
+        num_pid = len(pids.unique())
+        x = x.reshape(K, 3 * num_pid, -1, D)
+        xcen = []
+        for i in range(K):
+            center = torch.cat([x[i][:num_pid], x[i][num_pid:2*num_pid], x[i][2*num_pid:]], dim=1)
+            center = center.mean(dim=1)
+            xcen.append(center)
+        xcen = torch.stack(xcen, dim=0)
+        loss = 0
+        for i in range(xcen.shape[1]):
+            sim_matrix = F.cosine_similarity(xcen[:, i, :].unsqueeze(1), xcen[:, i, :].unsqueeze(0), dim=-1) / self.t # K, K
+            exp_sim = torch.exp(sim_matrix)
+            denominator = exp_sim.sum(dim=1)
+            step_loss = -(sim_matrix.diagonal() - torch.log(denominator))
+            loss += step_loss.mean()
+
+        loss /= xcen.shape[1]
+        return loss
+
 class IPD(nn.Module):
     def __init__(self, t=0.1):
         super(IPD, self).__init__()
         self.t = t
 
-    def forward(self, x):
+    def forward(self, x, pids):
         K, B, D = x.shape
         per_mode = B // 3
         loss = 0
@@ -255,3 +281,18 @@ class IPD(nn.Module):
 
         return loss / 3
 
+class IPC_v2(nn.Module):
+    def __init__(self):
+        super(IPC_v2, self).__init__()
+
+    def forward(self, x, pids):
+        num_pid = len(pids.unique())
+        d = x.shape[-1]
+        pidcen = pids.reshape(num_pid, -1)[:, 0]
+        xcen = x.reshape(3 * num_pid, -1, d)
+        xcen = torch.cat([xcen[:num_pid], xcen[num_pid:2*num_pid], xcen[2*num_pid:]], dim=1)
+        xcen = xcen.mean(dim=1)
+
+        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
+        loss = dist.masked_select(mask).mean()
+        return loss
