@@ -89,14 +89,6 @@
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
     </task>
-    <task id="LOCAL-00025" summary="with kl">
-      <option name="closed" value="true" />
-      <created>1728042144149</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1728042144149</updated>
-    </task>
     <task id="LOCAL-00026" summary="loss_3">
       <option name="closed" value="true" />
       <created>1728125410232</created>
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731233026555</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731239011975</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1731239011975</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
