@@ -138,6 +138,7 @@ def main(config):
 
         model._init_optimizer_stage3()
 
+        best_epoch=0
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
@@ -153,6 +154,7 @@ def main(config):
                     is_best_result = True
                     best_rank1 = cmc[0]
                     best_mAP = mAP
+                    best_epoch = current_epoch
                 else:
                     is_best_result = False
                 # is_best_result = (cmc[0] >= best_rank1)
@@ -161,7 +163,7 @@ def main(config):
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
                                                                                             mINP, mAP, rank_1_10_20))
-                print(f'now best result: {best_rank1} {best_mAP}\n')
+                logger(f'now best result: {best_rank1} {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
