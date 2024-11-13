@@ -195,11 +195,11 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
         num_part = per_part_features.size(0)
-        # loss_ipc = 0
-        # for i in range(num_part):
-        #     loss_ipc += base.IPC(per_part_features[i], rgb_pids)
-        #
-        # loss_ipc /= num_part
+        loss_ipc = 0
+        for i in range(num_part):
+            loss_ipc += base.IPC(per_part_features[i], rgb_pids)
+
+        loss_ipc /= num_part
 
         loss_ipd = base.IPD(per_part_features, rgb_pids)
 
@@ -226,7 +226,7 @@ def train_2rgb(base, loaders, text_features, config):
         # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.1 * loss_ipd # + loss_ipc + loss_hcc_kl + loss_hcc_kl_map + loss_kl_part
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.1 * loss_ipd + loss_ipc #+ loss_hcc_kl + loss_hcc_kl_map + loss_kl_part
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -239,7 +239,7 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      # 'loss_ipc': loss_ipc.data,
+                      'loss_ipc': loss_ipc.data,
                       'loss_ipd': loss_ipd.data,
                       # 'loss_hcc_kl': loss_hcc_kl.data,
                       # 'loss_hcc_kl_map': loss_hcc_kl_map.data,
