@@ -210,10 +210,6 @@ def train_2rgb(base, loaders, text_features, config):
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
-        # triplet_loss_part = 0
-        # for i in range(num_part):
-        #     triplet_loss_part += base.tri_creiteron(part_features[i], pids)
-        # triplet_loss_part /= num_part
         triplet_loss_part = base.tri_creiteron(part_features, pids)
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
@@ -221,12 +217,12 @@ def train_2rgb(base, loaders, text_features, config):
 
         # atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
 
-        # loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        # loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
-        # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
+        loss_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.1 * loss_ipd + loss_ipc #+ loss_hcc_kl + loss_hcc_kl_map + loss_kl_part
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.1 * loss_ipd + loss_ipc + loss_kl + loss_kl_map + loss_kl_part
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -239,12 +235,11 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
+                      'loss_kl': loss_kl.data,
+                      'loss_kl_map': loss_kl_map.data,
+                      'loss_kl_part': loss_kl_part.data,
                       'loss_ipc': loss_ipc.data,
                       'loss_ipd': loss_ipd.data,
-                      # 'loss_hcc_kl': loss_hcc_kl.data,
-                      # 'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      # 'loss_kl_part': loss_kl_part.data,
-                      # 'atten_loss': atten_loss.data
                       })
         # print(f"iter = {iter}")
         if (iter + 1) % 200 == 0:
