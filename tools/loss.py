@@ -343,3 +343,23 @@ class IPC_v3(nn.Module):
 
         loss /= 3
         return loss
+
+class IPC_v4(nn.Module):
+    def __init__(self):
+        super(IPC_v3, self).__init__()
+
+    def forward(self, x, pids):
+        num_pid = len(pids.unique())
+        d = x.shape[-1]
+        pidcen = pids.reshape(num_pid, -1)[:, 0]
+        xcen = x.reshape(3 * num_pid, -1, d)
+        xcen = xcen.mean(dim=1)
+
+        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], pidcen))
+        n, m = dist.shape
+        mid_n = n // 3 * 2
+        mid_m = m // 3 * 2
+        loss = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
+
+        loss /= 3
+        return loss
