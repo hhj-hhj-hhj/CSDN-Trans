@@ -355,7 +355,7 @@ class IPC_v4(nn.Module):
         xcen = x.reshape(3 * num_pid, -1, d)
         xcen = xcen.mean(dim=1)
 
-        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], pidcen))
+        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids]), pidcen)
         n, m = dist.shape
         mid_n = n // 3 * 2
         mid_m = m // 3 * 2
