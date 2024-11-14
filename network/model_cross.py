@@ -532,7 +532,7 @@ class Model(nn.Module):
             # part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts + 1, D_o), (b, num_parts + 1, H, W)
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (num_parts + 1, b, D_o)
             per_part_features = part_features[1:]  # (num_parts, b, D_o)
-            per_part_features = self.l2_norm(per_part_features)
+            # per_part_features = self.l2_norm(per_part_features)
             part_features = part_features[0]  # (num_parts + 1, b, D_o) -> (b, D_o), 只取cls token的特征
             # part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
             cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)

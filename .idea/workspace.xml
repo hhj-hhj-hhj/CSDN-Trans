@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="改用IPC_V4.跨模态中心对齐">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="还是加上归一化。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,38 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00034" summary="with attention">
-      <option name="closed" value="true" />
-      <created>1728478951175</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1728478951175</updated>
-    </task>
-    <task id="LOCAL-00035" summary="with attention">
-      <option name="closed" value="true" />
-      <created>1728529066663</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1728529066663</updated>
-    </task>
-    <task id="LOCAL-00036" summary="new text">
-      <option name="closed" value="true" />
-      <created>1728697455705</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1728697455705</updated>
-    </task>
-    <task id="LOCAL-00037" summary="print 2 logger">
-      <option name="closed" value="true" />
-      <created>1728698453568</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1728698453568</updated>
     </task>
     <task id="LOCAL-00038" summary="close single loader">
       <option name="closed" value="true" />
@@ -481,12 +450,42 @@
       <option name="project" value="LOCAL" />
       <updated>1731585987088</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586495346</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586495347</updated>
+    </task>
+    <task id="LOCAL-00084" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586529696</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586529696</updated>
+    </task>
+    <task id="LOCAL-00085" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586639927</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586639927</updated>
+    </task>
+    <task id="LOCAL-00086" summary="还是加上归一化。">
+      <option name="closed" value="true" />
+      <created>1731586783723</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586783723</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="209" />
-    <MESSAGE value="main_one_trans" />
     <MESSAGE value="visual" />
     <MESSAGE value="one prompt" />
     <MESSAGE value="with kl" />
@@ -510,7 +509,9 @@
     <MESSAGE value="ipc 和 ipd 使用 V3。" />
     <MESSAGE value="部位特征去除归一化。" />
     <MESSAGE value="改用IPC_V4.跨模态中心对齐" />
-    <option name="LAST_COMMIT_MESSAGE" value="改用IPC_V4.跨模态中心对齐" />
+    <MESSAGE value="修正" />
+    <MESSAGE value="还是加上归一化。" />
+    <option name="LAST_COMMIT_MESSAGE" value="还是加上归一化。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
