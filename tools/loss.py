@@ -346,7 +346,7 @@ class IPC_v3(nn.Module):
 
 class IPC_v4(nn.Module):
     def __init__(self):
-        super(IPC_v3, self).__init__()
+        super(IPC_v4, self).__init__()
 
     def forward(self, x, pids):
         num_pid = len(pids.unique())

@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="部位特征去除归一化。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="改用IPC_V4.跨模态中心对齐">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00033" summary="with attention">
-      <option name="closed" value="true" />
-      <created>1728477055397</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1728477055397</updated>
     </task>
     <task id="LOCAL-00034" summary="with attention">
       <option name="closed" value="true" />
@@ -480,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731585046830</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="改用IPC_V4.跨模态中心对齐">
+      <option name="closed" value="true" />
+      <created>1731585987088</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1731585987088</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -508,7 +509,8 @@
     <MESSAGE value="去除 ipc_loss" />
     <MESSAGE value="ipc 和 ipd 使用 V3。" />
     <MESSAGE value="部位特征去除归一化。" />
-    <option name="LAST_COMMIT_MESSAGE" value="部位特征去除归一化。" />
+    <MESSAGE value="改用IPC_V4.跨模态中心对齐" />
+    <option name="LAST_COMMIT_MESSAGE" value="改用IPC_V4.跨模态中心对齐" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
