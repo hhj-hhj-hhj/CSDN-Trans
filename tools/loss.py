@@ -363,6 +363,7 @@ class IPC_v4(nn.Module):
         mid_n = n // 3 * 2
         mid_m = m // 3 * 2
         loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
-        loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
-        loss = self.k1 * loss1 + self.k2 * loss2
+        # loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
+        # loss = self.k1 * loss1 + self.k2 * loss2
+        loss = loss1
         return loss
