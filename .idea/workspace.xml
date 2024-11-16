@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="还是加上归一化。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="先不使用身份间同部位区分损失。更改IPC_v4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,30 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00038" summary="close single loader">
-      <option name="closed" value="true" />
-      <created>1728698583738</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1728698583738</updated>
-    </task>
-    <task id="LOCAL-00039" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728707493815</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1728707493815</updated>
-    </task>
-    <task id="LOCAL-00040" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728708227745</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1728708227745</updated>
     </task>
     <task id="LOCAL-00041" summary="PromptLeatner_share">
       <option name="closed" value="true" />
@@ -482,13 +459,34 @@
       <option name="project" value="LOCAL" />
       <updated>1731586783723</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="还是去掉归一化。IPC_V4加上不同身份同部位距离。">
+      <option name="closed" value="true" />
+      <created>1731587652714</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1731587652714</updated>
+    </task>
+    <task id="LOCAL-00088" summary="加上归一化">
+      <option name="closed" value="true" />
+      <created>1731632286477</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1731632286477</updated>
+    </task>
+    <task id="LOCAL-00089" summary="先不使用身份间同部位区分损失。更改IPC_v4">
+      <option name="closed" value="true" />
+      <created>1731637022626</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1731637022626</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="visual" />
-    <MESSAGE value="one prompt" />
-    <MESSAGE value="with kl" />
     <MESSAGE value="loss_3" />
     <MESSAGE value="attention" />
     <MESSAGE value="attention loss" />
@@ -511,7 +509,10 @@
     <MESSAGE value="改用IPC_V4.跨模态中心对齐" />
     <MESSAGE value="修正" />
     <MESSAGE value="还是加上归一化。" />
-    <option name="LAST_COMMIT_MESSAGE" value="还是加上归一化。" />
+    <MESSAGE value="还是去掉归一化。IPC_V4加上不同身份同部位距离。" />
+    <MESSAGE value="加上归一化" />
+    <MESSAGE value="先不使用身份间同部位区分损失。更改IPC_v4" />
+    <option name="LAST_COMMIT_MESSAGE" value="先不使用身份间同部位区分损失。更改IPC_v4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

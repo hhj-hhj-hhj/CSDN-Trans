@@ -309,8 +309,9 @@ class IPD_V3(nn.Module):
         return loss
 
 class IPC_v2(nn.Module):
-    def __init__(self):
+    def __init__(self, margin=0.6):
         super(IPC_v2, self).__init__()
+        self.margin = margin
 
     def forward(self, x, pids):
         num_pid = len(pids.unique())
@@ -322,6 +323,7 @@ class IPC_v2(nn.Module):
 
         dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
         loss = dist.masked_select(mask).mean()
+        loss += (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
         return loss
 
 class IPC_v3(nn.Module):
