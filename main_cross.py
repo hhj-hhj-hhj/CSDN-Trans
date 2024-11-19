@@ -150,7 +150,7 @@ def main(config):
             if current_epoch + 1 >= 1 and (current_epoch + 1) % config.eval_epoch == 0:
                 cmc, mAP, mINP = test(model, loaders, config)
                 rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
-                if cmc[0] + mAP > best_rank1 + best_mAP:
+                if cmc[0] > best_rank1:
                     is_best_result = True
                     best_rank1 = cmc[0]
                     best_mAP = mAP
