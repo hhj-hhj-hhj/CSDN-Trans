@@ -45,6 +45,8 @@ def main(config):
     logger('\n' * 3)
     logger(config)
 
+    logger('Start Time: {})'.format(time_now()))
+
     if config.mode == 'train':
         if config.resume_train_epoch >= 0:
             model.resume_model(config.resume_train_epoch)
@@ -103,16 +105,13 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        # model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models', 'model_106.pth')
-        # trained_model_state_dict = torch.load(model_path)
-        # model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
-        # for k, v in trained_model_state_dict.items():
-        #     print(k)
-            # break
-        # print(f'Load the prompt_learner1 end')
-        # model_file_path = os.path.join(model.save_model_path, 'backup_cross/model_stage1_3share_prompt_cross.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # logger('The 1st Stage of Trained')
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
+        trained_model_state_dict = torch.load(model_path)
+        model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        print(f'Load the prompt_learner1 end')
+        model_file_path = os.path.join(model.save_model_path, 'backup_cross/model_stage1_3share_prompt_cross.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        logger('The 1st Stage of Trained')
 
 
         logger('Start the 3st Stage Training')
@@ -139,6 +138,7 @@ def main(config):
 
         model._init_optimizer_stage3()
 
+        best_epoch=0
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
@@ -154,6 +154,7 @@ def main(config):
                     is_best_result = True
                     best_rank1 = cmc[0]
                     best_mAP = mAP
+                    best_epoch = current_epoch
                 else:
                     is_best_result = False
                 # is_best_result = (cmc[0] >= best_rank1)
@@ -162,7 +163,7 @@ def main(config):
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
                                                                                             mINP, mAP, rank_1_10_20))
-                print(f'now best result: {best_rank1} {best_mAP}\n')
+                logger(f'now best result: {best_rank1} {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
