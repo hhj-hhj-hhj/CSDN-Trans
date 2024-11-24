@@ -18,6 +18,7 @@ warnings.filterwarnings("ignore")
 
 best_mAP = 0
 best_rank1 = 0
+best_rank10 = 0
 def seed_torch(seed):
     seed = int(seed)
     random.seed(seed)
@@ -33,6 +34,7 @@ def seed_torch(seed):
 def main(config):
     global best_mAP
     global best_rank1
+    global best_rank10
 
     loaders = Loader(config)
     model = Base(config)
@@ -153,6 +155,7 @@ def main(config):
                 if cmc[0] + mAP > best_rank1 + best_mAP:
                     is_best_result = True
                     best_rank1 = cmc[0]
+                    best_rank10 = cmc[9]
                     best_mAP = mAP
                     best_epoch = current_epoch
                 else:
@@ -163,7 +166,7 @@ def main(config):
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
                                                                                             mINP, mAP, rank_1_10_20))
-                logger(f'now best result: {best_rank1} {best_mAP} in epoch {best_epoch}\n')
+                logger(f'now best result: [{best_rank1} {best_rank10}] {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
         model.resume_model(config.resume_test_model)
