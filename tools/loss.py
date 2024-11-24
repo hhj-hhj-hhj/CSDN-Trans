@@ -278,7 +278,7 @@ class IPD(nn.Module):
             center = center.mean(dim=1)
             xcen.append(center)
         xcen = torch.stack(xcen, dim=0)
-        # xcen = F.normalize(xcen, p=2, dim=-1)
+        xcen = F.normalize(xcen, p=2, dim=-1)
         loss = 0
         label = torch.tensor([i for i in range (K)]).cuda()
         for i in range(xcen.shape[1]):
