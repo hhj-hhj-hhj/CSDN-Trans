@@ -6,7 +6,8 @@ from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
 # from visual.visual_base import Base
 from PIL import Image
-from visual.visual_base_attention import Base
+# from visual.visual_base_attention import Base as BaseAtt
+from visual.visual_base import Base
 # from torchvision.models import resnet50
 # model = resnet50(pretrained=True)
 
@@ -45,8 +46,8 @@ def main(config):
 
     input_tensor = img_tensor
 
-    # target_layers = [model_trans.module.image_encoder[-1][-1]]
-    target_layers = [model_trans.module.image_attention_fusion]
+    target_layers = [model_trans.module.image_encoder[-1][-1]]
+    # target_layers = [model_trans.module.image_attention_fusion]
     # target_layers = [model_trans.module.attnpool]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 

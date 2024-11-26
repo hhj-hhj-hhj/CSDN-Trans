@@ -30,6 +30,8 @@ class SYSUData(data.Dataset):
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
         print("SYSU dataset loaded finished")
+        print("IDS of color images: ", len(np.unique(self.train_color_label)))
+        print("IDS of thermal images: ", len(np.unique(self.train_thermal_label)))
 
     def get_flip(self, img, transform1, transform2):
         img_0 = transform1(img)
@@ -128,8 +130,8 @@ class SYSUDataIRNormalSamples:
 
 
 class RegDBData(data.Dataset):
-    def __init__(self, data_dir, trial, transform1=None, transform2=None, transform3=None,
-                 colorIndex=None, thermalIndex=None):
+    def __init__(self, data_dir, trial, transform1_1=None, transform1_2=None, transform2_1=None, transform2_2=None,
+                 transform3_1=None, transform3_2=None, colorIndex=None, thermalIndex=None):
         train_color_list = data_dir + 'idx/train_visible_{}'.format(trial) + '.txt'
         train_thermal_list = data_dir + 'idx/train_thermal_{}'.format(trial) + '.txt'
 
@@ -139,7 +141,7 @@ class RegDBData(data.Dataset):
         train_color_image = []
         for i in range(len(color_img_file)):
             img = Image.open(data_dir + color_img_file[i])
-            img = img.resize((144, 288), Image.ANTIALIAS)
+            img = img.resize((144, 288), Image.Resampling.LANCZOS)
             pix_array = np.array(img)
             train_color_image.append(pix_array)
         train_color_image = np.array(train_color_image)
@@ -147,7 +149,7 @@ class RegDBData(data.Dataset):
         train_thermal_image = []
         for i in range(len(thermal_img_file)):
             img = Image.open(data_dir + thermal_img_file[i])
-            img = img.resize((144, 288), Image.ANTIALIAS)
+            img = img.resize((144, 288), Image.Resampling.LANCZOS)
             pix_array = np.array(img)
             train_thermal_image.append(pix_array)
         train_thermal_image = np.array(train_thermal_image)
@@ -160,22 +162,34 @@ class RegDBData(data.Dataset):
         self.train_thermal_image = train_thermal_image
         self.train_thermal_label = train_thermal_label
 
-        self.transform1 = transform1
-        self.transform2 = transform2
-        self.transform3 = transform3
+        self.transform1_1 = transform1_1
+        self.transform1_2 = transform1_2
+        self.transform2_1 = transform2_1
+        self.transform2_2 = transform2_2
+        self.transform3_1 = transform3_1
+        self.transform3_2 = transform3_2
+        self.horizontal_flip = transforms.RandomHorizontalFlip(p=0.5)
         self.cIndex = colorIndex
         self.tIndex = thermalIndex
+        print("RegDB dataset loaded finished")
+        print("IDS of color images: ", len(np.unique(self.train_color_label)))
+        print("IDS of thermal images: ", len(np.unique(self.train_thermal_label)))
+
+    def get_flip(self, img, transform1, transform2):
+        img_0 = transform1(img)
+        img_0 = self.horizontal_flip(img_0)
+        img_0 = transform2(img_0)
+        return img_0
 
     def __getitem__(self, index):
-
         img1, target1 = self.train_color_image[self.cIndex[index]], self.train_color_label[self.cIndex[index]]
         img2, target2 = self.train_thermal_image[self.tIndex[index]], self.train_thermal_label[self.tIndex[index]]
 
-        img1_0 = self.transform1(img1)
-        img1_1 = self.transform2(img1)
-        img2 = self.transform3(img2)
+        rgb_1 = self.get_flip(img1, self.transform1_1, self.transform1_2)
+        rgb_2 = self.get_flip(img1, self.transform2_1, self.transform2_2)
+        ir_1 = self.get_flip(img2, self.transform3_1, self.transform3_2)
 
-        return img1_0, img1_1, img2, target1, target2
+        return rgb_1, rgb_2, ir_1, target1, target2
 
     def __len__(self):
         return len(self.train_color_label)

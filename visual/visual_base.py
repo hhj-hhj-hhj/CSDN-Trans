@@ -5,7 +5,7 @@ import torch.nn as nn
 from bisect import bisect_right
 from visual.visual_model import Model
 from network.lr import CosineLRScheduler
-from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl, ptcc
+from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl
 
 def create_scheduler(optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range = None):
 
@@ -55,7 +55,6 @@ class Base:
 
         self._init_device()
         self._init_model()
-        self._init_creiteron()
 
     def _init_device(self):
         self.device = torch.device('cuda')
@@ -65,15 +64,6 @@ class Base:
         self.model = Model(self.pid_num, self.img_h, self.img_w)
         self.model = nn.DataParallel(self.model).to(self.device)
 
-    def _init_creiteron(self):
-        self.con_creiteron = SupConLoss(self.device)
-        self.pid_creiteron = nn.CrossEntropyLoss()
-        self.soft_pid_creiteron = CrossEntropyLabelSmooth()
-        self.tri_creiteron = TripletLoss_WRT()
-
-        self.criterion_hcc_euc = hcc_euc()
-        self.criterion_hcc_kl = hcc_kl()
-        self.criterion_pp = ptcc()
 
     def _init_optimizer_stage1(self):
         params = []
@@ -91,21 +81,6 @@ class Base:
                                                  warmup_lr_init=self.stage1_warmup_lr_init,
                                                  warmup_t=self.stage1_warmup_epochs, noise_range=None)
 
-    def _init_optimizer_stage2(self):
-        params = []
-        keys = []
-        for key, value in self.model.named_parameters():
-            if 'image_attention_fusion' in key:
-                lr = self.stage2_learning_rate
-                weight_decay = self.stage1_weight_decay
-                params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-                keys += [[key]]
-
-        self.model_optimizer_stage2 = getattr(torch.optim, 'Adam')(params)
-        self.model_lr_scheduler_stage2 = create_scheduler(self.model_optimizer_stage2,
-                                                 num_epochs=self.stage1_train_epochs, lr_min=self.stage1_lr_min,
-                                                 warmup_lr_init=self.stage1_warmup_lr_init,
-                                                 warmup_t=self.stage1_warmup_epochs, noise_range=None)
 
     def _init_optimizer_stage3(self):
         params = []

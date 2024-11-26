@@ -3,6 +3,7 @@ import torch
 import torchvision
 import torch.nn as nn
 from network.gem_pool import GeneralizedMeanPoolingP
+import torch.nn.functional as F
 
 
 class Normalize(nn.Module):
@@ -11,7 +12,7 @@ class Normalize(nn.Module):
         self.power = power
 
     def forward(self, x):
-        norm = x.pow(self.power).sum(1, keepdim=True).pow(1. / self.power)
+        norm = x.pow(self.power).sum(-1, keepdim=True).pow(1. / self.power)
         out = x.div(norm)
         return out
 
@@ -96,67 +97,26 @@ class Classifier_part(nn.Module):
     def forward(self, features):
         bn_features = self.BN(features.squeeze())
         cls_score = self.classifier(bn_features)
-        return cls_score
-
-class PromptLearner_part_init(nn.Module):
-    def __init__(self, dtype, token_embedding):
-        super().__init__()
-        ctx_init = "A photo of a X X X X person's "
-        part_list = ['hair', 'neck', 'face', 'arms', 'hands', 'legs', 'feet', 'shoes', 'upper-clothes', 'pants']
-
-        tokenized_prompts_list = [clip.tokenize(ctx_init + part).cuda() for part in part_list]
-        with torch.no_grad():
-            embedding_list = [token_embedding(tokenized_prompts).type(dtype) for tokenized_prompts in
-                              tokenized_prompts_list]
-
-        self.tokenized_prompts_list = tokenized_prompts_list
-        self.num_parts = len(part_list)
-
-        for i, embedding in enumerate(embedding_list):
-            self.register_buffer(f"token_prefix_{i}", embedding[:, :4, :])
-            self.register_buffer(f"token_suffix_{i}", embedding[:, 8:, :])
-
-    def forward(self, cls_ctx):
-        b = cls_ctx.shape[0]
-        prompts = []
-        for i in range(self.num_parts):
-            prefix = getattr(self, f"token_prefix_{i}").expand(b, -1, -1)
-            suffix = getattr(self, f"token_suffix_{i}").expand(b, -1, -1)
-            prompt = torch.cat(
-                [
-                    prefix,  # (b, 4, dim)
-                    cls_ctx,  # (b, 4, dim)
-                    suffix,  # (b, *, dim)
-                ],
-                dim=1,
-            )
-            prompts.append(prompt)
-        prompts = torch.stack(prompts, dim=0)
-        # prompts = torch.transpose(prompts, 0, 1)
-        return prompts  # (num_parts, b, *, dim)
+        return cls_score, self.l2_norm(features)
 
 
-def is_same(x1, x2):
-    for i in range(len(x1)):
-        if not torch.equal(x1[i], x2[i]):
-            print(f'At {i} x1 and x2 are the not same')
-        # else :
-        #     print(f'At {i} Same')
 class PromptLearner_part(nn.Module):
-    def __init__(self, dtype, token_embedding):
+    def __init__(self, dtype, token_embedding, num_part=None):
         super().__init__()
-        ctx_init = "A photo of a person's X."
-        pre_ctx = 6
+        # ctx_init = "A photo of a person's X."
+        ctx_init = "A person's X."
+        # pre_ctx = 6
+        pre_ctx = 3
 
         tokenized_prompts = clip.tokenize(ctx_init).cuda()
         self.tokenized_prompts = tokenized_prompts
         with torch.no_grad():
             embedding = token_embedding(tokenized_prompts).type(dtype)
 
-        part_list = torch.empty(8, 1, 512, dtype=dtype)
+        part_list = torch.empty(num_part, 1, 512, dtype=dtype)
         nn.init.normal_(part_list, std=0.02)
         self.part_list = nn.Parameter(part_list)
-        self.num_parts = len(part_list)
+        self.num_parts = num_part
 
         self.register_buffer(f"token_prefix", embedding[:, :pre_ctx + 1, :])
         self.register_buffer(f"token_suffix", embedding[:, pre_ctx + 1 + 1:, :])
@@ -377,7 +337,7 @@ class TextEncoder(nn.Module):
 
 
 class CrossAttention(nn.Module):
-    def __init__(self, D=2048, D_o=2048, K=8):
+    def __init__(self, D=2048, D_o=2048, K=8, spatial_dim=162):  # 添加 spatial_dim 参数, 162=18*9
         super(CrossAttention, self).__init__()
         self.D = D
         self.D_text = 1024
@@ -385,40 +345,97 @@ class CrossAttention(nn.Module):
         self.D_o = D_o
         self.K = K
 
+        # 可学习的位置编码，包含空间维度和一个额外的分类标记位置
+        self.positional_embedding = nn.Parameter(torch.randn(spatial_dim, self.D) / self.D ** 0.5) # (HW, D)
+
         self.theta_K = nn.Linear(self.D, self.D_h)
         self.theta_Q = nn.Linear(self.D_text, self.D_h)
         self.theta_V = nn.Linear(self.D, self.D_h)
 
+        mlp_dim = self.D_h + self.D // 2
         self.softmax = nn.Softmax(dim=-1)
-
         self.mlp = nn.Sequential(
-            nn.Linear(self.D_h, self.D_h),
-            nn.LayerNorm(self.D_h),
-            nn.ReLU(),
-            nn.Linear(self.D_h, self.D_h),
+            nn.Linear(self.D_h, mlp_dim),  # 将维度扩展到 4 倍
+            nn.LayerNorm(mlp_dim),         # LayerNorm 正则化
+            nn.ReLU(),                          # 激活函数
+            nn.Linear(mlp_dim, self.D_h),  # 还原到 D_h 维度
+            nn.Dropout(0.1)                     # 可选的 Dropout 层
         )
-        # self.conv = nn.Conv1d(D_h, D_h, kernel_size=1)
+
         self.proj = nn.Linear(self.D_h, self.D_o)
 
     def forward(self, feature, part):
         B, D, H, W = feature.size()
-        feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, N)
-        _, _, N = feature.size()
-        _, K, _ = part.size()  # (B, K, D_text)
+        _, K, _ = part.size() # (B, K, D_text)
+        feature = feature.view(B, D, -1)  # (B, D, H, W) -> (B, D, HW)
+        feature = feature.transpose(1, 2)  # (B, HW, D)
 
-        K_c = self.theta_K(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
-        Q_c = self.theta_Q(part)  # (B, K, D_text) -> (B, K, D_h)
-        V_c = self.theta_V(feature.permute(0, 2, 1))  # (B, N, D) -> (B, N, D_h)
+        # 只为part添加cls token
+        part_cls_token = part.mean(dim=1, keepdim=True)  # (B, 1, D_text)
+        part = torch.cat([part_cls_token, part], dim=1)  # (B, K+1, D_text)
 
-        A_v = self.softmax(torch.matmul(Q_c, K_c.transpose(2, 1)) / (self.D_h ** 0.5))  # (B, K, N)
+        # 添加位置编码
+        feature = feature + self.positional_embedding[None, :, :].to(feature.dtype)  # (B, HW, D)
 
-        F_p = torch.matmul(A_v, V_c)  # (B, K, N) x (B, N, D_h) -> (B, K, D_h)
-        F_p = self.mlp(F_p) + F_p  # (B, K, D_h)
-        # F_p = self.conv(F_p.permute(0, 2, 1)).permute(0, 2, 1)  # (B, K, D_h) -> (B, K, D_h)
-        F_p = self.proj(F_p)  # (B, K, D_h) -> (B, K, D_o)
+        K_c = self.theta_K(feature)  # (B, HW, D) -> (B, HW, D_h)
+        Q_c = self.theta_Q(part)  # (B, K+1, D_text) -> (B, K+1, D_h)
+        V_c = self.theta_V(feature)  # (B, HW, D) -> (B, HW, D_h)
 
-        A_v = A_v.view(B, K, H, W)
-        return F_p, A_v
+        A_v = self.softmax(torch.matmul(Q_c, K_c.transpose(2, 1)) / (self.D_h ** 0.5))  # (B, K+1, HW)
+
+        F_p = torch.matmul(A_v, V_c)  # (B, K+1, HW) x (B, HW, D_h) -> (B, K+1, D_h)
+        F_p = self.mlp(F_p) + F_p  # (B, K+1, D_h)
+
+        F_p = self.proj(F_p)  # (B, K+1, D_h) -> (B, K+1, D_o)
+
+        A_v = A_v.view(B, K+1, H, W)  # 重塑为 (B, K+1, H, W)
+
+        # 返回结果，包括分类标记的特征
+        return F_p, A_v # (B, K+1, D_o), (B, K+1, H, W)
+
+class MultiCrossAttention(nn.Module):
+    def __init__(self, embed_dim, output_dim=None, num_part=16, spacial_dim=162, num_heads=32):
+        super().__init__()
+        text_dim = 1024
+        self.positional_embedding = nn.Parameter(torch.randn(spacial_dim + 1, embed_dim) / embed_dim ** 0.5)
+        # self.text_positional_embedding = nn.Parameter(torch.randn(num_part + 1, text_dim) / text_dim ** 0.5)
+        self.text_proj = nn.Linear(text_dim, embed_dim)
+        self.k_proj = nn.Linear(embed_dim, embed_dim)
+        self.q_proj = nn.Linear(embed_dim, embed_dim)
+        self.v_proj = nn.Linear(embed_dim, embed_dim)
+        self.c_proj = nn.Linear(embed_dim, output_dim or embed_dim)
+        self.num_heads = num_heads
+
+    def forward(self, x, text):
+        x = x.reshape(x.shape[0], x.shape[1], x.shape[2] * x.shape[3]).permute(2, 0, 1)  # NCHW -> (HW)NC
+        x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)  # (HW+1)NC
+        x = x + self.positional_embedding[:, None, :].to(x.dtype)  # (HW+1)NC
+        text = text.permute(1, 0, 2)  # NLD -> LND
+        text = torch.cat([text.mean(dim=0, keepdim=True), text], dim=0)  # (L+1)ND
+        # text = text + self.text_positional_embedding[:, None, :].to(text.dtype)  # (L+1)ND
+        text = self.text_proj(text)  # (L+1)ND -> (L+1)NC
+
+        x, attn = F.multi_head_attention_forward( # (L+1)NC, N(L+1)(HW+1)
+            query=text, key=x, value=x,
+            embed_dim_to_check=x.shape[-1],
+            num_heads=self.num_heads,
+            q_proj_weight=self.q_proj.weight,
+            k_proj_weight=self.k_proj.weight,
+            v_proj_weight=self.v_proj.weight,
+            in_proj_weight=None,
+            in_proj_bias=torch.cat([self.q_proj.bias, self.k_proj.bias, self.v_proj.bias]),
+            bias_k=None,
+            bias_v=None,
+            add_zero_attn=False,
+            dropout_p=0,
+            out_proj_weight=self.c_proj.weight,
+            out_proj_bias=self.c_proj.bias,
+            use_separate_proj_weight=True,
+            training=self.training,
+            need_weights=False
+        )
+
+        return x, attn
 
 
 class Model(nn.Module):
@@ -430,6 +447,7 @@ class Model(nn.Module):
         self.h_resolution = int((img_h - 16) // 16 + 1)
         self.w_resolution = int((img_w - 16) // 16 + 1)
         self.vision_stride_size = 16
+        self.l2_norm = Normalize(2)
         clip_model = load_clip_to_cpu('RN50', self.h_resolution, self.w_resolution, self.vision_stride_size)
         clip_model.to("cuda")
 
@@ -441,121 +459,48 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        self.prompt_part = PromptLearner_part_without_cls(clip_model.dtype, clip_model.token_embedding)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=16)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
-        self.classifier_part = Classifier_part(self.num_classes, self.prompt_part.num_parts * self.in_planes // 8)
+        self.classifier_part = Classifier_part(self.num_classes, self.in_planes)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes // 8, K=self.prompt_part.num_parts)
+        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.in_planes, num_part=self.prompt_part.num_parts)
+        # self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes)
 
-    def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
-        if get_image == True:
-            if x1 is not None and x2 is None:
-                image_features_map1 = self.image_encoder1(x1)
-                image_features_map1 = self.image_encoder(image_features_map1)
-                image_features1_proj = self.attnpool(image_features_map1)[0]
-                return image_features1_proj
-            elif x1 is None and x2 is not None:
-                image_features_map2 = self.image_encoder2(x2)
-                image_features_map2 = self.image_encoder(image_features_map2)
-                image_features2_proj = self.attnpool(image_features_map2)[0]
-                return image_features2_proj
-
-        if get_text == True:
-            if label1 is not None and label2 is None:
-                prompts1 = self.prompt_learner(label1, mode='rgb')
-                text_features1 = self.text_encoder(prompts1, self.prompt_learner.rgb_tokenized_prompts)
-                return text_features1
-            if label2 is not None and label1 is None:
-                prompts2 = self.prompt_learner(label2, mode='ir')
-                text_features2 = self.text_encoder(prompts2, self.prompt_learner.ir_tokenized_prompts)
-                return text_features2
-            elif label is not None:
-                prompts_common = self.prompt_learner(label, mode='common')
-                text_features_common = self.text_encoder(prompts_common, self.prompt_learner.tokenized_prompts)
-                return text_features_common
-
-        if x1 is not None and x2 is not None:
-
-            image_features_map1 = self.image_encoder1(x1)
-            image_features_map2 = self.image_encoder2(x2)
-            image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
+    def forward(self, data=None):
+            image_features_map1 = self.image_encoder1(data)
+            # image_features_map2 = self.image_encoder2(x2)
+            # image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
+            image_features_maps = image_features_map1
             image_features_maps = self.image_encoder(image_features_maps)
-
-            with torch.no_grad():
-                image_features_map1_flip = self.image_encoder1(x1_flip)
-                image_features_map2_flip = self.image_encoder2(x2_flip)
-                image_features_maps_flip = torch.cat([image_features_map1_flip, image_features_map2_flip], dim=0)
-                image_features_maps_flip = self.image_encoder(image_features_maps_flip)
 
             image_features_proj = self.attnpool(image_features_maps)[0]
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
             text_features_part = []
-            # with torch.no_grad():
-            #     cls_ctx = self.prompt_learner(label=label, mode='get_cls_ctx')
-            #     prompts = self.prompt_part(cls_ctx)
-            #     for i in range(self.prompt_part.num_parts):
-            #         text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-
-            prompts = self.prompt_part(label.size(0))
+            prompts = self.prompt_part(data.size(0))
             for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(data.size(0), -1, -1)  # (b, num_parts, dim)
 
-            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts, D_o), (b, num_parts, H, W)
-            part_features = part_features.view(part_features.size(0), -1)  # (b, num_parts, D_o) -> (b, num_parts*D_o)
-            cls_scores_part = self.classifier_part(part_features)  # (b, num_classes)
-            # part_features = part_features.transpose(0, 1)  # (b, num_parts, D_o) -> (num_parts, b, D_o)
-            # cls_scores_part = cls_scores_part.transpose(0, 1)  # (b, num_parts, num_classes) -> (num_parts, b, num_classes)
-            _, attention_weight_flip = self.cross_attention(image_features_maps_flip, text_features_part)  # (b, num_parts, H, W)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, attention_weight, attention_weight_flip
-
-        elif x1 is not None and x2 is None:
-
-            image_features_map1 = self.image_encoder1(x1)
-            image_features_map1 = self.image_encoder(image_features_map1)
-            image_features1_proj = self.attnpool(image_features_map1)[0]
-            _, _, test_features1 = self.classifier(image_features_map1)
-            _, test_features1_proj = self.classifier2(image_features1_proj)
-
-            text_features_part = []
-            prompts = self.prompt_part(x1.size(0))
-            for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            part_features, _ = self.cross_attention(image_features_map1, text_features_part)
-            part_features = part_features.view(part_features.size(0), -1)
-
-            return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
-        elif x1 is None and x2 is not None:
-
-            image_features_map2 = self.image_encoder2(x2)
-            image_features_map2 = self.image_encoder(image_features_map2)
-            image_features2_proj = self.attnpool(image_features_map2)[0]
-            _, _, test_features2 = self.classifier(image_features_map2)
-            _, test_features2_proj = self.classifier2(image_features2_proj)
-
-            text_features_part = []
-            prompts = self.prompt_part(x2.size(0))
-            for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            part_features, _ = self.cross_attention(image_features_map2, text_features_part)
-            part_features = part_features.view(part_features.size(0), -1)
-            return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
+            # part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts + 1, D_o), (b, num_parts + 1, H, W)
+            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (num_parts + 1, b, D_o)
+            per_part_features = part_features[1:]  # (num_parts, b, D_o)
+            per_part_features = self.l2_norm(per_part_features)
+            part_features = part_features[0]  # (num_parts + 1, b, D_o) -> (b, D_o), 只取cls token的特征
+            cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, per_part_features
 
 
 from network.clip import clip
+
 
 def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_size):
     url = clip._MODELS[backbone_name]
@@ -571,30 +516,5 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
     model = clip.build_model(state_dict or model.state_dict(), h_resolution, w_resolution, vision_stride_size)
 
     return model
-
-
-
-
-
-clip_model = load_clip_to_cpu('RN50', 18, 9, 16)
-clip_model.to("cuda")
-prompter = PromptLearner_part(clip_model.dtype, clip_model.token_embedding).cuda()
-text = prompter(2)
-print(text.shape)
-t1, t2 = text[:, 0], text[:, 1]
-print(t1.shape, t2.shape)
-for i in range(len(t1) - 1):
-    print(f'part {i}')
-    is_same(t1[i], t2[i])
-is_same(t1, t2)
-print('hello')
-# rgb = prompt(label=label, mode='rgb')[0]
-# ir = prompt(label=label, mode='ir')[0]
-# normal = prompt(label=label, mode='common')[0]
-# print('---------------')
-# nor_rgb = torch.cat((rgb[:6], rgb[10:12], rgb[16:]))
-# nor_normal = torch.cat((normal[:3], normal[2:5], normal[9:11], normal[15:]))
-#
-# is_same(nor_rgb, nor_normal)
 
 

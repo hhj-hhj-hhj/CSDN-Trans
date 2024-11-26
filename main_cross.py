@@ -166,6 +166,7 @@ def main(config):
                 logger(f'now best result: {best_rank1} {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
+        loader = loaders.get_train_loader()
         # model.resume_model(config.resume_test_model)
         model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', 'model_86_v11.pth')
         model.model.load_state_dict(torch.load(model_path))
@@ -182,12 +183,12 @@ if __name__ == '__main__':
     parser.add_argument('--cuda', type=str, default='cuda')
     parser.add_argument('--mode', type=str, default='test', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
-    parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
+    parser.add_argument('--gall_mode', default='multi', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
-    parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
+    parser.add_argument('--dataset', default='regdb', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
     parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
-    parser.add_argument('--regdb_data_path', type=str, default='/opt/data/private/data/RegDB/')
+    parser.add_argument('--regdb_data_path', type=str, default='D:/Re-ID_Data/person/Infrared/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')
     parser.add_argument('--img_w', default=144, type=int, metavar='imgw', help='img width')
