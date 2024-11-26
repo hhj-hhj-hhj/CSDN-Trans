@@ -120,16 +120,17 @@ class Loader:
             self.gallery_loaders = gallery_loaders
 
         elif self.dataset == 'regdb':
-            samples = RegDBData(self.regdb_data_path, self.trial, transform1=self.transform_color1,
-                                transform2=self.transform_color2, transform3=self.transform_thermal)
+            samples = RegDBData(self.regdb_data_path, self.trial, transform1_1=self.transform_color1_1, transform1_2=self.transform_color1_2, transform2_1=self.transform_color2_1, \
+                               transform2_2=self.transform_color2_2, transform3_1=self.transform_thermal_1, transform3_2=self.transform_thermal_2)
+
             self.color_pos, self.thermal_pos = GenIdx(samples.train_color_label, samples.train_thermal_label)
             self.samples = samples
 
-            rgb_samples = RegDBDataRGBSamples(self.regdb_data_path, self.trial)
-            ir_samples = RegDBDataIRSamples(self.regdb_data_path, self.trial)
-
-            self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
-            self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
+            # rgb_samples = RegDBDataRGBSamples(self.regdb_data_path, self.trial)
+            # ir_samples = RegDBDataIRSamples(self.regdb_data_path, self.trial)
+            #
+            # self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
+            # self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
             normal_samples = RegDBDataNormalSamples(self.regdb_data_path, self.trial, transform1=self.transform_test,
                                                    transform2=self.transform_test)
