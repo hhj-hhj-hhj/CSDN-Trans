@@ -188,7 +188,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
     parser.add_argument('--sysu_data_path', type=str, default='D:/hhj/SYSU-MM01/')
-    parser.add_argument('--regdb_data_path', type=str, default='D:/hhj/SYSU-MM01/RegDB/')
+    parser.add_argument('--regdb_data_path', type=str, default='D:/hhj/RegDB/')
     parser.add_argument('--trial', default=1, type=int, help='trial (only for RegDB dataset)')
     parser.add_argument('--batch-size', default=32, type=int, metavar='B', help='training batch size')
     parser.add_argument('--img_w', default=144, type=int, metavar='imgw', help='img width')
