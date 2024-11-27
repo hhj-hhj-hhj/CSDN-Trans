@@ -347,7 +347,7 @@ class IPC_v3(nn.Module):
         return loss
 
 class IPC_v4(nn.Module):
-    def __init__(self, margin=0.6, k1=1.0, k2=1.2):
+    def __init__(self, margin=0.6, k1=1.0, k2=1.0):
         super(IPC_v4, self).__init__()
         self.margin = margin
         self.k1 = k1
