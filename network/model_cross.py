@@ -462,11 +462,11 @@ class Model(nn.Module):
         self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=16)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
-        self.classifier_part = Classifier_part(self.num_classes, self.in_planes)
+        self.classifier_part = Classifier_part(self.num_classes, 1024)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.in_planes, num_part=self.prompt_part.num_parts)
+        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=1024, num_part=self.prompt_part.num_parts)
         # self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes)
 
     def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
