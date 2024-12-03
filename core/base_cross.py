@@ -71,7 +71,7 @@ class Base:
         self.tri_creiteron = TripletLoss_WRT()
 
         self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
-        self.IPC = IPC_v2(k1=1.5)
+        self.IPC = IPC_v2(margin=0.5)
         self.IPD = IPD(margin=0.3)
         # self.IPD_v2 = IPD_v2(t=0.1)
 
