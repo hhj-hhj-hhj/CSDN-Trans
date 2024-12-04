@@ -566,6 +566,7 @@ class Model(nn.Module):
             part_features = self.l2_norm(part_features)
 
             return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
+            # return torch.cat([test_features1, test_features1_proj], dim=1)
         elif x1 is None and x2 is not None:
 
             image_features_map2 = self.image_encoder2(x2)
@@ -590,6 +591,7 @@ class Model(nn.Module):
             part_features = self.l2_norm(part_features)
 
             return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
+            # return torch.cat([test_features2, test_features2_proj], dim=1)
 
 
 from .clip import clip
