@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="先不使用身份间同部位区分损失。更改IPC_v4">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipc的margin改成0.5">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,238 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00041" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728708266444</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1728708266444</updated>
-    </task>
-    <task id="LOCAL-00042" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728708852548</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1728708852548</updated>
-    </task>
-    <task id="LOCAL-00043" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728708999990</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1728708999990</updated>
-    </task>
-    <task id="LOCAL-00044" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728711042092</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1728711042092</updated>
-    </task>
-    <task id="LOCAL-00045" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728711571845</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1728711571845</updated>
-    </task>
-    <task id="LOCAL-00046" summary="PromptLeatner_share">
-      <option name="closed" value="true" />
-      <created>1728813625003</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1728813625003</updated>
-    </task>
-    <task id="LOCAL-00047" summary="PromptLeatner_share_with_clothes">
-      <option name="closed" value="true" />
-      <created>1728892717788</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1728892717788</updated>
-    </task>
-    <task id="LOCAL-00048" summary="PromptLeatner_share_with_clothes">
-      <option name="closed" value="true" />
-      <created>1728893531457</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1728893531457</updated>
-    </task>
-    <task id="LOCAL-00049" summary="modal_contrastive">
-      <option name="closed" value="true" />
-      <created>1728979699175</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1728979699175</updated>
-    </task>
-    <task id="LOCAL-00050" summary="modal_contrastive">
-      <option name="closed" value="true" />
-      <created>1728989610487</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1728989610488</updated>
-    </task>
-    <task id="LOCAL-00051" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729510004336</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1729510004336</updated>
-    </task>
-    <task id="LOCAL-00052" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729593308710</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1729593308711</updated>
-    </task>
-    <task id="LOCAL-00053" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729599818822</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1729599818822</updated>
-    </task>
-    <task id="LOCAL-00054" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729601463078</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1729601463078</updated>
-    </task>
-    <task id="LOCAL-00055" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729601983417</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1729601983417</updated>
-    </task>
-    <task id="LOCAL-00056" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729603786918</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1729603786918</updated>
-    </task>
-    <task id="LOCAL-00057" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729668645274</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1729668645274</updated>
-    </task>
-    <task id="LOCAL-00058" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729752325210</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1729752325211</updated>
-    </task>
-    <task id="LOCAL-00059" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729756754965</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1729756754965</updated>
-    </task>
-    <task id="LOCAL-00060" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1729823506211</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1729823506211</updated>
-    </task>
-    <task id="LOCAL-00061" summary="cross attention&#10;cloth prompt">
-      <option name="closed" value="true" />
-      <created>1730185041954</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1730185041955</updated>
-    </task>
-    <task id="LOCAL-00062" summary="cross attention&#10;cloth prompt">
-      <option name="closed" value="true" />
-      <created>1730291469696</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1730291469696</updated>
-    </task>
-    <task id="LOCAL-00063" summary="cross attention&#10;cloth prompt">
-      <option name="closed" value="true" />
-      <created>1730295696010</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1730295696010</updated>
-    </task>
-    <task id="LOCAL-00064" summary="训练的part_prompt">
-      <option name="closed" value="true" />
-      <created>1730343856814</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1730343856815</updated>
-    </task>
-    <task id="LOCAL-00065" summary="训练的part_prompt">
-      <option name="closed" value="true" />
-      <created>1730357788071</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1730357788071</updated>
-    </task>
-    <task id="LOCAL-00066" summary="modal_contrastive">
-      <option name="closed" value="true" />
-      <created>1730710269192</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1730710269193</updated>
-    </task>
-    <task id="LOCAL-00067" summary="modal_contrastive">
-      <option name="closed" value="true" />
-      <created>1730719232814</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1730719232814</updated>
-    </task>
-    <task id="LOCAL-00068" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1730890122208</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1730890122208</updated>
-    </task>
-    <task id="LOCAL-00069" summary="cross attention">
-      <option name="closed" value="true" />
-      <created>1730967123449</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1730967123449</updated>
     </task>
     <task id="LOCAL-00070" summary="cross attention">
       <option name="closed" value="true" />
@@ -483,36 +250,268 @@
       <option name="project" value="LOCAL" />
       <updated>1731637022626</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="IPC_V2中加入，不同身份同部位区分损失。">
+      <option name="closed" value="true" />
+      <created>1731773431523</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1731773431523</updated>
+    </task>
+    <task id="LOCAL-00091" summary="best策略">
+      <option name="closed" value="true" />
+      <created>1731980204833</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1731980204834</updated>
+    </task>
+    <task id="LOCAL-00092" summary="去除IPD中求均值后的归一化。">
+      <option name="closed" value="true" />
+      <created>1732068135297</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1732068135298</updated>
+    </task>
+    <task id="LOCAL-00093" summary="还是加上归一化。另外最优模型策略回归。">
+      <option name="closed" value="true" />
+      <created>1732156132290</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1732156132290</updated>
+    </task>
+    <task id="LOCAL-00094" summary="part_prompt修改。加上photo">
+      <option name="closed" value="true" />
+      <created>1732170712025</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1732170712025</updated>
+    </task>
+    <task id="LOCAL-00095" summary="part_prompt修改成原来的。">
+      <option name="closed" value="true" />
+      <created>1732210649805</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210649805</updated>
+    </task>
+    <task id="LOCAL-00096" summary="num_part从12改成14。">
+      <option name="closed" value="true" />
+      <created>1732210816021</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210816021</updated>
+    </task>
+    <task id="LOCAL-00097" summary="num_part从12改成14。">
+      <option name="closed" value="true" />
+      <created>1732210835192</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210835192</updated>
+    </task>
+    <task id="LOCAL-00098" summary="将ipc系数调整成和ipd一样的0.1">
+      <option name="closed" value="true" />
+      <created>1732310662927</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1732310662927</updated>
+    </task>
+    <task id="LOCAL-00099" summary="num_part从14改成16。">
+      <option name="closed" value="true" />
+      <created>1732342906639</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1732342906639</updated>
+    </task>
+    <task id="LOCAL-00100" summary="main加上best_rank10显示。ipd去除均值后的归一化">
+      <option name="closed" value="true" />
+      <created>1732413767184</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1732413767184</updated>
+    </task>
+    <task id="LOCAL-00101" summary="ipd再次加上均值后的归一化">
+      <option name="closed" value="true" />
+      <created>1732459375338</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1732459375338</updated>
+    </task>
+    <task id="LOCAL-00102" summary="ipc系数改为0.15">
+      <option name="closed" value="true" />
+      <created>1732460806402</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1732460806402</updated>
+    </task>
+    <task id="LOCAL-00103" summary="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1">
+      <option name="closed" value="true" />
+      <created>1732528478929</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1732528478929</updated>
+    </task>
+    <task id="LOCAL-00104" summary="regdb数据集">
+      <option name="closed" value="true" />
+      <created>1732589036703</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589036703</updated>
+    </task>
+    <task id="LOCAL-00105" summary="regdb数据集">
+      <option name="closed" value="true" />
+      <created>1732589192324</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589192324</updated>
+    </task>
+    <task id="LOCAL-00106" summary="regdb main">
+      <option name="closed" value="true" />
+      <created>1732589985031</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589985031</updated>
+    </task>
+    <task id="LOCAL-00107" summary="回到0.05">
+      <option name="closed" value="true" />
+      <created>1732593494655</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1732593494655</updated>
+    </task>
+    <task id="LOCAL-00108" summary="使用IPC_v4">
+      <option name="closed" value="true" />
+      <created>1732599648658</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1732599648658</updated>
+    </task>
+    <task id="LOCAL-00109" summary="IPC_v4，将k2改成1.2">
+      <option name="closed" value="true" />
+      <created>1732688215790</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1732688215790</updated>
+    </task>
+    <task id="LOCAL-00110" summary="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05">
+      <option name="closed" value="true" />
+      <created>1732716213294</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1732716213294</updated>
+    </task>
+    <task id="LOCAL-00111" summary="ipc和ipd系数变成0.15">
+      <option name="closed" value="true" />
+      <created>1732785467527</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1732785467527</updated>
+    </task>
+    <task id="LOCAL-00112" summary="部位特征改为1024维度。">
+      <option name="closed" value="true" />
+      <created>1732855113193</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1732855113193</updated>
+    </task>
+    <task id="LOCAL-00113" summary="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18">
+      <option name="closed" value="true" />
+      <created>1732900363378</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1732900363378</updated>
+    </task>
+    <task id="LOCAL-00114" summary="部位改回16。ipc和ipd系数从0.15改成0.2">
+      <option name="closed" value="true" />
+      <created>1732954515139</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1732954515139</updated>
+    </task>
+    <task id="LOCAL-00115" summary="ipd去除归一化。系数改回0.15">
+      <option name="closed" value="true" />
+      <created>1733027403376</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1733027403376</updated>
+    </task>
+    <task id="LOCAL-00116" summary="ipc_v2两种loss加上k系数">
+      <option name="closed" value="true" />
+      <created>1733157833122</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1733157833122</updated>
+    </task>
+    <task id="LOCAL-00117" summary="ipc的k1变成1.5.ipd的归一化重新加上">
+      <option name="closed" value="true" />
+      <created>1733193881547</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1733193881547</updated>
+    </task>
+    <task id="LOCAL-00118" summary="ipc的margin改成0.5">
+      <option name="closed" value="true" />
+      <created>1733194457821</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1733194457821</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="loss_3" />
-    <MESSAGE value="attention" />
-    <MESSAGE value="attention loss" />
-    <MESSAGE value="with attention" />
-    <MESSAGE value="new text" />
-    <MESSAGE value="print 2 logger" />
-    <MESSAGE value="close single loader" />
-    <MESSAGE value="PromptLeatner_share" />
-    <MESSAGE value="PromptLeatner_share_with_clothes" />
-    <MESSAGE value="cross attention&#10;cloth prompt" />
-    <MESSAGE value="训练的part_prompt" />
-    <MESSAGE value="modal_contrastive" />
-    <MESSAGE value="cross attention" />
-    <MESSAGE value="一致性约束" />
-    <MESSAGE value="温度系数修改" />
-    <MESSAGE value="loss修改" />
-    <MESSAGE value="去除 ipc_loss" />
-    <MESSAGE value="ipc 和 ipd 使用 V3。" />
-    <MESSAGE value="部位特征去除归一化。" />
-    <MESSAGE value="改用IPC_V4.跨模态中心对齐" />
-    <MESSAGE value="修正" />
-    <MESSAGE value="还是加上归一化。" />
-    <MESSAGE value="还是去掉归一化。IPC_V4加上不同身份同部位距离。" />
-    <MESSAGE value="加上归一化" />
-    <MESSAGE value="先不使用身份间同部位区分损失。更改IPC_v4" />
-    <option name="LAST_COMMIT_MESSAGE" value="先不使用身份间同部位区分损失。更改IPC_v4" />
+    <MESSAGE value="去除IPD中求均值后的归一化。" />
+    <MESSAGE value="还是加上归一化。另外最优模型策略回归。" />
+    <MESSAGE value="part_prompt修改。加上photo" />
+    <MESSAGE value="part_prompt修改成原来的。" />
+    <MESSAGE value="num_part从12改成14。" />
+    <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
+    <MESSAGE value="num_part从14改成16。" />
+    <MESSAGE value="main加上best_rank10显示。ipd去除均值后的归一化" />
+    <MESSAGE value="ipd再次加上均值后的归一化" />
+    <MESSAGE value="ipc系数改为0.15" />
+    <MESSAGE value="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1" />
+    <MESSAGE value="regdb数据集" />
+    <MESSAGE value="regdb main" />
+    <MESSAGE value="回到0.05" />
+    <MESSAGE value="使用IPC_v4" />
+    <MESSAGE value="IPC_v4，将k2改成1.2" />
+    <MESSAGE value="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05" />
+    <MESSAGE value="ipc和ipd系数变成0.15" />
+    <MESSAGE value="部位特征改为1024维度。" />
+    <MESSAGE value="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18" />
+    <MESSAGE value="部位改回16。ipc和ipd系数从0.15改成0.2" />
+    <MESSAGE value="ipd去除归一化。系数改回0.15" />
+    <MESSAGE value="ipc_v2两种loss加上k系数" />
+    <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
+    <MESSAGE value="ipc的margin改成0.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="ipc的margin改成0.5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -528,9 +527,9 @@
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/core/train_cross.py</url>
-          <line>89</line>
-          <option name="timeStamp" value="43" />
+          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
+          <line>541</line>
+          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
