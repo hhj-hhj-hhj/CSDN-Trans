@@ -114,7 +114,8 @@ def main(config):
         # model_file_path = os.path.join(model.save_model_path, 'backup_cross/model_stage1_3share_prompt_cross.pth')
         # torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
-
+        stage1_save_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_regdb', 'model_stage1_3share_prompt_cross.pth')
+        torch.save(model.model.state_dict(), stage1_save_path)
 
         logger('Start the 3st Stage Training')
         logger('Extracting Text Features')

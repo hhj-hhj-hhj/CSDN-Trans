@@ -54,7 +54,8 @@ def test(base, loader, config):
 
     elif loader.dataset == 'regdb':
         gall_loader = loader.gallery_loaders
-        gall_feat = np.zeros((loader.n_gallery, 3072))
+        # gall_feat = np.zeros((loader.n_gallery, 3072))
+        gall_feat = np.zeros((loader.n_gallery, 5120))
         ptr = 0
         with torch.no_grad():
             for batch_idx, (input, label) in enumerate(gall_loader):
