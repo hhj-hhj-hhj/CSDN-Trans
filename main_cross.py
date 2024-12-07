@@ -83,12 +83,10 @@ def main(config):
             with torch.no_grad():
                 for i, data in enumerate(loaders.get_train_normal_loader()):
                     rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
-
                     ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
                     rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
                     ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
                     for i, j, img_feat1, img_feat2 in zip(rgb_pids, ir_pids, rgb_image_features_proj, ir_image_features_proj):
-
                         visible_labels.append(i)
                         visible_image_features.append(img_feat1.cpu())
                         infrared_labels.append(j)
