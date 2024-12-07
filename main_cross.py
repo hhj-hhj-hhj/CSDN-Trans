@@ -81,7 +81,7 @@ def main(config):
             infrared_labels = []
 
             with torch.no_grad():
-                for i, data in enumerate(loaders.get_train_normal_loader()):
+                for iter_loader, data in enumerate(loaders.get_train_normal_loader()):
                     rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
                     ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
                     rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
