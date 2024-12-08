@@ -82,21 +82,21 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
         ir_target = infrared_labels_list[ir_b_list].long()
         rgb_image_features = visible_image_features_list[rgb_b_list]
         ir_image_features = infrared_image_features_list[ir_b_list]
-        rgb_text_features = base.model(label1=rgb_target, get_text=True)
-        ir_text_features = base.model(label2=ir_target, get_text=True)
-        # image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
-        # target = torch.cat([rgb_target, ir_target], dim=0)
-        # text_features = base.model(label=target, get_text=True)
-        # loss_i2t = base.con_creiteron(image_features, text_features, target, target)
-        # loss_t2i = base.con_creiteron(text_features, image_features, target, target)
-
-        rgb_loss_i2t = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
-        ir_loss_i2t = base.con_creiteron(ir_image_features, ir_text_features, ir_target, ir_target)
-        loss_i2t = rgb_loss_i2t + ir_loss_i2t
-
-        rgb_loss_t2i = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
-        ir_loss_t2i = base.con_creiteron(ir_text_features, ir_image_features, ir_target, ir_target)
-        loss_t2i = rgb_loss_t2i + ir_loss_t2i
+        # rgb_text_features = base.model(label1=rgb_target, get_text=True)
+        # ir_text_features = base.model(label2=ir_target, get_text=True)
+        image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
+        target = torch.cat([rgb_target, ir_target], dim=0)
+        text_features = base.model(label=target, get_text=True)
+        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
+        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
+        #
+        # rgb_loss_i2t = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
+        # ir_loss_i2t = base.con_creiteron(ir_image_features, ir_text_features, ir_target, ir_target)
+        # loss_i2t = rgb_loss_i2t + ir_loss_i2t
+        #
+        # rgb_loss_t2i = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
+        # ir_loss_t2i = base.con_creiteron(ir_text_features, ir_image_features, ir_target, ir_target)
+        # loss_t2i = rgb_loss_t2i + ir_loss_t2i
 
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage1.zero_grad()
