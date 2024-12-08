@@ -72,7 +72,8 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
     base.set_train()
     meter = MultiItemAverageMeter()
     rgb_iter_list = torch.randperm(num_image).to(base.device)
-    ir_iter_list = torch.randperm(num_image).to(base.device)
+    # ir_iter_list = torch.randperm(num_image).to(base.device)
+    ir_iter_list = rgb_iter_list
     for i in range(i_ter):
         # print(f"this is the {i}/{i_ter} iteration")
         rgb_b_list = rgb_iter_list[i*batch: (i+1)*batch]
