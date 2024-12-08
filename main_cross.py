@@ -69,8 +69,8 @@ def main(config):
                                     indexes[-1]))
 
         logger('Start the 1st Stage of Training')
-        # stage1_128_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize64.pth')
-        # trained_model_state_dict = torch.load(stage1_128_model_path)
+        # stage1_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize64.pth')
+        # trained_model_state_dict = torch.load(stage1_model_path)
         # model.model.load_state_dict(trained_model_state_dict)
         # logger('Load the 1st Stage init Model End')
         model._init_optimizer_stage1()
@@ -106,14 +106,14 @@ def main(config):
 
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
-                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list)
+                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list, is_common=False)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        # logger('save the mode of the 1st stage, batchsize=32*2_1')
-        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2_1.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
+        logger('save the mode of the 1st stage, batchsize=32*2_1')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2_1.pth')
+        torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
         model._init_optimizer_stage1()
@@ -149,13 +149,13 @@ def main(config):
 
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
-                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list)
+                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list, is_common=True)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        logger('save the mode of the 1st stage, batchsize=32*2')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2.pth')
+        logger('save the mode of the 1st stage, batchsize=32*2_common')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2_common.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
