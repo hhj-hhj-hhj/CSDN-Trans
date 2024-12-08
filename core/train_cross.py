@@ -71,14 +71,16 @@ def train_stage1(base, num_image, i_ter, batch, visible_labels_list, visible_ima
 def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visible_image_features_list, infrared_labels_list, infrared_image_features_list):
     base.set_train()
     meter = MultiItemAverageMeter()
-    iter_list = torch.randperm(num_image).to(base.device)
+    rgb_iter_list = torch.randperm(num_image).to(base.device)
+    ir_iter_list = torch.randperm(num_image).to(base.device)
     for i in range(i_ter):
         # print(f"this is the {i}/{i_ter} iteration")
-        b_list = iter_list[i*batch: (i+1)*batch]
-        rgb_target = visible_labels_list[b_list].long()
-        ir_target = infrared_labels_list[b_list].long()
-        rgb_image_features = visible_image_features_list[b_list]
-        ir_image_features = infrared_image_features_list[b_list]
+        rgb_b_list = rgb_iter_list[i*batch: (i+1)*batch]
+        ir_b_list = ir_iter_list[i*batch: (i+1)*batch]
+        rgb_target = visible_labels_list[rgb_b_list].long()
+        ir_target = infrared_labels_list[ir_b_list].long()
+        rgb_image_features = visible_image_features_list[rgb_b_list]
+        ir_image_features = infrared_image_features_list[ir_b_list]
         rgb_text_features = base.model(label1=rgb_target, get_text=True)
         ir_text_features = base.model(label2=ir_target, get_text=True)
         # image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
