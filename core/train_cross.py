@@ -84,8 +84,8 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
         rgb_text_features = base.model(label1=rgb_target, get_text=True)
         ir_text_features = base.model(label2=ir_target, get_text=True)
         # image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
-        # text_features = torch.cat([rgb_text_features, ir_text_features], dim=0)
         # target = torch.cat([rgb_target, ir_target], dim=0)
+        # text_features = base.model(label=target, get_text=True)
         # loss_i2t = base.con_creiteron(image_features, text_features, target, target)
         # loss_t2i = base.con_creiteron(text_features, image_features, target, target)
 
