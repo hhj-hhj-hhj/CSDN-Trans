@@ -68,11 +68,11 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        logger('Start the 1st Stage of Training')
-        stage1_128_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize128.pth')
-        trained_model_state_dict = torch.load(stage1_128_model_path)
-        model.model.load_state_dict(trained_model_state_dict)
-        logger('Load the 1st Stage init Model End')
+        # logger('Start the 1st Stage of Training')
+        # stage1_128_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize128.pth')
+        # trained_model_state_dict = torch.load(stage1_128_model_path)
+        # model.model.load_state_dict(trained_model_state_dict)
+        # logger('Load the 1st Stage init Model End')
         model._init_optimizer_stage1()
 
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
@@ -111,8 +111,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        logger('save the mode of the 1st stage, batchsize=128*2')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize128*2.pth')
+        logger('save the mode of the 1st stage, batchsize=64')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize64.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     parser.add_argument('--milestones', nargs='+', type=int, default=[40, 70],
                         help='milestones for the learning rate decay')
 
-    parser.add_argument('--stage1_batch-size', default=128, type=int, metavar='B', help='training batch size')
+    parser.add_argument('--stage1_batch-size', default=64, type=int, metavar='B', help='training batch size')
     parser.add_argument('--stage1_learning_rate', type=float, default=0.00035)
     parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
