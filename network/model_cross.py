@@ -167,7 +167,7 @@ class PromptLearner_share(nn.Module):
     def __init__(self, num_class, dtype, token_embedding):
         super().__init__()
         rgb_ctx_init = "A visible photo of a X X X X person."
-        ir_ctx_init = "A infrared photo of a X X X X person."
+        ir_ctx_init = "An infrared photo of a X X X X person."
         ctx_init = "A photo of a X X X X person."
         ctx_dim = 512
 
