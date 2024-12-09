@@ -112,7 +112,7 @@ def main(config):
                                                             (current_epoch)[0], result))
         #
         logger('save the mode of the 1st stage, batchsize=32*2_1')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2_1.pth')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32_2_1.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
@@ -154,8 +154,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        logger('save the mode of the 1st stage, batchsize=32*2_common')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32*2_common.pth')
+        logger('save the mode of the 1st stage, batchsize=32_2_common')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32_2_common.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
