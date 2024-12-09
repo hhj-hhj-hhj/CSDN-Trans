@@ -111,6 +111,32 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
 
     return meter.get_val(), meter.get_str()
 
+def train_stage2(base, num_image, i_ter, batch, labels_list, image_features_list):
+    base.set_train()
+    meter = MultiItemAverageMeter()
+    iter_list = torch.randperm(num_image).to(base.device)
+    for i in range(i_ter):
+        # print(f"this is the {i}/{i_ter} iteration")
+        b_list = iter_list[i*batch: (i+1)*batch]
+        target = labels_list[b_list].long()
+        image_features = image_features_list[b_list]
+        text_features = base.model(label=target, get_text=True)
+        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
+        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
+
+
+        loss = loss_i2t + loss_t2i
+        base.model_optimizer_stage1.zero_grad()
+        loss.backward()
+        base.model_optimizer_stage1.step()
+
+        meter.update({'loss_i2t': loss_i2t.data,
+                      'loss_t2i': loss_t2i.data,})
+        # if (i + 1) % 200 == 0:
+        #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
+
+    return meter.get_val(), meter.get_str()
+
 # 只有一种rgb图像
 def train(base, loaders, text_features, config):
 
