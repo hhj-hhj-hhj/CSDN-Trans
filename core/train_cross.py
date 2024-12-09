@@ -11,13 +11,14 @@ def train_stage1_randomcolor(base, data_loader):
         with torch.no_grad():
             rgb_image_features = base.model(x1=rgb_img, get_image=True)
             ir_image_features = base.model(x2=ir_img, get_image=True)
-        rgb_text_features = base.model(label=rgb_target, get_text=True)
+        rgb_text_features = base.model(label1=rgb_target, get_text=True)
+        ir_text_features = base.model(label2=ir_target, get_text=True)
         loss_i2t_rgb = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
-        loss_i2t_ir = base.con_creiteron(ir_image_features, rgb_text_features, ir_target, ir_target)
+        loss_i2t_ir = base.con_creiteron(ir_image_features, ir_text_features, ir_target, ir_target)
         loss_i2t = loss_i2t_rgb + loss_i2t_ir
 
         loss_t2i_rgb = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
-        loss_t2i_ir = base.con_creiteron(rgb_text_features, ir_image_features, ir_target, ir_target)
+        loss_t2i_ir = base.con_creiteron(ir_text_features, ir_image_features, ir_target, ir_target)
         loss_t2i = loss_t2i_rgb + loss_t2i_ir
 
         loss = loss_i2t + loss_t2i
