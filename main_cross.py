@@ -69,10 +69,10 @@ def main(config):
                                     indexes[-1]))
 
         logger('Start the 1st Stage of Training')
-        stage1_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize64_loader.pth')
-        trained_model_state_dict = torch.load(stage1_model_path)
-        model.model.load_state_dict(trained_model_state_dict)
-        logger('Load the 1st Stage init Model End')
+        # stage1_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\end_sysu', 'model_stage1_batchsize64_loader.pth')
+        # trained_model_state_dict = torch.load(stage1_model_path)
+        # model.model.load_state_dict(trained_model_state_dict)
+        # logger('Load the 1st Stage init Model End')
 
         # model._init_optimizer_stage1()
         #
@@ -117,21 +117,21 @@ def main(config):
         # torch.save(model.model.state_dict(), model_file_path)
         # logger('The 1st Stage of Trained')
 
-        # print('Start the 1st Stage of Training')
-        #
-        # model._init_optimizer_stage1()
-        #
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # logger('save the mode of the 1st stage, batchsize=64,loader')
-        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize64_loader.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # logger('The 1st Stage of Trained')
+        print('Start the 1st Stage of Training')
+
+        model._init_optimizer_stage1()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        logger('save the mode of the 1st stage, batchsize=32,loader')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_batchsize32_loader.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        logger('The 1st Stage of Trained')
 
         logger('Start the 2nd Stage of Training')
         model._init_optimizer_stage1()
@@ -155,7 +155,7 @@ def main(config):
                         image_features.append(img_feat.cpu())
                 labels_list = torch.stack(labels, dim=0).cuda()
                 image_features_list = torch.stack(image_features, dim=0).cuda()
-                batch = config.stage1_batch_size
+                batch = config.stage1_batch_size * 2
                 num_image = labels_list.shape[0]
                 i_ter = num_image // batch
             del labels, image_features
@@ -167,8 +167,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        logger('save the mode of the 2st stage, batchsize=64_common_epoch60')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_batchsize64_common_epoch60.pth')
+        logger('save the mode of the 2st stage, batchsize=32__64common')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_batchsize32_64_common.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
 
@@ -256,7 +256,7 @@ if __name__ == '__main__':
     parser.add_argument('--milestones', nargs='+', type=int, default=[40, 70],
                         help='milestones for the learning rate decay')
 
-    parser.add_argument('--stage1_batch-size', default=64, type=int, metavar='B', help='training batch size')
+    parser.add_argument('--stage1_batch-size', default=32, type=int, metavar='B', help='training batch size')
     parser.add_argument('--stage1_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
