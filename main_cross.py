@@ -127,8 +127,8 @@ def main(config):
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
-        #
-        logger('save the mode of the 2st stage, batchsize=64_64')
+
+        logger('save the mode of the 2st stage, batchsize=64_64_2text')
         model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_64_64_2text.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
