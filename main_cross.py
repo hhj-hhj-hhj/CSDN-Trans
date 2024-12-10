@@ -138,7 +138,7 @@ def main(config):
 
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
 
-            logger(f'Extracting Image Features in epoch {current_epoch}')
+            # logger(f'Extracting Image Features in epoch {current_epoch}')
             labels = []
             image_features = []
 
@@ -159,7 +159,7 @@ def main(config):
                 num_image = labels_list.shape[0]
                 i_ter = num_image // batch
             del labels, image_features
-            logger(f'Image Features Extracted, Start Training Epoch {current_epoch}')
+            # logger(f'Image Features Extracted, Start Training Epoch {current_epoch}')
 
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage2(model, num_image, i_ter, batch, labels_list, image_features_list)
@@ -167,7 +167,7 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
         #
-        logger('save the mode of the 2st stage, batchsize=32__64common')
+        logger('save the mode of the 2st stage, batchsize=32_64common')
         model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_batchsize32_64_common.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
