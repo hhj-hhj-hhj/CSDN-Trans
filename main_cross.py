@@ -123,7 +123,7 @@ def main(config):
 
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
-                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list, is_common=False)
+                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
