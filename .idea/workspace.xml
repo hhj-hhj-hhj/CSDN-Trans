@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="尝试复现最优的文本。">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
-    </list>
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="避免覆cross版本的trin的两个一阶段，复制来自trans的版本。" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -92,38 +86,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00108" summary="使用IPC_v4">
-      <option name="closed" value="true" />
-      <created>1732599648658</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
-      <option name="project" value="LOCAL" />
-      <updated>1732599648658</updated>
-    </task>
-    <task id="LOCAL-00109" summary="IPC_v4，将k2改成1.2">
-      <option name="closed" value="true" />
-      <created>1732688215790</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
-      <option name="project" value="LOCAL" />
-      <updated>1732688215790</updated>
-    </task>
-    <task id="LOCAL-00110" summary="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05">
-      <option name="closed" value="true" />
-      <created>1732716213294</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
-      <option name="project" value="LOCAL" />
-      <updated>1732716213294</updated>
-    </task>
-    <task id="LOCAL-00111" summary="ipc和ipd系数变成0.15">
-      <option name="closed" value="true" />
-      <created>1732785467527</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1732785467527</updated>
     </task>
     <task id="LOCAL-00112" summary="部位特征改为1024维度。">
       <option name="closed" value="true" />
@@ -485,14 +447,42 @@
       <option name="project" value="LOCAL" />
       <updated>1733856875613</updated>
     </task>
-    <option name="localTasksCounter" value="157" />
+    <task id="LOCAL-00157" summary="恢复trans版本的代码到最优文本的那个版本。">
+      <option name="closed" value="true" />
+      <created>1733912876147</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1733912876147</updated>
+    </task>
+    <task id="LOCAL-00158" summary="一阶段直接加载。">
+      <option name="closed" value="true" />
+      <created>1733913054509</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1733913054509</updated>
+    </task>
+    <task id="LOCAL-00159" summary="避免覆盖权重。">
+      <option name="closed" value="true" />
+      <created>1733913109889</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1733913109889</updated>
+    </task>
+    <task id="LOCAL-00160" summary="避免覆cross版本的trin的两个一阶段，复制来自trans的版本。">
+      <option name="closed" value="true" />
+      <created>1733913295510</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1733913295510</updated>
+    </task>
+    <option name="localTasksCounter" value="161" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="针对regdb的更改" />
-    <MESSAGE value="针对regdb的修改" />
-    <MESSAGE value="prompt加上photo" />
-    <MESSAGE value="stage1对应到cclnet。batchsize128，学习率0.00035" />
     <MESSAGE value="对比差异" />
     <MESSAGE value="修复循环内两个i" />
     <MESSAGE value="一阶段加载权重" />
@@ -514,7 +504,11 @@
     <MESSAGE value="一阶段改成32batchsize，与3rgb_prompt一样" />
     <MESSAGE value="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。" />
     <MESSAGE value="尝试复现最优的文本。" />
-    <option name="LAST_COMMIT_MESSAGE" value="尝试复现最优的文本。" />
+    <MESSAGE value="恢复trans版本的代码到最优文本的那个版本。" />
+    <MESSAGE value="一阶段直接加载。" />
+    <MESSAGE value="避免覆盖权重。" />
+    <MESSAGE value="避免覆cross版本的trin的两个一阶段，复制来自trans的版本。" />
+    <option name="LAST_COMMIT_MESSAGE" value="避免覆cross版本的trin的两个一阶段，复制来自trans的版本。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
