@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="尝试复现最优的文本。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_trans.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,14 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00107" summary="回到0.05">
-      <option name="closed" value="true" />
-      <created>1732593494655</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
-      <option name="project" value="LOCAL" />
-      <updated>1732593494655</updated>
     </task>
     <task id="LOCAL-00108" summary="使用IPC_v4">
       <option name="closed" value="true" />
@@ -486,11 +477,18 @@
       <option name="project" value="LOCAL" />
       <updated>1733846226174</updated>
     </task>
-    <option name="localTasksCounter" value="156" />
+    <task id="LOCAL-00156" summary="尝试复现最优的文本。">
+      <option name="closed" value="true" />
+      <created>1733856875613</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1733856875613</updated>
+    </task>
+    <option name="localTasksCounter" value="157" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
     <MESSAGE value="prompt加上photo" />
@@ -515,7 +513,8 @@
     <MESSAGE value="阶段2改成60epoch" />
     <MESSAGE value="一阶段改成32batchsize，与3rgb_prompt一样" />
     <MESSAGE value="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。" />
-    <option name="LAST_COMMIT_MESSAGE" value="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。" />
+    <MESSAGE value="尝试复现最优的文本。" />
+    <option name="LAST_COMMIT_MESSAGE" value="尝试复现最优的文本。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

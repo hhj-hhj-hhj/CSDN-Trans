@@ -1,4 +1,3 @@
-
 import os
 import ast
 import torch
@@ -64,35 +63,24 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        # print('Start the 1st Stage of Training')
-        #
-        # model._init_optimizer_stage1()
-        #
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
-        # # torch.save(model.model.state_dict(), model_file_path)
-        # print('The 1st Stage of Trained')
-
-
-        stage1_model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup', 'model_stage1.pth')
-        trained_model_state_dict = torch.load(stage1_model_path)
-        model.model.load_state_dict(trained_model_state_dict)
-        logger('Load the 1st Stage init Model End')
-
+        print('Start the 1st Stage of Training')
+        model._init_optimizer_stage1()
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 1st Stage of Trained')
         logger('Start the 1st Stage of Training')
         logger('Extracting Image Features')
-
         visible_image_features = []
         visible_labels = []
         infrared_image_features = []
         infrared_labels = []
-
         with torch.no_grad():
             for i, data in enumerate(loaders.get_train_normal_loader()):
                 rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
@@ -114,9 +102,7 @@ def main(config):
             i_ter = num_image // batch
         del visible_labels, visible_image_features, infrared_labels, infrared_image_features
         logger('Image Features Extracted, Start Training')
-
         model._init_optimizer_stage1()
-
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
             model.model_lr_scheduler_stage1.step(current_epoch)
             _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
@@ -124,8 +110,7 @@ def main(config):
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
-
-        model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_3_prompt_clothes.pth')
+        model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_3share_prompt.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
