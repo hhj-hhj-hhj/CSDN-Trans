@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="cross版本的main，文本训练阶段完全复制tans版本。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="防止权重覆盖。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,22 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00114" summary="部位改回16。ipc和ipd系数从0.15改成0.2">
-      <option name="closed" value="true" />
-      <created>1732954515139</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
-      <option name="project" value="LOCAL" />
-      <updated>1732954515139</updated>
-    </task>
-    <task id="LOCAL-00115" summary="ipd去除归一化。系数改回0.15">
-      <option name="closed" value="true" />
-      <created>1733027403376</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
-      <option name="project" value="LOCAL" />
-      <updated>1733027403376</updated>
     </task>
     <task id="LOCAL-00116" summary="ipc_v2两种loss加上k系数">
       <option name="closed" value="true" />
@@ -481,11 +466,26 @@
       <option name="project" value="LOCAL" />
       <updated>1733914490021</updated>
     </task>
-    <option name="localTasksCounter" value="163" />
+    <task id="LOCAL-00163" summary="防止权重覆盖。">
+      <option name="closed" value="true" />
+      <created>1733916370616</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1733916370616</updated>
+    </task>
+    <task id="LOCAL-00164" summary="防止权重覆盖。">
+      <option name="closed" value="true" />
+      <created>1733916681728</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
+      <option name="project" value="LOCAL" />
+      <updated>1733916681728</updated>
+    </task>
+    <option name="localTasksCounter" value="165" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="修复循环内两个i" />
     <MESSAGE value="一阶段加载权重" />
     <MESSAGE value="一阶段重复策略" />
     <MESSAGE value="一阶段训练，红外和可见光使用两个随机列表，增加多样性" />
@@ -510,7 +510,8 @@
     <MESSAGE value="避免覆盖权重。" />
     <MESSAGE value="避免覆cross版本的trin的两个一阶段，复制来自trans的版本。" />
     <MESSAGE value="cross版本的main，文本训练阶段完全复制tans版本。" />
-    <option name="LAST_COMMIT_MESSAGE" value="cross版本的main，文本训练阶段完全复制tans版本。" />
+    <MESSAGE value="防止权重覆盖。" />
+    <option name="LAST_COMMIT_MESSAGE" value="防止权重覆盖。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

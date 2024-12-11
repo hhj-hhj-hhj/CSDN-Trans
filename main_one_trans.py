@@ -63,23 +63,23 @@ def main(config):
                 logger('Time: {}, automatically resume training from the latest step (model {})'.format(time_now(),
                                     indexes[-1]))
 
-        # print('Start the 1st Stage of Training')
-        # model._init_optimizer_stage1()
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1_v2.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # print('The 1st Stage of Trained')
+        print('Start the 1st Stage of Training')
+        model._init_optimizer_stage1()
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1_v2.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        print('The 1st Stage of Trained')
 
-        stage1_model_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
-        trained_model_state_dict = torch.load(stage1_model_path)
-        model.model.load_state_dict(trained_model_state_dict)
-        logger('Load the 1st Stage init Model End')
+        # stage1_model_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        # trained_model_state_dict = torch.load(stage1_model_path)
+        # model.model.load_state_dict(trained_model_state_dict)
+        # logger('Load the 1st Stage init Model End')
 
         logger('Start the 1st Stage of Training')
         logger('Extracting Image Features')
