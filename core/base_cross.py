@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 
 from bisect import bisect_right
-from network.model_trans import Model
+from network.model_cross import Model
 from network.lr import CosineLRScheduler
-from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl, hcc_kl_3
+from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl, hcc_kl_3, IPC, IPD, IPD_v2, IPC_v2, IPD_V3, IPC_v3, IPC_v4
 
 def create_scheduler(optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range = None):
 
@@ -46,7 +46,6 @@ class Base:
         self.img_w = config.img_w
 
         self.stage1_learning_rate = config.stage1_learning_rate
-        self.stage2_learning_rate = config.stage2_learning_rate
         self.stage1_weight_decay = config.stage1_weight_decay
         self.stage1_train_epochs = config.stage1_train_epochs
         self.stage1_lr_min = config.stage1_lr_min
@@ -71,9 +70,10 @@ class Base:
         self.soft_pid_creiteron = CrossEntropyLabelSmooth()
         self.tri_creiteron = TripletLoss_WRT()
 
-        self.criterion_hcc_euc = hcc_euc()
-        self.criterion_hcc_kl = hcc_kl()
         self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
+        self.IPC = IPC_v2(margin=0.6)
+        self.IPD = IPD(margin=0.3)
+        # self.IPD_v2 = IPD_v2(t=0.1)
 
     def _init_optimizer_stage1(self):
         params = []
@@ -84,30 +84,9 @@ class Base:
                 weight_decay = self.stage1_weight_decay
                 params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
                 keys += [[key]]
-            # if 'prompt_learner2' in key:
-            #     lr = self.stage1_learning_rate
-            #     weight_decay = self.stage1_weight_decay
-            #     params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-            #     keys += [[key]]
 
         self.model_optimizer_stage1 = getattr(torch.optim, 'Adam')(params)
         self.model_lr_scheduler_stage1 = create_scheduler(self.model_optimizer_stage1,
-                                                 num_epochs=self.stage1_train_epochs, lr_min=self.stage1_lr_min,
-                                                 warmup_lr_init=self.stage1_warmup_lr_init,
-                                                 warmup_t=self.stage1_warmup_epochs, noise_range=None)
-
-    def _init_optimizer_stage2(self):
-        params = []
-        keys = []
-        for key, value in self.model.named_parameters():
-            if 'attention_fusion' in key:
-                lr = self.stage2_learning_rate
-                weight_decay = self.stage1_weight_decay
-                params += [{'params': [value], 'lr': lr, 'weight_decay': weight_decay}]
-                keys += [[key]]
-
-        self.model_optimizer_stage2 = getattr(torch.optim, 'Adam')(params)
-        self.model_lr_scheduler_stage2 = create_scheduler(self.model_optimizer_stage2,
                                                  num_epochs=self.stage1_train_epochs, lr_min=self.stage1_lr_min,
                                                  warmup_lr_init=self.stage1_warmup_lr_init,
                                                  warmup_t=self.stage1_warmup_epochs, noise_range=None)
@@ -119,18 +98,18 @@ class Base:
             if 'prompt_learner' in key:
                 value.requires_grad_(False)
                 continue
-            # if 'prompt_learner2' in key:
+            # if 'prompt_part' in key:
             #     value.requires_grad_(False)
-            #     continue
-            # if 'attention_fusion' in key:
-            #     value.requires_grad_(False)
-            #     continue
             if 'text_encoder' in key:
                 value.requires_grad_(False)
                 continue
             lr = self.learning_rate
             if 'classifier' in key:
                 lr = self.learning_rate * 2
+            # if 'classifier_part' in key:
+            #     lr = self.learning_rate * 2
+            # if 'cross_attention' in key:
+            #     lr = self.learning_rate * 2
             params += [{'params': [value], 'lr': lr, 'weight_decay': self.weight_decay}]
             keys += [[key]]
 

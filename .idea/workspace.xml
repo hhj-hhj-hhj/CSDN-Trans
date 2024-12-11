@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="重新训练一遍trans版本的文本权重。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="随机种子的环境变量修复。另外cross复刻trans的训练。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_one_trans.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_one_trans.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00117" summary="ipc的k1变成1.5.ipd的归一化重新加上">
-      <option name="closed" value="true" />
-      <created>1733193881547</created>
-      <option name="number" value="00117" />
-      <option name="presentableId" value="LOCAL-00117" />
-      <option name="project" value="LOCAL" />
-      <updated>1733193881547</updated>
     </task>
     <task id="LOCAL-00118" summary="ipc的margin改成0.5">
       <option name="closed" value="true" />
@@ -483,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733917081712</updated>
     </task>
-    <option name="localTasksCounter" value="166" />
+    <task id="LOCAL-00166" summary="随机种子的环境变量修复。另外cross复刻trans的训练。">
+      <option name="closed" value="true" />
+      <created>1733925033888</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
+      <option name="project" value="LOCAL" />
+      <updated>1733925033888</updated>
+    </task>
+    <option name="localTasksCounter" value="167" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="一阶段重复策略" />
     <MESSAGE value="一阶段训练，红外和可见光使用两个随机列表，增加多样性" />
     <MESSAGE value="一阶段训练，64batchsize" />
     <MESSAGE value="一阶段训练代码部分，只输出对比损失不分模态。另外cat后再计算损失。" />
@@ -523,7 +522,8 @@
     <MESSAGE value="cross版本的main，文本训练阶段完全复制tans版本。" />
     <MESSAGE value="防止权重覆盖。" />
     <MESSAGE value="重新训练一遍trans版本的文本权重。" />
-    <option name="LAST_COMMIT_MESSAGE" value="重新训练一遍trans版本的文本权重。" />
+    <MESSAGE value="随机种子的环境变量修复。另外cross复刻trans的训练。" />
+    <option name="LAST_COMMIT_MESSAGE" value="随机种子的环境变量修复。另外cross复刻trans的训练。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
