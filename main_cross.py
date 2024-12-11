@@ -22,7 +22,7 @@ best_rank10 = 0
 def seed_torch(seed):
     seed = int(seed)
     random.seed(seed)
-    os.environ['PYTHONASHSEED'] = str(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -83,8 +83,8 @@ def main(config):
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
-        logger('save the mode of the 1st stage, batchsize=32_common')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_32_common.pth')
+        logger('save the mode of the 1st stage, as_trans_1')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_as_trans.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
@@ -126,8 +126,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
 
-        logger('save the mode of the 2st stage, batchsize=32_32_1to2text')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_32_32_1to2text.pth')
+        logger('save the mode of the 2st stage, as_trans')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_as_trans.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
 
