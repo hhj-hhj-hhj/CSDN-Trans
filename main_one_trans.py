@@ -76,7 +76,7 @@ def main(config):
         # torch.save(model.model.state_dict(), model_file_path)
         # print('The 1st Stage of Trained')
 
-        stage1_model_path = os.path.join(model.save_model_path, 'backup/model_stage1_v2.pth')
+        stage1_model_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
         trained_model_state_dict = torch.load(stage1_model_path)
         model.model.load_state_dict(trained_model_state_dict)
         logger('Load the 1st Stage init Model End')
