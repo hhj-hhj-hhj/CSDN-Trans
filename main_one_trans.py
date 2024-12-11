@@ -72,7 +72,7 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1.pth')
+        # model_file_path = os.path.join(model.save_model_path, 'backup/model_stage1_v2.pth')
         # torch.save(model.model.state_dict(), model_file_path)
         # print('The 1st Stage of Trained')
 
@@ -116,7 +116,7 @@ def main(config):
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
-        model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_3share_prompt.pth')
+        model_file_path = os.path.join(model.save_model_path, 'backup_3/model_stage1_3share_prompt_v2.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
