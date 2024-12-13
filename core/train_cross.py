@@ -187,7 +187,7 @@ def train_2rgb(base, loaders, text_features, config):
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
         # features, cls_score, part_features, cls_scores_part, attention_weight, attention_weight_flip = base.model(x1=rgb_imgs, x1_flip=rgb_imgs_flip, x2=ir_1, x2_flip=ir_1_flip, label=pids)
-        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        features, cls_score, part_features, cls_scores_part, per_part_features, text_features_part = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
@@ -198,6 +198,9 @@ def train_2rgb(base, loaders, text_features, config):
         loss_ipc = 0
         for i in range(num_part):
             loss_ipc += base.IPC(per_part_features[i], rgb_pids)
+            sim = per_part_features[i] @ text_features_part[i].t()
+            print(f"sim = {sim}")
+            print()
 
         loss_ipc /= num_part
 

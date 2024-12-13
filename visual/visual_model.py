@@ -435,7 +435,7 @@ class MultiCrossAttention(nn.Module):
             need_weights=False
         )
 
-        return x, attn
+        return x
 
 
 class Model(nn.Module):
@@ -472,13 +472,10 @@ class Model(nn.Module):
     def forward(self, data=None):
             image_features_map1 = self.image_encoder1(data)
             # image_features_map2 = self.image_encoder2(x2)
-            # image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = image_features_map1
             image_features_maps = self.image_encoder(image_features_maps)
 
             image_features_proj = self.attnpool(image_features_maps)[0]
-            features, cls_scores, _ = self.classifier(image_features_maps)
-            cls_scores_proj, _ = self.classifier2(image_features_proj)
 
             text_features_part = []
             prompts = self.prompt_part(data.size(0))
@@ -490,13 +487,8 @@ class Model(nn.Module):
             text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
             text_features_part = text_features_part.expand(data.size(0), -1, -1)  # (b, num_parts, dim)
 
-            # part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (b, num_parts + 1, D_o), (b, num_parts + 1, H, W)
-            part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (num_parts + 1, b, D_o)
-            per_part_features = part_features[1:]  # (num_parts, b, D_o)
-            per_part_features = self.l2_norm(per_part_features)
-            part_features = part_features[0]  # (num_parts + 1, b, D_o) -> (b, D_o), 只取cls token的特征
-            cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, per_part_features
+            part_features = self.cross_attention(image_features_maps, text_features_part)
+            return part_features[0]
 
 
 from network.clip import clip

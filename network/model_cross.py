@@ -103,10 +103,10 @@ class Classifier_part(nn.Module):
 class PromptLearner_part(nn.Module):
     def __init__(self, dtype, token_embedding, num_part=None):
         super().__init__()
-        # ctx_init = "A photo of a person's X."
-        ctx_init = "A person's X."
-        # pre_ctx = 6
-        pre_ctx = 3
+        ctx_init = "A photo of a person's X."
+        # ctx_init = "A person's X."
+        pre_ctx = 6
+        # pre_ctx = 3
 
         tokenized_prompts = clip.tokenize(ctx_init).cuda()
         self.tokenized_prompts = tokenized_prompts
@@ -167,7 +167,7 @@ class PromptLearner_share(nn.Module):
     def __init__(self, num_class, dtype, token_embedding):
         super().__init__()
         rgb_ctx_init = "A visible photo of a X X X X person."
-        ir_ctx_init = "A infrared photo of a X X X X person."
+        ir_ctx_init = "An infrared photo of a X X X X person."
         ctx_init = "A photo of a X X X X person."
         ctx_dim = 512
 
@@ -462,11 +462,11 @@ class Model(nn.Module):
         self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=16)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
-        self.classifier_part = Classifier_part(self.num_classes, self.in_planes)
+        self.classifier_part = Classifier_part(self.num_classes, 2048)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.in_planes, num_part=self.prompt_part.num_parts)
+        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=2048, num_part=self.prompt_part.num_parts)
         # self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes)
 
     def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
@@ -566,6 +566,7 @@ class Model(nn.Module):
             part_features = self.l2_norm(part_features)
 
             return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
+            # return torch.cat([test_features1, test_features1_proj], dim=1)
         elif x1 is None and x2 is not None:
 
             image_features_map2 = self.image_encoder2(x2)
@@ -590,6 +591,7 @@ class Model(nn.Module):
             part_features = self.l2_norm(part_features)
 
             return torch.cat([test_features2, test_features2_proj, part_features], dim=1)
+            # return torch.cat([test_features2, test_features2_proj], dim=1)
 
 
 from .clip import clip

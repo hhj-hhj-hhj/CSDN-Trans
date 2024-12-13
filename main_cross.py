@@ -105,12 +105,12 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
-        trained_model_state_dict = torch.load(model_path)
-        model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        # model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
+        # trained_model_state_dict = torch.load(model_path)
+        # model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', 'model_14.pth')
+        model.model.load_state_dict(torch.load(model_path))
         print(f'Load the prompt_learner1 end')
-        model_file_path = os.path.join(model.save_model_path, 'backup_cross/model_stage1_3share_prompt_cross.pth')
-        torch.save(model.model.state_dict(), model_file_path)
         logger('The 1st Stage of Trained')
 
 
@@ -168,7 +168,7 @@ def main(config):
     elif config.mode == 'test':
         loader = loaders.get_train_loader()
         # model.resume_model(config.resume_test_model)
-        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', 'model_86_v11.pth')
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', 'model_101_v18.pth')
         model.model.load_state_dict(torch.load(model_path))
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
@@ -182,10 +182,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
     parser.add_argument('--mode', type=str, default='test', help='train, test')
-    parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
+    parser.add_argument('--test_mode', default='indoor', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='multi', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
-    parser.add_argument('--dataset', default='regdb', help='dataset name: regdb or sysu]')
+    parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
     parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01/')
     parser.add_argument('--regdb_data_path', type=str, default='D:/Re-ID_Data/person/Infrared/RegDB/')

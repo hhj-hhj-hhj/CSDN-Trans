@@ -8,8 +8,6 @@ from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
 from PIL import Image
 # from visual.visual_base_attention import Base as BaseAtt
 from visual.visual_base import Base
-# from torchvision.models import resnet50
-# model = resnet50(pretrained=True)
 
 
 import argparse
@@ -22,20 +20,16 @@ def main(config):
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0002.jpg"
+    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0003.jpg"
     image = Image.open(image_path)
 
-    # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_V1_trans.pth'
-    # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_91_only3.pth'
-    # model_path = r'D:/PretrainModel/CSDN/models/testModel/model_106.pth'
-    model_path = r'D:/PretrainModel/CSDN/models/testModel/model_105_with_attention.pth'
-
+    model_name = 'model_86_v11.pth'
+    model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', model_name)
     model_trans.load_state_dict(torch.load(model_path), strict=False)
 
     import torchvision.transforms as transforms
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     transform_test_rgb = transforms.Compose([
-        # transforms.ToPILImage(),
         transforms.Resize((config.img_h, config.img_w)),
         transforms.ToTensor(),
         normalize])
@@ -47,8 +41,6 @@ def main(config):
     input_tensor = img_tensor
 
     target_layers = [model_trans.module.image_encoder[-1][-1]]
-    # target_layers = [model_trans.module.image_attention_fusion]
-    # target_layers = [model_trans.module.attnpool]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 
     grayscale_cam = cam(input_tensor=input_tensor, targets=None)
@@ -56,6 +48,10 @@ def main(config):
 
     img = np.array(image)
     img = cv2.resize(img, (config.img_w, config.img_h))
+    # 将grayscale_cam的输出逐行写入一个txt文件
+    with open('output.txt', 'w') as f:
+        for line in grayscale_cam:
+            f.write(' '.join(map(str, line)) + '\n')
 
     visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
     print(visualization.shape)
@@ -67,6 +63,7 @@ def main(config):
     plt.imshow(visualization)
     plt.axis('off')
     plt.show()
+    print('----------------------')
 
     # print('----------------------')
     # target_layers = [model_trans.module.image_encoder[-1][-1]]

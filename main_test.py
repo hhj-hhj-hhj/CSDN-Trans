@@ -48,7 +48,7 @@ def main(config):
     logger(config)
 
     if config.mode == 'test':
-        model_path = os.path.join(testModelPath, 'model_105_V1_trans.pth')
+        model_path = os.path.join(testModelPath, 'model_101_v18.pth')
         model.model.load_state_dict(torch.load(model_path), strict=False)
         cmc, mAP, mINP = test(model, loaders, config)
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \n Rank: {}'.format(time_now(),
