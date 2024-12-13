@@ -106,7 +106,8 @@ def train_stage1_2rgb(base, num_image, i_ter, batch, visible_labels_list, visibl
     base.set_train()
     meter = MultiItemAverageMeter()
     iter_list = torch.randperm(num_image).to(base.device)
-    iter_list2 = torch.randperm(num_image).to(base.device)
+    # iter_list2 = torch.randperm(num_image).to(base.device)
+    iter_list2 = iter_list
     for i in range(i_ter):
         # print(f"this is the {i}/{i_ter} iteration")
         b_list = iter_list[i*batch: (i+1)*batch]
@@ -141,8 +142,8 @@ def train_stage1_2rgb(base, num_image, i_ter, batch, visible_labels_list, visibl
                       'loss_t2i': loss_t2i.data,})
         # if (i + 1) % 200 == 0:
         #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
-        if (i + 1) % 2 == 0:
-            break
+        # if (i + 1) % 2 == 0:
+        #     break
     return meter.get_val(), meter.get_str()
 
 # 只有一种rgb图像
