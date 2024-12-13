@@ -1,7 +1,7 @@
 
 import torchvision.transforms as transforms
 from data_loader.dataset_cross import SYSUData, RegDBData, TestData, process_query_sysu, process_gallery_sysu, \
-    process_test_regdb, SYSUDataNormalSamples, Dataset, SYSUDataRGBNormalSamples, SYSUDataIRNormalSamples, \
+    process_test_regdb, SYSUDataNormalSamples, Dataset, SYSUDataRGBNormalSamples, SYSUDataIRNormalSamples, SYSUDataNormalSamples2rgb, \
     RegDBDataNormalSamples, RegDBDataRGBSamples, RegDBDataIRSamples
 from data_loader.processing import ChannelRandomErasing, ChannelAdapGray, ChannelExchange
 from data_loader.sampler import GenIdx, IdentitySampler
@@ -61,6 +61,14 @@ class Loader:
             transforms.Resize((config.img_h, config.img_w)),
             transforms.ToTensor(),
             normalize])
+        self.transform_test_rgb2 = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize((config.img_h, config.img_w)),
+            transforms.ToTensor(),
+            normalize,
+            ChannelExchange(gray=2)
+        ])
+
         self.transform_test_ir = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.img_h, config.img_w)),
@@ -102,8 +110,11 @@ class Loader:
             # self.stage1_rgb_loader = self.get_stage1_rgb_loader(rgb_samples)
             # self.stage1_ir_loader = self.get_stage1_ir_loader(ir_samples)
 
-            normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
-                                      transform2=self.transform_test_ir)
+            # normal_samples = SYSUDataNormalSamples(self.sysu_data_path, transform1=self.transform_test_rgb,
+            #                           transform2=self.transform_test_ir)
+
+            normal_samples = SYSUDataNormalSamples2rgb(self.sysu_data_path, transform1=self.transform_test_rgb, transform2=self.transform_test_rgb2,
+                                      transform3=self.transform_test_ir)
             self.normal_color_pos, self.normal_thermal_pos = GenIdx(normal_samples.train_color_label,
                                                                     normal_samples.train_thermal_label)
             self.normal_samples = normal_samples

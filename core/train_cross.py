@@ -102,30 +102,47 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
         #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
     return meter.get_val(), meter.get_str()
 
-def train_stage2(base, num_image, i_ter, batch, labels_list, image_features_list):
+def train_stage1_2rgb(base, num_image, i_ter, batch, visible_labels_list, visible_image_features_list, gray_image_features_list, infrared_labels_list, infrared_image_features_list):
     base.set_train()
     meter = MultiItemAverageMeter()
     iter_list = torch.randperm(num_image).to(base.device)
+    iter_list2 = torch.randperm(num_image).to(base.device)
     for i in range(i_ter):
         # print(f"this is the {i}/{i_ter} iteration")
         b_list = iter_list[i*batch: (i+1)*batch]
-        target = labels_list[b_list].long()
-        image_features = image_features_list[b_list]
-        text_features = base.model(label=target, get_text=True)
-        loss_i2t = base.con_creiteron(image_features, text_features, target, target)
-        loss_t2i = base.con_creiteron(text_features, image_features, target, target)
-
-
+        gray_list = iter_list2[i*batch: (i+1)*batch]
+        rgb_target = visible_labels_list[b_list].long()
+        gray_target = visible_labels_list[gray_list].long()
+        ir_target = infrared_labels_list[b_list].long()
+        rgb_image_features = visible_image_features_list[b_list]
+        gray_image_features = gray_image_features_list[gray_list]
+        ir_image_features = infrared_image_features_list[b_list]
+        rgb_text_features = base.model(label1=rgb_target, get_text=True)
+        gray_text_features = base.model(label1=gray_target, get_text=True)
+        ir_text_features = base.model(label2=ir_target, get_text=True)
+        # image_features = torch.cat([rgb_image_features, ir_image_features], dim=0)
+        # text_features = torch.cat([rgb_text_features, rgb_text_features], dim=0)
+        # target = torch.cat([rgb_target, rgb_target], dim=0)
+        # loss_i2t = base.con_creiteron(image_features, text_features, target, target)
+        # loss_t2i = base.con_creiteron(text_features, image_features, target, target)
+        rgb_loss_i2t = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
+        gray_loss_i2t = base.con_creiteron(gray_image_features, gray_text_features, gray_target, gray_target)
+        ir_loss_i2t = base.con_creiteron(ir_image_features, ir_text_features, ir_target, ir_target)
+        loss_i2t = rgb_loss_i2t + ir_loss_i2t + gray_loss_i2t
+        rgb_loss_t2i = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
+        gray_loss_t2i = base.con_creiteron(gray_text_features, gray_image_features, gray_target, gray_target)
+        ir_loss_t2i = base.con_creiteron(ir_text_features, ir_image_features, ir_target, ir_target)
+        loss_t2i = rgb_loss_t2i + ir_loss_t2i + gray_loss_t2i
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage1.zero_grad()
         loss.backward()
         base.model_optimizer_stage1.step()
-
         meter.update({'loss_i2t': loss_i2t.data,
                       'loss_t2i': loss_t2i.data,})
         # if (i + 1) % 200 == 0:
         #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
-
+        if (i + 1) % 2 == 0:
+            break
     return meter.get_val(), meter.get_str()
 
 # 只有一种rgb图像
