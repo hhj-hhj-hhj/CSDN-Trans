@@ -126,8 +126,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
 
-        logger('save the mode of the 2st stage, only stage2, batchsize=64')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64.pth')
+        logger('save the mode of the 2st stage, only stage2, batchsize=64,epoch=120')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64_90ep.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
 
@@ -221,8 +221,8 @@ if __name__ == '__main__':
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)
     parser.add_argument('--stage1_warmup_lr_init', type=float, default=0.00001)
-    parser.add_argument('--stage1_warmup_epochs', type=int, default=5)
-    parser.add_argument('--stage1_train_epochs', type=int, default=60)
+    parser.add_argument('--stage1_warmup_epochs', type=int, default=10)
+    parser.add_argument('--stage1_train_epochs', type=int, default=120)
 
     parser.add_argument('--lambda1', type=float, default=0.15)
     parser.add_argument('--lambda2', type=float, default=0.05)
