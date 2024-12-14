@@ -127,7 +127,7 @@ def main(config):
                                                             (current_epoch)[0], result))
 
         logger('save the mode of the 2st stage, only stage2, batchsize=64,epoch=120')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64_90ep.pth')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64_120ep.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
 
