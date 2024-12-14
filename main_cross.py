@@ -10,7 +10,7 @@ import numpy as np
 from data_loader.loader_cross import Loader
 from core import test
 from core.base_cross import Base
-from core.train_cross import train, train_stage1, train_stage1_3share, train_stage1_randomcolor, train_2rgb, train_stage1_2rgb
+from core.train_cross import train, train_stage1, train_stage1_3share, train_stage1_randomcolor, train_stage2, train_2rgb
 from tools import make_dirs, Logger, os_walk, time_now
 import warnings
 warnings.filterwarnings("ignore")
@@ -22,7 +22,7 @@ best_rank10 = 0
 def seed_torch(seed):
     seed = int(seed)
     random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
+    os.environ['PYTHONASHSEED'] = str(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -74,109 +74,104 @@ def main(config):
         # model.model.load_state_dict(trained_model_state_dict)
         # logger('Load the 1st Stage init Model End')
 
-        # print('Start the 1st Stage of Training')
-        # model._init_optimizer_stage1()
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # logger('save the mode of the 1st stage, as_trans_1')
-        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_as_trans.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # logger('The 1st Stage of Trained')
+        print('Start the 1st Stage of Training')
 
-        # logger('Start the 2st Stage of Training')
-        # logger('Extracting Image Features')
-        # visible_image_features = []
-        # visible_labels = []
-        # infrared_image_features = []
-        # infrared_labels = []
-        # with torch.no_grad():
-        #     for i, data in enumerate(loaders.get_train_normal_loader()):
-        #         rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
-        #         ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
-        #         rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
-        #         ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
-        #         for i, j, img_feat1, img_feat2 in zip(rgb_pids, ir_pids, rgb_image_features_proj,
-        #                                               ir_image_features_proj):
-        #             visible_labels.append(i)
-        #             visible_image_features.append(img_feat1.cpu())
-        #             infrared_labels.append(j)
-        #             infrared_image_features.append(img_feat2.cpu())
-        #     visible_labels_list = torch.stack(visible_labels, dim=0).cuda()
-        #     infrared_labels_list = torch.stack(infrared_labels, dim=0).cuda()
-        #     visible_image_features_list = torch.stack(visible_image_features, dim=0).cuda()
-        #     infrared_image_features_list = torch.stack(infrared_image_features, dim=0).cuda()
-        #     batch = config.stage1_batch_size * 2
-        #     # num_image = infrared_labels_list.shape[0]
-        #     num_image = visible_labels_list.shape[0]
-        #     i_ter = num_image // batch
-        # del visible_labels, visible_image_features, infrared_labels, infrared_image_features
-        # logger('Image Features Extracted, Start Training')
-        # model._init_optimizer_stage1()
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
-        #                                     visible_image_features_list, infrared_labels_list,
-        #                                     infrared_image_features_list)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        #
-        # logger('save the mode of the 2st stage, only stage2, batchsize=64')
-        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # logger('The 2st Stage of Trained')
-
-        logger('Start the 2st Stage of 2rgb of Training')
-        logger('Extracting Image Features')
-        visible_image_features = []
-        visible_labels = []
-        gray_image_features = []
-        infrared_image_features = []
-        infrared_labels = []
-        with torch.no_grad():
-            for i, data in enumerate(loaders.get_train_normal_loader()):
-                rgb_imgs, gray_imgs, rgb_pids = data[0].to(model.device), data[1].to(model.device), data[3].to(model.device)
-                ir_imgs, ir_pids = data[2].to(model.device), data[4].to(model.device)
-                rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
-                gray_image_features_proj = model.model(x1=gray_imgs, get_image=True)
-                ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
-                for i, j, img_feat1, img_feat1_2, img_feat2 in zip(rgb_pids, ir_pids, rgb_image_features_proj, gray_image_features_proj, ir_image_features_proj):
-                    visible_labels.append(i)
-                    visible_image_features.append(img_feat1.cpu())
-                    gray_image_features.append(img_feat1_2.cpu())
-                    infrared_labels.append(j)
-                    infrared_image_features.append(img_feat2.cpu())
-            visible_labels_list = torch.stack(visible_labels, dim=0).cuda()
-            infrared_labels_list = torch.stack(infrared_labels, dim=0).cuda()
-            visible_image_features_list = torch.stack(visible_image_features, dim=0).cuda()
-            gray_image_features_list = torch.stack(gray_image_features, dim=0).cuda()
-            infrared_image_features_list = torch.stack(infrared_image_features, dim=0).cuda()
-            batch = config.stage1_batch_size * 2
-            # num_image = infrared_labels_list.shape[0]
-            num_image = visible_labels_list.shape[0]
-            i_ter = num_image // batch
-        del visible_labels, visible_image_features, gray_image_features, infrared_labels, infrared_image_features
-        logger('Image Features Extracted, Start Training')
         model._init_optimizer_stage1()
+
         for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
             model.model_lr_scheduler_stage1.step(current_epoch)
-            _, result = train_stage1_2rgb(model, num_image, i_ter, batch, visible_labels_list,
-                                            visible_image_features_list, gray_image_features_list, infrared_labels_list,
-                                            infrared_image_features_list)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        logger('save the mode of the 1st stage, batchsize=32_common')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_32_common.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        logger('The 1st Stage of Trained')
+
+        logger('Start the 2st Stage of Training')
+        model._init_optimizer_stage1()
+
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            # logger(f'Extracting Image Features in epoch {current_epoch}')
+            visible_image_features = []
+            visible_labels = []
+            infrared_image_features = []
+            infrared_labels = []
+
+            with torch.no_grad():
+                for iter_loader, data in enumerate(loaders.get_train_normal_loader()):
+                    rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
+                    ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
+                    rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
+                    ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
+                    for i, j, img_feat1, img_feat2 in zip(rgb_pids, ir_pids, rgb_image_features_proj, ir_image_features_proj):
+                        visible_labels.append(i)
+                        visible_image_features.append(img_feat1.cpu())
+                        infrared_labels.append(j)
+                        infrared_image_features.append(img_feat2.cpu())
+                visible_labels_list = torch.stack(visible_labels, dim=0).cuda()
+                infrared_labels_list = torch.stack(infrared_labels, dim=0).cuda()
+                visible_image_features_list = torch.stack(visible_image_features, dim=0).cuda()
+                infrared_image_features_list = torch.stack(infrared_image_features, dim=0).cuda()
+                batch = config.stage1_batch_size * 1
+                num_image = visible_labels_list.shape[0]
+                i_ter = num_image // batch
+            del visible_labels, visible_image_features, infrared_labels, infrared_image_features
+            # logger(f'Image Features Extracted, Start Training Epoch {current_epoch}')
+
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_3share(model, num_image, i_ter, batch, visible_labels_list,
+                                     visible_image_features_list, infrared_labels_list, infrared_image_features_list, is_common=False)
             logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
 
-        logger('save the mode of the 2st stage only stage2,2rgb, batchsize=64')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64_2rgb.pth')
+        logger('save the mode of the 2st stage, batchsize=32_32_1to2text')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_32_32_1to2text.pth')
         torch.save(model.model.state_dict(), model_file_path)
-        logger('The 2st Stage of 2rg of Trained')
+        logger('The 2st Stage of Trained')
 
+
+        # logger('Start the 2nd Stage of Training')
+        # model._init_optimizer_stage1()
+        #
+        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+        #
+        #     # logger(f'Extracting Image Features in epoch {current_epoch}')
+        #     labels = []
+        #     image_features = []
+        #
+        #     with torch.no_grad():
+        #         for iter_loader, data in enumerate(loaders.get_train_normal_loader()):
+        #             rgb_imgs, rgb_pids = data[0].to(model.device), data[2].to(model.device)
+        #             ir_imgs, ir_pids = data[1].to(model.device), data[3].to(model.device)
+        #             rgb_image_features_proj = model.model(x1=rgb_imgs, get_image=True)
+        #             ir_image_features_proj = model.model(x2=ir_imgs, get_image=True)
+        #             pids = torch.cat([rgb_pids, ir_pids], dim=0)
+        #             image_features_proj = torch.cat([rgb_image_features_proj, ir_image_features_proj], dim=0)
+        #             for i, img_feat in zip(pids, image_features_proj):
+        #                 labels.append(i)
+        #                 image_features.append(img_feat.cpu())
+        #         labels_list = torch.stack(labels, dim=0).cuda()
+        #         image_features_list = torch.stack(image_features, dim=0).cuda()
+        #         batch = config.stage1_batch_size * 2
+        #         num_image = labels_list.shape[0]
+        #         i_ter = num_image // batch
+        #     del labels, image_features
+        #     # logger(f'Image Features Extracted, Start Training Epoch {current_epoch}')
+        #
+        #     model.model_lr_scheduler_stage1.step(current_epoch)
+        #     _, result = train_stage2(model, num_image, i_ter, batch, labels_list, image_features_list)
+        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+        #                                                     model.model_lr_scheduler_stage1._get_lr
+        #                                                     (current_epoch)[0], result))
+        # #
+        # logger('save the mode of the 2st stage, batchsize=32_64common')
+        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_batchsize32_64_common.pth')
+        # torch.save(model.model.state_dict(), model_file_path)
+        # logger('The 2st Stage of Trained')
 
         logger('Start the 3st Stage Training')
         logger('Extracting Text Features')
@@ -263,7 +258,7 @@ if __name__ == '__main__':
                         help='milestones for the learning rate decay')
 
     parser.add_argument('--stage1_batch-size', default=32, type=int, metavar='B', help='training batch size')
-    parser.add_argument('--stage1_learning_rate', type=float, default=0.00035)
+    parser.add_argument('--stage1_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)

@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="随机种子的环境变量修复。另外cross复刻trans的训练。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="文本训练添加灰度图。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,46 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00118" summary="ipc的margin改成0.5">
-      <option name="closed" value="true" />
-      <created>1733194457821</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
-      <option name="project" value="LOCAL" />
-      <updated>1733194457821</updated>
-    </task>
-    <task id="LOCAL-00119" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733305368916</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
-      <option name="project" value="LOCAL" />
-      <updated>1733305368916</updated>
-    </task>
-    <task id="LOCAL-00120" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733307500926</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
-      <option name="project" value="LOCAL" />
-      <updated>1733307500926</updated>
-    </task>
-    <task id="LOCAL-00121" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733329452190</created>
-      <option name="number" value="00121" />
-      <option name="presentableId" value="LOCAL-00121" />
-      <option name="project" value="LOCAL" />
-      <updated>1733329452190</updated>
-    </task>
-    <task id="LOCAL-00122" summary="针对regdb的修改">
-      <option name="closed" value="true" />
-      <created>1733331763097</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
-      <option name="project" value="LOCAL" />
-      <updated>1733331763097</updated>
     </task>
     <task id="LOCAL-00123" summary="针对regdb的修改">
       <option name="closed" value="true" />
@@ -483,7 +443,47 @@
       <option name="project" value="LOCAL" />
       <updated>1733925033888</updated>
     </task>
-    <option name="localTasksCounter" value="167" />
+    <task id="LOCAL-00167" summary="修复base_cross">
+      <option name="closed" value="true" />
+      <created>1733926154179</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
+      <option name="project" value="LOCAL" />
+      <updated>1733926154180</updated>
+    </task>
+    <task id="LOCAL-00168" summary="only_stage2,stage1-learn-rate=0.0035">
+      <option name="closed" value="true" />
+      <created>1733993870370</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1733993870370</updated>
+    </task>
+    <task id="LOCAL-00169" summary="文本训练添加灰度图。">
+      <option name="closed" value="true" />
+      <created>1734076780996</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1734076780996</updated>
+    </task>
+    <task id="LOCAL-00170" summary="文本训练添加灰度图。">
+      <option name="closed" value="true" />
+      <created>1734077129970</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
+      <option name="project" value="LOCAL" />
+      <updated>1734077129970</updated>
+    </task>
+    <task id="LOCAL-00171" summary="文本训练添加灰度图。">
+      <option name="closed" value="true" />
+      <created>1734077323160</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1734077323160</updated>
+    </task>
+    <option name="localTasksCounter" value="172" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,9 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="一阶段训练，红外和可见光使用两个随机列表，增加多样性" />
-    <MESSAGE value="一阶段训练，64batchsize" />
-    <MESSAGE value="一阶段训练代码部分，只输出对比损失不分模态。另外cat后再计算损失。" />
     <MESSAGE value="修正一个单词错误" />
     <MESSAGE value="随机列表两个相同。" />
     <MESSAGE value="prompt换成common。" />
@@ -523,7 +520,10 @@
     <MESSAGE value="防止权重覆盖。" />
     <MESSAGE value="重新训练一遍trans版本的文本权重。" />
     <MESSAGE value="随机种子的环境变量修复。另外cross复刻trans的训练。" />
-    <option name="LAST_COMMIT_MESSAGE" value="随机种子的环境变量修复。另外cross复刻trans的训练。" />
+    <MESSAGE value="修复base_cross" />
+    <MESSAGE value="only_stage2,stage1-learn-rate=0.0035" />
+    <MESSAGE value="文本训练添加灰度图。" />
+    <option name="LAST_COMMIT_MESSAGE" value="文本训练添加灰度图。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
