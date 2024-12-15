@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="文本训练阶段改成120epoch和10warm_up">
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00127" summary="对比差异">
-      <option name="closed" value="true" />
-      <created>1733545757392</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
-      <option name="project" value="LOCAL" />
-      <updated>1733545757392</updated>
     </task>
     <task id="LOCAL-00128" summary="修复循环内两个i">
       <option name="closed" value="true" />
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734179150617</updated>
     </task>
-    <option name="localTasksCounter" value="176" />
+    <task id="LOCAL-00176" summary="文本训练阶段改成120epoch和10warm_up">
+      <option name="closed" value="true" />
+      <created>1734179235531</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1734179235531</updated>
+    </task>
+    <option name="localTasksCounter" value="177" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
