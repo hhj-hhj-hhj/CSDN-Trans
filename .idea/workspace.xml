@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="文本训练阶段改成120epoch和10warm_up">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="文本训练阶段改成90epoch和10warm_up，0.0003学习率">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00128" summary="修复循环内两个i">
-      <option name="closed" value="true" />
-      <created>1733551245889</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1733551245889</updated>
     </task>
     <task id="LOCAL-00129" summary="一阶段加载权重">
       <option name="closed" value="true" />
@@ -481,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734179235531</updated>
     </task>
-    <option name="localTasksCounter" value="177" />
+    <task id="LOCAL-00177" summary="文本训练阶段改成90epoch和10warm_up，0.0003学习率">
+      <option name="closed" value="true" />
+      <created>1734240362377</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1734240362377</updated>
+    </task>
+    <option name="localTasksCounter" value="178" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="还是直接试单文本吧。" />
     <MESSAGE value="模拟最初的，一阶段训练两次的场景。" />
     <MESSAGE value="一阶段分别训两次。" />
     <MESSAGE value="一阶段分别训练" />
@@ -521,7 +521,8 @@
     <MESSAGE value="Revert &quot;only_stage2,stage1-learn-rate=0.0035&quot;&#10;&#10;This reverts commit 5a06346d" />
     <MESSAGE value="Revert &quot;文本训练添加灰度图。&quot;&#10;&#10;This reverts commit 145563ed" />
     <MESSAGE value="文本训练阶段改成120epoch和10warm_up" />
-    <option name="LAST_COMMIT_MESSAGE" value="文本训练阶段改成120epoch和10warm_up" />
+    <MESSAGE value="文本训练阶段改成90epoch和10warm_up，0.0003学习率" />
+    <option name="LAST_COMMIT_MESSAGE" value="文本训练阶段改成90epoch和10warm_up，0.0003学习率" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -74,19 +74,19 @@ def main(config):
         # model.model.load_state_dict(trained_model_state_dict)
         # logger('Load the 1st Stage init Model End')
 
-        # print('Start the 1st Stage of Training')
-        # model._init_optimizer_stage1()
-        # for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
-        #     data_all_loader = loaders.get_train_normal_loader()
-        #     model.model_lr_scheduler_stage1.step(current_epoch)
-        #     _, result = train_stage1_randomcolor(model, data_all_loader)
-        #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
-        #                                                     model.model_lr_scheduler_stage1._get_lr
-        #                                                     (current_epoch)[0], result))
-        # logger('save the mode of the 1st stage, as_trans_1')
-        # model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_as_trans.pth')
-        # torch.save(model.model.state_dict(), model_file_path)
-        # logger('The 1st Stage of Trained')
+        print('Start the 1st Stage of Training')
+        model._init_optimizer_stage1()
+        for current_epoch in range(start_train_epoch, config.stage1_train_epochs):
+            data_all_loader = loaders.get_train_normal_loader()
+            model.model_lr_scheduler_stage1.step(current_epoch)
+            _, result = train_stage1_randomcolor(model, data_all_loader)
+            logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
+                                                            model.model_lr_scheduler_stage1._get_lr
+                                                            (current_epoch)[0], result))
+        logger('save the mode of the 1st stage, same_trans_1')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage1_same_trans.pth')
+        torch.save(model.model.state_dict(), model_file_path)
+        logger('The 1st Stage of Trained')
 
         logger('Start the 2st Stage of Training')
         logger('Extracting Image Features')
@@ -110,7 +110,7 @@ def main(config):
             infrared_labels_list = torch.stack(infrared_labels, dim=0).cuda()
             visible_image_features_list = torch.stack(visible_image_features, dim=0).cuda()
             infrared_image_features_list = torch.stack(infrared_image_features, dim=0).cuda()
-            batch = config.stage1_batch_size * 2
+            batch = config.stage1_batch_size
             # num_image = infrared_labels_list.shape[0]
             num_image = visible_labels_list.shape[0]
             i_ter = num_image // batch
@@ -126,8 +126,8 @@ def main(config):
                                                             model.model_lr_scheduler_stage1._get_lr
                                                             (current_epoch)[0], result))
 
-        logger('save the mode of the 2st stage, only stage2, batchsize=64,epoch=120')
-        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_only_stage2_64_90ep.pth')
+        logger('save the mode of the 2st stage, same_trans')
+        model_file_path = os.path.join(model.save_model_path, 'end_sysu/model_stage2_same_trans.pth')
         torch.save(model.model.state_dict(), model_file_path)
         logger('The 2st Stage of Trained')
 
@@ -221,8 +221,8 @@ if __name__ == '__main__':
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)
     parser.add_argument('--stage1_warmup_lr_init', type=float, default=0.00001)
-    parser.add_argument('--stage1_warmup_epochs', type=int, default=10)
-    parser.add_argument('--stage1_train_epochs', type=int, default=90)
+    parser.add_argument('--stage1_warmup_epochs', type=int, default=5)
+    parser.add_argument('--stage1_train_epochs', type=int, default=60)
 
     parser.add_argument('--lambda1', type=float, default=0.15)
     parser.add_argument('--lambda2', type=float, default=0.05)
