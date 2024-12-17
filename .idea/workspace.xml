@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="完全复刻trans版本。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加载权重一阶段，再训练图像编码器。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00130" summary="一阶段重复策略">
-      <option name="closed" value="true" />
-      <created>1733619836414</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1733619836414</updated>
     </task>
     <task id="LOCAL-00131" summary="一阶段训练，红外和可见光使用两个随机列表，增加多样性">
       <option name="closed" value="true" />
@@ -481,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734296748245</updated>
     </task>
-    <option name="localTasksCounter" value="179" />
+    <task id="LOCAL-00179" summary="加载权重一阶段，再训练图像编码器。">
+      <option name="closed" value="true" />
+      <created>1734362963020</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1734362963021</updated>
+    </task>
+    <option name="localTasksCounter" value="180" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="一阶段分别训两次。" />
     <MESSAGE value="一阶段分别训练" />
     <MESSAGE value="一阶段使用之前的randow里面的，dataloader在训练阶段传入，不提前提取特征的方式。" />
     <MESSAGE value="阶段2改成30epoch" />
@@ -521,7 +522,8 @@
     <MESSAGE value="文本训练阶段改成120epoch和10warm_up" />
     <MESSAGE value="文本训练阶段改成90epoch和10warm_up，0.0003学习率" />
     <MESSAGE value="完全复刻trans版本。" />
-    <option name="LAST_COMMIT_MESSAGE" value="完全复刻trans版本。" />
+    <MESSAGE value="加载权重一阶段，再训练图像编码器。" />
+    <option name="LAST_COMMIT_MESSAGE" value="加载权重一阶段，再训练图像编码器。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
