@@ -131,6 +131,12 @@ def main(config):
         # torch.save(model.model.state_dict(), model_file_path)
         # logger('The 2st Stage of Trained')
 
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
+        trained_model_state_dict = torch.load(model_path)
+        model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        model_save_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\stage1_part', '14.pth')
+        torch.save(model.model.state_dict(), model_save_path)
+
         logger('Start the 3st Stage Training')
         logger('Extracting Text Features')
 
