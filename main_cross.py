@@ -136,6 +136,7 @@ def main(config):
         model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
         model_save_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\stage1_part', '16_test.pth')
         torch.save(model.model.state_dict(), model_save_path)
+        logger('The 1st Stage prompt_learner loaded')
 
         logger('Start the 3st Stage Training')
         logger('Extracting Text Features')
