@@ -167,7 +167,7 @@ class PromptLearner_share(nn.Module):
     def __init__(self, num_class, dtype, token_embedding):
         super().__init__()
         rgb_ctx_init = "A visible photo of a X X X X person."
-        ir_ctx_init = "A infrared photo of a X X X X person."
+        ir_ctx_init = "An infrared photo of a X X X X person."
         ctx_init = "A photo of a X X X X person."
         ctx_dim = 512
 
@@ -459,7 +459,7 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=14)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=16)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
         self.classifier_part = Classifier_part(self.num_classes, 2048)
