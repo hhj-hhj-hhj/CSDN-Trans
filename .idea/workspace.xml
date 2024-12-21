@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="把红外的an改成a。因为训练的时候用的就是a">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加上一阶段文本加载成功提示。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,22 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00134" summary="一阶段训练代码部分，只输出对比损失不分模态。另外cat后再计算损失。">
-      <option name="closed" value="true" />
-      <created>1733669107588</created>
-      <option name="number" value="00134" />
-      <option name="presentableId" value="LOCAL-00134" />
-      <option name="project" value="LOCAL" />
-      <updated>1733669107588</updated>
-    </task>
-    <task id="LOCAL-00135" summary="修正一个单词错误">
-      <option name="closed" value="true" />
-      <created>1733669804579</created>
-      <option name="number" value="00135" />
-      <option name="presentableId" value="LOCAL-00135" />
-      <option name="project" value="LOCAL" />
-      <updated>1733669804579</updated>
     </task>
     <task id="LOCAL-00136" summary="随机列表两个相同。">
       <option name="closed" value="true" />
@@ -483,7 +465,23 @@
       <option name="project" value="LOCAL" />
       <updated>1734732740139</updated>
     </task>
-    <option name="localTasksCounter" value="183" />
+    <task id="LOCAL-00183" summary="重新测试v18的精度。不过红外是an不是a">
+      <option name="closed" value="true" />
+      <created>1734734043841</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1734734043841</updated>
+    </task>
+    <task id="LOCAL-00184" summary="加上一阶段文本加载成功提示。">
+      <option name="closed" value="true" />
+      <created>1734734399470</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
+      <option name="project" value="LOCAL" />
+      <updated>1734734399470</updated>
+    </task>
+    <option name="localTasksCounter" value="185" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,8 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="阶段2改成60epoch" />
-    <MESSAGE value="一阶段改成32batchsize，与3rgb_prompt一样" />
     <MESSAGE value="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。" />
     <MESSAGE value="尝试复现最优的文本。" />
     <MESSAGE value="恢复trans版本的代码到最优文本的那个版本。" />
@@ -523,7 +519,9 @@
     <MESSAGE value="恢复到训练灰度图之前版本。" />
     <MESSAGE value="开始做消融。num_part改成14." />
     <MESSAGE value="把红外的an改成a。因为训练的时候用的就是a" />
-    <option name="LAST_COMMIT_MESSAGE" value="把红外的an改成a。因为训练的时候用的就是a" />
+    <MESSAGE value="重新测试v18的精度。不过红外是an不是a" />
+    <MESSAGE value="加上一阶段文本加载成功提示。" />
+    <option name="LAST_COMMIT_MESSAGE" value="加上一阶段文本加载成功提示。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

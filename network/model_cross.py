@@ -103,10 +103,10 @@ class Classifier_part(nn.Module):
 class PromptLearner_part(nn.Module):
     def __init__(self, dtype, token_embedding, num_part=None):
         super().__init__()
-        ctx_init = "A photo of a person's X."
-        # ctx_init = "A person's X."
-        pre_ctx = 6
-        # pre_ctx = 3
+        # ctx_init = "A photo of a person's X."
+        ctx_init = "A person's X."
+        # pre_ctx = 6
+        pre_ctx = 3
 
         tokenized_prompts = clip.tokenize(ctx_init).cuda()
         self.tokenized_prompts = tokenized_prompts
