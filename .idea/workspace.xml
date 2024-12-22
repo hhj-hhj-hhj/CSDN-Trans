@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="提交本地更改以回复到v18">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2leM4GAFmB8NVqC9Olidj4H7eXZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dataset_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_cross_regdb.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.model_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tmp.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_cross.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;209&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/win10/Desktop/vmunet&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\hhjhhj\CSDN\data_loader" />
+      <recent name="D:\hhjhhj\CSDN\network" />
+      <recent name="D:\hhjhhj\CSDN\tools" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\hhjhhj\CSDN\network" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-babbdf50b680-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.15989.155" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="" />
+      <created>1725535896025</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1725535896025</updated>
+    </task>
+    <task id="LOCAL-00076" summary="温度系数修改">
+      <option name="closed" value="true" />
+      <created>1731249135475</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1731249135475</updated>
+    </task>
+    <task id="LOCAL-00077" summary="loss修改">
+      <option name="closed" value="true" />
+      <created>1731269560018</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1731269560018</updated>
+    </task>
+    <task id="LOCAL-00078" summary="去除 ipc_loss">
+      <option name="closed" value="true" />
+      <created>1731373019757</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1731373019758</updated>
+    </task>
+    <task id="LOCAL-00079" summary="ipc 和 ipd 使用 V3。">
+      <option name="closed" value="true" />
+      <created>1731479912706</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1731479912706</updated>
+    </task>
+    <task id="LOCAL-00080" summary="部位特征去除归一化。">
+      <option name="closed" value="true" />
+      <created>1731585032695</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1731585032695</updated>
+    </task>
+    <task id="LOCAL-00081" summary="部位特征去除归一化。">
+      <option name="closed" value="true" />
+      <created>1731585046829</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1731585046830</updated>
+    </task>
+    <task id="LOCAL-00082" summary="改用IPC_V4.跨模态中心对齐">
+      <option name="closed" value="true" />
+      <created>1731585987088</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1731585987088</updated>
+    </task>
+    <task id="LOCAL-00083" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586495346</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586495347</updated>
+    </task>
+    <task id="LOCAL-00084" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586529696</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586529696</updated>
+    </task>
+    <task id="LOCAL-00085" summary="修正">
+      <option name="closed" value="true" />
+      <created>1731586639927</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586639927</updated>
+    </task>
+    <task id="LOCAL-00086" summary="还是加上归一化。">
+      <option name="closed" value="true" />
+      <created>1731586783723</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1731586783723</updated>
+    </task>
+    <task id="LOCAL-00087" summary="还是去掉归一化。IPC_V4加上不同身份同部位距离。">
+      <option name="closed" value="true" />
+      <created>1731587652714</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1731587652714</updated>
+    </task>
+    <task id="LOCAL-00088" summary="加上归一化">
+      <option name="closed" value="true" />
+      <created>1731632286477</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1731632286477</updated>
+    </task>
+    <task id="LOCAL-00089" summary="先不使用身份间同部位区分损失。更改IPC_v4">
+      <option name="closed" value="true" />
+      <created>1731637022626</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1731637022626</updated>
+    </task>
+    <task id="LOCAL-00090" summary="IPC_V2中加入，不同身份同部位区分损失。">
+      <option name="closed" value="true" />
+      <created>1731773431523</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1731773431523</updated>
+    </task>
+    <task id="LOCAL-00091" summary="best策略">
+      <option name="closed" value="true" />
+      <created>1731980204833</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1731980204834</updated>
+    </task>
+    <task id="LOCAL-00092" summary="去除IPD中求均值后的归一化。">
+      <option name="closed" value="true" />
+      <created>1732068135297</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1732068135298</updated>
+    </task>
+    <task id="LOCAL-00093" summary="还是加上归一化。另外最优模型策略回归。">
+      <option name="closed" value="true" />
+      <created>1732156132290</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1732156132290</updated>
+    </task>
+    <task id="LOCAL-00094" summary="part_prompt修改。加上photo">
+      <option name="closed" value="true" />
+      <created>1732170712025</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1732170712025</updated>
+    </task>
+    <task id="LOCAL-00095" summary="part_prompt修改成原来的。">
+      <option name="closed" value="true" />
+      <created>1732210649805</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210649805</updated>
+    </task>
+    <task id="LOCAL-00096" summary="num_part从12改成14。">
+      <option name="closed" value="true" />
+      <created>1732210816021</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210816021</updated>
+    </task>
+    <task id="LOCAL-00097" summary="num_part从12改成14。">
+      <option name="closed" value="true" />
+      <created>1732210835192</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210835192</updated>
+    </task>
+    <task id="LOCAL-00098" summary="将ipc系数调整成和ipd一样的0.1">
+      <option name="closed" value="true" />
+      <created>1732310662927</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1732310662927</updated>
+    </task>
+    <task id="LOCAL-00099" summary="num_part从14改成16。">
+      <option name="closed" value="true" />
+      <created>1732342906639</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1732342906639</updated>
+    </task>
+    <task id="LOCAL-00100" summary="main加上best_rank10显示。ipd去除均值后的归一化">
+      <option name="closed" value="true" />
+      <created>1732413767184</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1732413767184</updated>
+    </task>
+    <task id="LOCAL-00101" summary="ipd再次加上均值后的归一化">
+      <option name="closed" value="true" />
+      <created>1732459375338</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1732459375338</updated>
+    </task>
+    <task id="LOCAL-00102" summary="ipc系数改为0.15">
+      <option name="closed" value="true" />
+      <created>1732460806402</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1732460806402</updated>
+    </task>
+    <task id="LOCAL-00103" summary="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1">
+      <option name="closed" value="true" />
+      <created>1732528478929</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1732528478929</updated>
+    </task>
+    <task id="LOCAL-00104" summary="regdb数据集">
+      <option name="closed" value="true" />
+      <created>1732589036703</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589036703</updated>
+    </task>
+    <task id="LOCAL-00105" summary="regdb数据集">
+      <option name="closed" value="true" />
+      <created>1732589192324</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589192324</updated>
+    </task>
+    <task id="LOCAL-00106" summary="regdb main">
+      <option name="closed" value="true" />
+      <created>1732589985031</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1732589985031</updated>
+    </task>
+    <task id="LOCAL-00107" summary="回到0.05">
+      <option name="closed" value="true" />
+      <created>1732593494655</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1732593494655</updated>
+    </task>
+    <task id="LOCAL-00108" summary="使用IPC_v4">
+      <option name="closed" value="true" />
+      <created>1732599648658</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1732599648658</updated>
+    </task>
+    <task id="LOCAL-00109" summary="IPC_v4，将k2改成1.2">
+      <option name="closed" value="true" />
+      <created>1732688215790</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1732688215790</updated>
+    </task>
+    <task id="LOCAL-00110" summary="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05">
+      <option name="closed" value="true" />
+      <created>1732716213294</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1732716213294</updated>
+    </task>
+    <task id="LOCAL-00111" summary="ipc和ipd系数变成0.15">
+      <option name="closed" value="true" />
+      <created>1732785467527</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1732785467527</updated>
+    </task>
+    <task id="LOCAL-00112" summary="部位特征改为1024维度。">
+      <option name="closed" value="true" />
+      <created>1732855113193</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1732855113193</updated>
+    </task>
+    <task id="LOCAL-00113" summary="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18">
+      <option name="closed" value="true" />
+      <created>1732900363378</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1732900363378</updated>
+    </task>
+    <task id="LOCAL-00114" summary="部位改回16。ipc和ipd系数从0.15改成0.2">
+      <option name="closed" value="true" />
+      <created>1732954515139</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1732954515139</updated>
+    </task>
+    <task id="LOCAL-00115" summary="ipd去除归一化。系数改回0.15">
+      <option name="closed" value="true" />
+      <created>1733027403376</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1733027403376</updated>
+    </task>
+    <task id="LOCAL-00116" summary="ipc_v2两种loss加上k系数">
+      <option name="closed" value="true" />
+      <created>1733157833122</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1733157833122</updated>
+    </task>
+    <task id="LOCAL-00117" summary="ipc的k1变成1.5.ipd的归一化重新加上">
+      <option name="closed" value="true" />
+      <created>1733193881547</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1733193881547</updated>
+    </task>
+    <task id="LOCAL-00118" summary="ipc的margin改成0.5">
+      <option name="closed" value="true" />
+      <created>1733194457821</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1733194457821</updated>
+    </task>
+    <task id="LOCAL-00119" summary="针对regdb的更改">
+      <option name="closed" value="true" />
+      <created>1733305368916</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1733305368916</updated>
+    </task>
+    <task id="LOCAL-00120" summary="针对regdb的更改">
+      <option name="closed" value="true" />
+      <created>1733307500926</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1733307500926</updated>
+    </task>
+    <task id="LOCAL-00121" summary="针对regdb的更改">
+      <option name="closed" value="true" />
+      <created>1733329452190</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1733329452190</updated>
+    </task>
+    <task id="LOCAL-00122" summary="针对regdb的修改">
+      <option name="closed" value="true" />
+      <created>1733331763097</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1733331763097</updated>
+    </task>
+    <task id="LOCAL-00123" summary="针对regdb的修改">
+      <option name="closed" value="true" />
+      <created>1733344804138</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1733344804138</updated>
+    </task>
+    <task id="LOCAL-00124" summary="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03">
+      <option name="closed" value="true" />
+      <created>1734889190870</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1734889190871</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="num_part从12改成14。" />
+    <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
+    <MESSAGE value="num_part从14改成16。" />
+    <MESSAGE value="main加上best_rank10显示。ipd去除均值后的归一化" />
+    <MESSAGE value="ipd再次加上均值后的归一化" />
+    <MESSAGE value="ipc系数改为0.15" />
+    <MESSAGE value="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1" />
+    <MESSAGE value="regdb数据集" />
+    <MESSAGE value="regdb main" />
+    <MESSAGE value="回到0.05" />
+    <MESSAGE value="使用IPC_v4" />
+    <MESSAGE value="IPC_v4，将k2改成1.2" />
+    <MESSAGE value="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05" />
+    <MESSAGE value="ipc和ipd系数变成0.15" />
+    <MESSAGE value="部位特征改为1024维度。" />
+    <MESSAGE value="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18" />
+    <MESSAGE value="部位改回16。ipc和ipd系数从0.15改成0.2" />
+    <MESSAGE value="ipd去除归一化。系数改回0.15" />
+    <MESSAGE value="ipc_v2两种loss加上k系数" />
+    <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
+    <MESSAGE value="ipc的margin改成0.5" />
+    <MESSAGE value="针对regdb的更改" />
+    <MESSAGE value="针对regdb的修改" />
+    <MESSAGE value="提交本地更改以回复到v18" />
+    <MESSAGE value="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/core/train.py</url>
+          <line>80</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/core/train_attention.py</url>
+          <line>91</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="target_i.T" language="Python" />
+        <watch expression="ir_imgs" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
