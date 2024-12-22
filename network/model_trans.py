@@ -214,90 +214,6 @@ class PromptLearner_share(nn.Module):
         )
         return prompts
 
-class PromptLearner_share_with_cloth(nn.Module):
-    def __init__(self, num_class, dtype, token_embedding):
-        super().__init__()
-        rgb_ctx_init = "A visible photo of a X X X X person wearing Y Y Y Y."
-        ir_ctx_init = "A infrared photo of a X X X X person."
-        ctx_init = "A photo of a X X X X person wearing Y Y Y Y."
-        ctx_dim = 512
-
-        rgb_n_ctx = 5
-        ir_n_ctx = 5
-        mid_n_ctx = 2
-        n_ctx = 4
-
-        rgb_tokenized_prompts = clip.tokenize(rgb_ctx_init).cuda()
-        ir_tokenized_prompts = clip.tokenize(ir_ctx_init).cuda()
-        tokenized_prompts = clip.tokenize(ctx_init).cuda()
-        with torch.no_grad():
-            rgb_embedding = token_embedding(rgb_tokenized_prompts).type(dtype)
-            ir_embedding = token_embedding(ir_tokenized_prompts).type(dtype)
-            embedding = token_embedding(tokenized_prompts).type(dtype)
-
-        self.rgb_tokenized_prompts = rgb_tokenized_prompts
-        self.ir_tokenized_prompts = ir_tokenized_prompts
-        self.tokenized_prompts = tokenized_prompts  # torch.Tensor
-
-        n_cls_ctx = 4
-        cloth_cls_ctx = 4
-        cls_vectors = torch.empty(num_class, n_cls_ctx, ctx_dim, dtype=dtype)
-        cloth_cls_vectors = torch.empty(num_class, cloth_cls_ctx, ctx_dim, dtype=dtype)
-        nn.init.normal_(cls_vectors, std=0.02)
-        nn.init.normal_(cloth_cls_vectors, std=0.02)
-        self.cls_ctx = nn.Parameter(cls_vectors)
-        self.cloth_cls_ctx = nn.Parameter(cloth_cls_vectors)
-
-        self.register_buffer("rgb_token_prefix", rgb_embedding[:, :rgb_n_ctx + 1, :])
-        self.register_buffer("ir_token_prefix", ir_embedding[:, :ir_n_ctx + 1, :])
-        self.register_buffer("token_prefix", embedding[:, :n_ctx + 1, :])
-
-        self.register_buffer("rgb_token_mid", rgb_embedding[:, rgb_n_ctx + n_cls_ctx + 1: rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1, :])
-        self.register_buffer("token_mid", embedding[:, n_ctx + n_cls_ctx + 1: n_ctx + n_cls_ctx + mid_n_ctx + 1, :])
-
-        self.register_buffer("rgb_token_suffix", rgb_embedding[:, rgb_n_ctx + n_cls_ctx + mid_n_ctx + 1 + cloth_cls_ctx:, :])
-        self.register_buffer("ir_token_suffix", ir_embedding[:, ir_n_ctx + 1 + n_cls_ctx:, :])
-        self.register_buffer("token_suffix", embedding[:, n_ctx + n_cls_ctx + mid_n_ctx + 1 + cloth_cls_ctx:, :])
-        self.num_class = num_class
-        self.n_cls_ctx = n_cls_ctx
-
-    def forward(self, label, mode=None):
-        cls_ctx = self.cls_ctx[label]
-        cloth_cls_ctx = self.cloth_cls_ctx[label]
-        b = label.shape[0]
-        if mode == 'ir':
-            prefix = self.ir_token_prefix.expand(b, -1, -1)
-            suffix = self.ir_token_suffix.expand(b, -1, -1)
-            prompts = torch.cat(
-                [
-                    prefix,  # (b, rgb_n_ctx/ir_n_ctx/n_ctx, dim)
-                    cls_ctx,  # (b, n_cls_ctx, dim)
-                    suffix,  # (b, *, dim)
-                ],
-                dim=1,
-            )
-            return prompts
-        elif mode == 'rgb':
-            prefix = self.rgb_token_prefix.expand(b, -1, -1)
-            mid = self.rgb_token_mid.expand(b, -1, -1)
-            suffix = self.rgb_token_suffix.expand(b, -1, -1)
-        else:
-            prefix = self.token_prefix.expand(b, -1, -1)
-            mid = self.token_mid.expand(b, -1, -1)
-            suffix = self.token_suffix.expand(b, -1, -1)
-
-        prompts = torch.cat(
-            [
-                prefix,  # (b, rgb_n_ctx/ir_n_ctx/n_ctx, dim)
-                cls_ctx,  # (b, n_cls_ctx, dim)
-                mid,  # (b, mid_n_ctx, dim)
-                cloth_cls_ctx,  # (b, cloth_cls_ctx, dim)
-                suffix,  # (b, *, dim)
-            ],
-            dim=1,
-        )
-        return prompts
-
 class TextEncoder(nn.Module):
     def __init__(self, clip_model):
         super().__init__()
@@ -376,7 +292,6 @@ class Model(nn.Module):
         self.classifier2 = Classifier2(self.num_classes)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
-        # self.prompt_learner = PromptLearner_share_with_cloth(num_classes, clip_model.dtype, clip_model.token_embedding)
         # self.prompt_learner1 = PromptLearner1(num_classes, clip_model.dtype, clip_model.token_embedding)
         # self.prompt_learner2 = PromptLearner2(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
@@ -436,15 +351,15 @@ class Model(nn.Module):
             image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = self.image_encoder(image_features_maps)
             image_features_proj = self.attnpool(image_features_maps)[0]
-            features, cls_scores, features_bn = self.classifier(image_features_maps)
-            cls_scores_proj, image_features_proj_bn = self.classifier2(image_features_proj)
+            features, cls_scores, _ = self.classifier(image_features_maps)
+            cls_scores_proj, _ = self.classifier2(image_features_proj)
 
             # pp = None
             # B, C, H, W = image_features_maps.shape
             # pp = image_features_maps.view(B, 8, self.in_planes // 8, 6, H // 6, W)
             # pp = pp.mean(-1).mean(-1).permute(0, 1, 3, 2).contiguous()
             # pp = pp.view(B, 8 * 6, self.in_planes // 8)
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], #[features_bn, image_features_proj_bn]
+            return [features, image_features_proj], [cls_scores, cls_scores_proj]
 
         elif x1 is not None and x2 is None:
 
@@ -481,5 +396,3 @@ def load_clip_to_cpu(backbone_name, h_resolution, w_resolution, vision_stride_si
     model = clip.build_model(state_dict or model.state_dict(), h_resolution, w_resolution, vision_stride_size)
 
     return model
-
-
