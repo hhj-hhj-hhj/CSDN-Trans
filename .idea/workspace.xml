@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="提交本地更改以回复到v18">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipc的margin改成0.5">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +46,6 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_cross.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_cross_regdb.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
@@ -88,6 +89,54 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
+    </task>
+    <task id="LOCAL-00070" summary="cross attention">
+      <option name="closed" value="true" />
+      <created>1731008893559</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1731008893559</updated>
+    </task>
+    <task id="LOCAL-00071" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731208769956</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1731208769956</updated>
+    </task>
+    <task id="LOCAL-00072" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731218615130</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1731218615130</updated>
+    </task>
+    <task id="LOCAL-00073" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731233026555</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1731233026555</updated>
+    </task>
+    <task id="LOCAL-00074" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731239011975</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1731239011975</updated>
+    </task>
+    <task id="LOCAL-00075" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731244275170</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1731244275170</updated>
     </task>
     <task id="LOCAL-00076" summary="温度系数修改">
       <option name="closed" value="true" />
@@ -433,58 +482,14 @@
       <option name="project" value="LOCAL" />
       <updated>1733194457821</updated>
     </task>
-    <task id="LOCAL-00119" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733305368916</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
-      <option name="project" value="LOCAL" />
-      <updated>1733305368916</updated>
-    </task>
-    <task id="LOCAL-00120" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733307500926</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
-      <option name="project" value="LOCAL" />
-      <updated>1733307500926</updated>
-    </task>
-    <task id="LOCAL-00121" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733329452190</created>
-      <option name="number" value="00121" />
-      <option name="presentableId" value="LOCAL-00121" />
-      <option name="project" value="LOCAL" />
-      <updated>1733329452190</updated>
-    </task>
-    <task id="LOCAL-00122" summary="针对regdb的修改">
-      <option name="closed" value="true" />
-      <created>1733331763097</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
-      <option name="project" value="LOCAL" />
-      <updated>1733331763097</updated>
-    </task>
-    <task id="LOCAL-00123" summary="针对regdb的修改">
-      <option name="closed" value="true" />
-      <created>1733344804138</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
-      <option name="project" value="LOCAL" />
-      <updated>1733344804138</updated>
-    </task>
-    <task id="LOCAL-00124" summary="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03">
-      <option name="closed" value="true" />
-      <created>1734889190870</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
-      <option name="project" value="LOCAL" />
-      <updated>1734889190871</updated>
-    </task>
-    <option name="localTasksCounter" value="125" />
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="去除IPD中求均值后的归一化。" />
+    <MESSAGE value="还是加上归一化。另外最优模型策略回归。" />
+    <MESSAGE value="part_prompt修改。加上photo" />
+    <MESSAGE value="part_prompt修改成原来的。" />
     <MESSAGE value="num_part从12改成14。" />
     <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
     <MESSAGE value="num_part从14改成16。" />
@@ -506,11 +511,7 @@
     <MESSAGE value="ipc_v2两种loss加上k系数" />
     <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
     <MESSAGE value="ipc的margin改成0.5" />
-    <MESSAGE value="针对regdb的更改" />
-    <MESSAGE value="针对regdb的修改" />
-    <MESSAGE value="提交本地更改以回复到v18" />
-    <MESSAGE value="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03" />
-    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03" />
+    <option name="LAST_COMMIT_MESSAGE" value="ipc的margin改成0.5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -524,6 +525,11 @@
           <url>file://$PROJECT_DIR$/core/train_attention.py</url>
           <line>91</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
+          <line>541</line>
+          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

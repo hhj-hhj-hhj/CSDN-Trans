@@ -192,7 +192,7 @@ if __name__ == '__main__':
     parser.add_argument('--img_h', default=288, type=int, metavar='imgh', help='img height')
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--pid_num', type=int, default=206)
-    parser.add_argument('--learning_rate', type=float, default=0.00035)
+    parser.add_argument('--learning_rate', type=float, default=0.0003)
     parser.add_argument('--weight_decay', type=float, default=0.0005)
     parser.add_argument('--milestones', nargs='+', type=int, default=[40, 70],
                         help='milestones for the learning rate decay')
