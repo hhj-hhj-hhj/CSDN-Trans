@@ -86,29 +86,21 @@ def train_stage1_3share(base, num_image, i_ter, batch, visible_labels_list, visi
         # target = torch.cat([rgb_target, rgb_target], dim=0)
         # loss_i2t = base.con_creiteron(image_features, text_features, target, target)
         # loss_t2i = base.con_creiteron(text_features, image_features, target, target)
-
         rgb_loss_i2t = base.con_creiteron(rgb_image_features, rgb_text_features, rgb_target, rgb_target)
         ir_loss_i2t = base.con_creiteron(ir_image_features, ir_text_features, ir_target, ir_target)
         loss_i2t = rgb_loss_i2t + ir_loss_i2t
-
         rgb_loss_t2i = base.con_creiteron(rgb_text_features, rgb_image_features, rgb_target, rgb_target)
         ir_loss_t2i = base.con_creiteron(ir_text_features, ir_image_features, ir_target, ir_target)
         loss_t2i = rgb_loss_t2i + ir_loss_t2i
-
         loss = loss_i2t + loss_t2i
         base.model_optimizer_stage1.zero_grad()
         loss.backward()
         base.model_optimizer_stage1.step()
-
-        meter.update({'rgb_loss_i2t': rgb_loss_i2t.data,
-                      'ir_loss_i2t': ir_loss_i2t.data,
-                      'rgb_loss_t2i': rgb_loss_t2i.data,
-                      'ir_loss_t2i': ir_loss_t2i.data,})
+        meter.update({'loss_i2t': loss_i2t.data,
+                      'loss_t2i': loss_t2i.data,})
         # if (i + 1) % 200 == 0:
         #     print(f'stage1: iter:[{i + 1}/{i_ter}] loss_i2t:{loss_i2t.data}  loss_t2i:{loss_t2i.data}')
-
     return meter.get_val(), meter.get_str()
-
 # 只有一种rgb图像
 def train(base, loaders, text_features, config):
 
@@ -198,20 +190,11 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_imgs = torch.cat([rgb_imgs1, rgb_imgs2], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        # features, cls_score = base.model(x1=rgb_imgs, x2=ir_imgs)
-        features, cls_score, features_bn = base.model(x1=rgb_imgs, x2=ir_imgs)
+        features, cls_score = base.model(x1=rgb_imgs, x2=ir_imgs)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
         ir_attn_features = features[1].narrow(0, 2 * n, n)
-
-        rgb_bn_features = features_bn[0].narrow(0, 0, n).squeeze()
-        ir_bn_features = features_bn[0].narrow(0, 2 * n, n).squeeze()
-        rgb_g_bn_features = features_bn[0].narrow(0, 0, n).squeeze()
-        ir_g_bn_features = features_bn[0].narrow(0, 2 * n, n).squeeze()
-
-
-
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
 
@@ -223,13 +206,14 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        # modal_loss = base.modal_contrastive(rgb_bn_features, ir_bn_features, rgb_pids) + base.modal_contrastive(rgb_g_bn_features, ir_g_bn_features, rgb_pids)
-
         loss_hcc_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
         loss_hcc_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        # loss_pp_euc = 0
+        # for i in range(pp.size(1)):
+        #     loss_pp_euc += base.criterion_pp_3(pp[:,i], pids) / pp.size(1)
 
         loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss  + loss_hcc_kl + loss_hcc_kl_map
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_hcc_kl + loss_hcc_kl_map # + loss_pp_euc * 0.05
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -242,17 +226,15 @@ def train_2rgb(base, loaders, text_features, config):
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       'loss_hcc_kl': loss_hcc_kl.data,
                       'loss_hcc_kl_map': loss_hcc_kl_map.data,
-                      # 'modal_loss': modal_loss.data
+                      # 'loss_pp_euc': loss_pp_euc,
                       })
         # print(f"iter = {iter}")
-        if (iter + 1) % 200 == 0:
-            print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
+        # if (iter + 1) % 20 == 0:
+        #     print(f'Iteration [{iter + 1}/{len(loader)}] Loss: {meter.get_str()}')
         # if iter == 3:
         #     break
         # break
     return meter.get_val(), meter.get_str()
-
-
 
 
 
