@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="还原到v18的代码。同时改一下一阶段保存路径">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="针对regdb的修改">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +90,22 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
+    </task>
+    <task id="LOCAL-00075" summary="一致性约束">
+      <option name="closed" value="true" />
+      <created>1731244275170</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1731244275170</updated>
+    </task>
+    <task id="LOCAL-00076" summary="温度系数修改">
+      <option name="closed" value="true" />
+      <created>1731249135475</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1731249135475</updated>
     </task>
     <task id="LOCAL-00077" summary="loss修改">
       <option name="closed" value="true" />
@@ -465,37 +483,12 @@
       <option name="project" value="LOCAL" />
       <updated>1733344804138</updated>
     </task>
-    <task id="LOCAL-00124" summary="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03">
-      <option name="closed" value="true" />
-      <created>1734832484445</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
-      <option name="project" value="LOCAL" />
-      <updated>1734832484445</updated>
-    </task>
-    <task id="LOCAL-00125" summary="还原到v18的代码。同时改一下一阶段保存路径">
-      <option name="closed" value="true" />
-      <created>1734832733446</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
-      <option name="project" value="LOCAL" />
-      <updated>1734832733446</updated>
-    </task>
-    <option name="localTasksCounter" value="126" />
+    <option name="localTasksCounter" value="124" />
     <servers />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="part_prompt修改。加上photo" />
+    <MESSAGE value="part_prompt修改成原来的。" />
     <MESSAGE value="num_part从12改成14。" />
     <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
     <MESSAGE value="num_part从14改成16。" />
@@ -519,9 +512,7 @@
     <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
-    <MESSAGE value="Revert &quot;stage1对应到cclnet。batchsize128，学习率0.00035&quot;&#10;&#10;This reverts commit 8fb74f03" />
-    <MESSAGE value="还原到v18的代码。同时改一下一阶段保存路径" />
-    <option name="LAST_COMMIT_MESSAGE" value="还原到v18的代码。同时改一下一阶段保存路径" />
+    <option name="LAST_COMMIT_MESSAGE" value="针对regdb的修改" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
