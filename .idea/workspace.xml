@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="针对regdb的修改" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="复刻了v18">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00075" summary="一致性约束">
-      <option name="closed" value="true" />
-      <created>1731244275170</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1731244275170</updated>
     </task>
     <task id="LOCAL-00076" summary="温度系数修改">
       <option name="closed" value="true" />
@@ -479,11 +474,18 @@
       <option name="project" value="LOCAL" />
       <updated>1733344804138</updated>
     </task>
-    <option name="localTasksCounter" value="124" />
+    <task id="LOCAL-00124" summary="复刻了v18">
+      <option name="closed" value="true" />
+      <created>1734891398487</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1734891398487</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="part_prompt修改。加上photo" />
     <MESSAGE value="part_prompt修改成原来的。" />
     <MESSAGE value="num_part从12改成14。" />
     <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
@@ -508,7 +510,8 @@
     <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="针对regdb的修改" />
+    <MESSAGE value="复刻了v18" />
+    <option name="LAST_COMMIT_MESSAGE" value="复刻了v18" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

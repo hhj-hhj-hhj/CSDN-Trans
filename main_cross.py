@@ -107,13 +107,15 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
+        load_name = 'model_stage1_3share_prompt.pth'
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', load_name)
         trained_model_state_dict = torch.load(model_path)
         model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
-        print(f'Load the prompt_learner1 end')
-        model_file_path = os.path.join(model.save_model_path, 'stage1_part/16.pth')
+        logger(f'Load the prompt_learner1 end, {load_name}')
+        save_name = 'stage1_part/16.pth'
+        model_file_path = os.path.join(model.save_model_path, save_name)
         torch.save(model.model.state_dict(), model_file_path)
-        logger('The 1st Stage of Trained')
+        logger(f'The 1st Stage of Trained, {save_name}')
 
 
         logger('Start the 3st Stage Training')
