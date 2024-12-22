@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加上一阶段文本加载成功提示。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="部位文本去掉photo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00136" summary="随机列表两个相同。">
-      <option name="closed" value="true" />
-      <created>1733670574482</created>
-      <option name="number" value="00136" />
-      <option name="presentableId" value="LOCAL-00136" />
-      <option name="project" value="LOCAL" />
-      <updated>1733670574482</updated>
     </task>
     <task id="LOCAL-00137" summary="prompt换成common。">
       <option name="closed" value="true" />
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734734399470</updated>
     </task>
-    <option name="localTasksCounter" value="185" />
+    <task id="LOCAL-00185" summary="部位文本去掉photo">
+      <option name="closed" value="true" />
+      <created>1734793822275</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1734793822275</updated>
+    </task>
+    <option name="localTasksCounter" value="186" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="二阶段依旧换成对应两个文本的方式。而不是融合两种模态使用一个文本。" />
     <MESSAGE value="尝试复现最优的文本。" />
     <MESSAGE value="恢复trans版本的代码到最优文本的那个版本。" />
     <MESSAGE value="一阶段直接加载。" />
@@ -521,7 +520,8 @@
     <MESSAGE value="把红外的an改成a。因为训练的时候用的就是a" />
     <MESSAGE value="重新测试v18的精度。不过红外是an不是a" />
     <MESSAGE value="加上一阶段文本加载成功提示。" />
-    <option name="LAST_COMMIT_MESSAGE" value="加上一阶段文本加载成功提示。" />
+    <MESSAGE value="部位文本去掉photo" />
+    <option name="LAST_COMMIT_MESSAGE" value="部位文本去掉photo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
