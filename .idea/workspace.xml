@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="load和save权重名字添加logger">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="load和save权重名字添加logger，修正版。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00077" summary="loss修改">
-      <option name="closed" value="true" />
-      <created>1731269560018</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1731269560018</updated>
     </task>
     <task id="LOCAL-00078" summary="去除 ipc_loss">
       <option name="closed" value="true" />
@@ -483,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734893764661</updated>
     </task>
-    <option name="localTasksCounter" value="126" />
+    <task id="LOCAL-00126" summary="load和save权重名字添加logger，修正版。">
+      <option name="closed" value="true" />
+      <created>1734894305413</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1734894305414</updated>
+    </task>
+    <option name="localTasksCounter" value="127" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="num_part从12改成14。" />
     <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
     <MESSAGE value="num_part从14改成16。" />
     <MESSAGE value="main加上best_rank10显示。ipd去除均值后的归一化" />
@@ -523,7 +521,8 @@
     <MESSAGE value="针对regdb的修改" />
     <MESSAGE value="prompt加上photo" />
     <MESSAGE value="load和save权重名字添加logger" />
-    <option name="LAST_COMMIT_MESSAGE" value="load和save权重名字添加logger" />
+    <MESSAGE value="load和save权重名字添加logger，修正版。" />
+    <option name="LAST_COMMIT_MESSAGE" value="load和save权重名字添加logger，修正版。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
