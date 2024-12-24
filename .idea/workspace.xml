@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数乘以2。防止无法分离特征。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00079" summary="ipc 和 ipd 使用 V3。">
-      <option name="closed" value="true" />
-      <created>1731479912706</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1731479912706</updated>
     </task>
     <task id="LOCAL-00080" summary="部位特征去除归一化。">
       <option name="closed" value="true" />
@@ -482,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734944041954</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。">
+      <option name="closed" value="true" />
+      <created>1735004723983</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1735004723983</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -497,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="num_part从14改成16。" />
     <MESSAGE value="main加上best_rank10显示。ipd去除均值后的归一化" />
     <MESSAGE value="ipd再次加上均值后的归一化" />
     <MESSAGE value="ipc系数改为0.15" />
@@ -522,7 +521,8 @@
     <MESSAGE value="load和save权重名字添加logger" />
     <MESSAGE value="load和save权重名字添加logger，修正版。" />
     <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
-    <option name="LAST_COMMIT_MESSAGE" value="ipd系数乘以2。防止无法分离特征。" />
+    <MESSAGE value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
+    <option name="LAST_COMMIT_MESSAGE" value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
