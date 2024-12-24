@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="load和save权重名字添加logger，修正版。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数乘以2。防止无法分离特征。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00078" summary="去除 ipc_loss">
-      <option name="closed" value="true" />
-      <created>1731373019757</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1731373019758</updated>
     </task>
     <task id="LOCAL-00079" summary="ipc 和 ipd 使用 V3。">
       <option name="closed" value="true" />
@@ -482,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734894305414</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="ipd系数乘以2。防止无法分离特征。">
+      <option name="closed" value="true" />
+      <created>1734944041954</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1734944041954</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -497,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="将ipc系数调整成和ipd一样的0.1" />
     <MESSAGE value="num_part从14改成16。" />
     <MESSAGE value="main加上best_rank10显示。ipd去除均值后的归一化" />
     <MESSAGE value="ipd再次加上均值后的归一化" />
@@ -522,7 +521,8 @@
     <MESSAGE value="prompt加上photo" />
     <MESSAGE value="load和save权重名字添加logger" />
     <MESSAGE value="load和save权重名字添加logger，修正版。" />
-    <option name="LAST_COMMIT_MESSAGE" value="load和save权重名字添加logger，修正版。" />
+    <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
+    <option name="LAST_COMMIT_MESSAGE" value="ipd系数乘以2。防止无法分离特征。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
