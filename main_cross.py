@@ -112,7 +112,7 @@ def main(config):
         trained_model_state_dict = torch.load(model_path)
         model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
         print(f'Load the prompt_learner end,load_name: {load_name}')
-        save_name = 'stage1_part/14.pth'
+        save_name = 'stage1_part/18.pth'
         model_file_path = os.path.join(model.save_model_path, save_name)
         torch.save(model.model.state_dict(), model_file_path)
         logger(f'The 1st Stage of Trained,asave_name: {save_name}')
