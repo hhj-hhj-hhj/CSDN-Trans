@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd的margin改成 0.35">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="还是ipd*2效果好。另外换成stage1only64的文本。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00081" summary="部位特征去除归一化。">
-      <option name="closed" value="true" />
-      <created>1731585046829</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1731585046830</updated>
     </task>
     <task id="LOCAL-00082" summary="改用IPC_V4.跨模态中心对齐">
       <option name="closed" value="true" />
@@ -482,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735077105181</updated>
     </task>
-    <option name="localTasksCounter" value="130" />
+    <task id="LOCAL-00130" summary="还是ipd*2效果好。另外换成stage1only64的文本。">
+      <option name="closed" value="true" />
+      <created>1735136113241</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1735136113241</updated>
+    </task>
+    <option name="localTasksCounter" value="131" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -497,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipd再次加上均值后的归一化" />
     <MESSAGE value="ipc系数改为0.15" />
     <MESSAGE value="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1" />
     <MESSAGE value="regdb数据集" />
@@ -522,7 +522,8 @@
     <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
     <MESSAGE value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
     <MESSAGE value="ipd的margin改成 0.35" />
-    <option name="LAST_COMMIT_MESSAGE" value="ipd的margin改成 0.35" />
+    <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
+    <option name="LAST_COMMIT_MESSAGE" value="还是ipd*2效果好。另外换成stage1only64的文本。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
