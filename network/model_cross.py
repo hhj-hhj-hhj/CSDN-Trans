@@ -439,9 +439,10 @@ class MultiCrossAttention(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, num_classes, img_h, img_w):
+    def __init__(self, num_part, num_classes, img_h, img_w):
         super(Model, self).__init__()
         self.in_planes = 2048
+        self.num_part = num_part
         self.num_classes = num_classes
 
         self.h_resolution = int((img_h - 16) // 16 + 1)
@@ -459,7 +460,7 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=18)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=self.num_part)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
         self.classifier_part = Classifier_part(self.num_classes, 2048)

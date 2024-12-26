@@ -31,6 +31,7 @@ class Base:
     def __init__(self, config):
         self.config = config
 
+        self.num_part = config.num_part
         self.pid_num = config.pid_num
 
         self.max_save_model_num = config.max_save_model_num
@@ -61,7 +62,7 @@ class Base:
 
     def _init_model(self):
 
-        self.model = Model(self.pid_num, self.img_h, self.img_w)
+        self.model = Model(self.num_part, self.pid_num, self.img_h, self.img_w)
         self.model = nn.DataParallel(self.model).to(self.device)
 
     def _init_creiteron(self):

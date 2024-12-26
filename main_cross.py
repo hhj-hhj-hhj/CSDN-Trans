@@ -196,6 +196,7 @@ if __name__ == '__main__':
     parser.add_argument('--img_w', default=144, type=int, metavar='imgw', help='img width')
     parser.add_argument('--img_h', default=288, type=int, metavar='imgh', help='img height')
     parser.add_argument('--seed', type=int, default=1)
+    parser.add_argument('--num_part', type=int, default=18)
     parser.add_argument('--pid_num', type=int, default=395)
     parser.add_argument('--learning_rate', type=float, default=0.0003)
     parser.add_argument('--weight_decay', type=float, default=0.0005)
