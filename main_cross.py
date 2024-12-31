@@ -112,10 +112,10 @@ def main(config):
         trained_model_state_dict = torch.load(model_path)
         model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
         print(f'Load the prompt_learner end,load_name: {load_name}')
-        save_name = f'stage1_part/{config.num_part}.pth'
-        model_file_path = os.path.join(model.save_model_path, save_name)
-        torch.save(model.model.state_dict(), model_file_path)
-        logger(f'The 1st Stage of Trained,asave_name: {save_name}')
+        # save_name = f'stage1_part/{config.num_part}.pth'
+        # model_file_path = os.path.join(model.save_model_path, save_name)
+        # torch.save(model.model.state_dict(), model_file_path)
+        # logger(f'The 1st Stage of Trained,asave_name: {save_name}')
 
 
         logger('Start the 3st Stage Training')
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     parser.add_argument('--img_w', default=144, type=int, metavar='imgw', help='img width')
     parser.add_argument('--img_h', default=288, type=int, metavar='imgh', help='img height')
     parser.add_argument('--seed', type=int, default=1)
-    parser.add_argument('--num_part', type=int, default=18)
+    parser.add_argument('--num_part', type=int, default=16)
     parser.add_argument('--pid_num', type=int, default=395)
     parser.add_argument('--learning_rate', type=float, default=0.0003)
     parser.add_argument('--weight_decay', type=float, default=0.0005)

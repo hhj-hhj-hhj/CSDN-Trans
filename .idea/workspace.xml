@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="针对部位的消融。num_part改成18">
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,22 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00084" summary="修正">
-      <option name="closed" value="true" />
-      <created>1731586529696</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1731586529696</updated>
-    </task>
-    <task id="LOCAL-00085" summary="修正">
-      <option name="closed" value="true" />
-      <created>1731586639927</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
-      <option name="project" value="LOCAL" />
-      <updated>1731586639927</updated>
     </task>
     <task id="LOCAL-00086" summary="还是加上归一化。">
       <option name="closed" value="true" />
@@ -484,7 +468,23 @@
       <option name="project" value="LOCAL" />
       <updated>1735207073010</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <task id="LOCAL-00133" summary="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。">
+      <option name="closed" value="true" />
+      <created>1735207629503</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1735207629503</updated>
+    </task>
+    <task id="LOCAL-00134" summary="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。">
+      <option name="closed" value="true" />
+      <created>1735207825451</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1735207825451</updated>
+    </task>
+    <option name="localTasksCounter" value="135" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,8 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1" />
-    <MESSAGE value="regdb数据集" />
     <MESSAGE value="regdb main" />
     <MESSAGE value="回到0.05" />
     <MESSAGE value="使用IPC_v4" />
@@ -524,7 +522,9 @@
     <MESSAGE value="ipd的margin改成 0.35" />
     <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
     <MESSAGE value="针对部位的消融。num_part改成18" />
-    <option name="LAST_COMMIT_MESSAGE" value="针对部位的消融。num_part改成18" />
+    <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。" />
+    <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
+    <option name="LAST_COMMIT_MESSAGE" value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
