@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数还是改成1吧。" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数还是改成2吧，保证变量。">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00088" summary="加上归一化">
-      <option name="closed" value="true" />
-      <created>1731632286477</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1731632286477</updated>
     </task>
     <task id="LOCAL-00089" summary="先不使用身份间同部位区分损失。更改IPC_v4">
       <option name="closed" value="true" />
@@ -480,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735698910691</updated>
     </task>
-    <option name="localTasksCounter" value="137" />
+    <task id="LOCAL-00137" summary="ipd系数还是改成2吧，保证变量。">
+      <option name="closed" value="true" />
+      <created>1735700293361</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1735700293361</updated>
+    </task>
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="使用IPC_v4" />
     <MESSAGE value="IPC_v4，将k2改成1.2" />
     <MESSAGE value="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05" />
     <MESSAGE value="ipc和ipd系数变成0.15" />
@@ -520,7 +523,8 @@
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
     <MESSAGE value="对lambda4的消融。num_part定为16" />
     <MESSAGE value="ipd系数还是改成1吧。" />
-    <option name="LAST_COMMIT_MESSAGE" value="ipd系数还是改成1吧。" />
+    <MESSAGE value="ipd系数还是改成2吧，保证变量。" />
+    <option name="LAST_COMMIT_MESSAGE" value="ipd系数还是改成2吧，保证变量。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
