@@ -554,7 +554,7 @@ class Model(nn.Module):
             # part_features = part_features[0]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
             # part_features = part_features.view(part_features.size(0), -1)
             # _, part_features = self.classifier_part(part_features)
-            part_features = self.l2_norm(part_features)
+            # part_features = self.l2_norm(part_features)
 
             # return torch.cat([test_features1, test_features1_proj, part_features], dim=1)
             return torch.cat([test_features1, test_features1_proj], dim=1)
