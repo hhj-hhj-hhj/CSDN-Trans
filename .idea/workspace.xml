@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd系数还是改成2吧，保证变量。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="去除ipd和ipc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
@@ -91,22 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00089" summary="先不使用身份间同部位区分损失。更改IPC_v4">
-      <option name="closed" value="true" />
-      <created>1731637022626</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1731637022626</updated>
-    </task>
-    <task id="LOCAL-00090" summary="IPC_V2中加入，不同身份同部位区分损失。">
-      <option name="closed" value="true" />
-      <created>1731773431523</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1731773431523</updated>
     </task>
     <task id="LOCAL-00091" summary="best策略">
       <option name="closed" value="true" />
@@ -484,7 +469,23 @@
       <option name="project" value="LOCAL" />
       <updated>1735700293361</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="去除ipd和ipc">
+      <option name="closed" value="true" />
+      <created>1735783729446</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1735783729446</updated>
+    </task>
+    <task id="LOCAL-00139" summary="去除ipd和ipc">
+      <option name="closed" value="true" />
+      <created>1735783785757</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1735783785757</updated>
+    </task>
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,7 +500,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="IPC_v4，将k2改成1.2" />
     <MESSAGE value="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05" />
     <MESSAGE value="ipc和ipd系数变成0.15" />
     <MESSAGE value="部位特征改为1024维度。" />
@@ -524,7 +524,8 @@
     <MESSAGE value="对lambda4的消融。num_part定为16" />
     <MESSAGE value="ipd系数还是改成1吧。" />
     <MESSAGE value="ipd系数还是改成2吧，保证变量。" />
-    <option name="LAST_COMMIT_MESSAGE" value="ipd系数还是改成2吧，保证变量。" />
+    <MESSAGE value="去除ipd和ipc" />
+    <option name="LAST_COMMIT_MESSAGE" value="去除ipd和ipc" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
