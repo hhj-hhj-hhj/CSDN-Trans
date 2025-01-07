@@ -186,31 +186,31 @@ def train_2rgb(base, loaders, text_features, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        # features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
-        features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)
         ir_attn_features = features[1].narrow(0, 2 * n, n)
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
-        # num_part = per_part_features.size(0)
-        # loss_ipc = 0
-        # for i in range(num_part):
-        #     loss_ipc += base.IPC(per_part_features[i], rgb_pids)
-        #
-        # loss_ipc /= num_part
-        #
-        # loss_ipd = base.IPD(per_part_features, rgb_pids)
+        num_part = per_part_features.size(0)
+        loss_ipc = 0
+        for i in range(num_part):
+            loss_ipc += base.IPC(per_part_features[i], rgb_pids)
+
+        loss_ipc /= num_part
+
+        loss_ipd = base.IPD(per_part_features, rgb_pids)
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)
 
-        # ide_loss_part = base.pid_creiteron(cls_scores_part, pids)
+        ide_loss_part = base.pid_creiteron(cls_scores_part, pids)
 
         triplet_loss = base.tri_creiteron(features[0].squeeze(), pids)
         triplet_loss_proj = base.tri_creiteron(features[1].squeeze(), pids)
-        # triplet_loss_part = base.tri_creiteron(part_features, pids)
+        triplet_loss_part = base.tri_creiteron(part_features, pids)
 
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
@@ -221,28 +221,28 @@ def train_2rgb(base, loaders, text_features, config):
         # loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
         # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
-        # loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (0 * loss_ipd + 1 * loss_ipc) #+ loss_kl + loss_kl_map + loss_kl_part
+        loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) #+ loss_kl + loss_kl_map + loss_kl_part
 
-        loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
+        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) #+ \
+               #config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
         base.model_optimizer_stage3.step()
         meter.update({'pid_loss': ide_loss.data,
                       'pid_loss_proj': ide_loss_proj.data,
-                      # 'pid_loss_part': ide_loss_part.data,
+                      'pid_loss_part': ide_loss_part.data,
                       'triplet_loss': triplet_loss.data,
                       'triplet_loss_proj': triplet_loss_proj.data,
-                      # 'triplet_loss_part': triplet_loss_part.data,
+                      'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
                       # 'loss_kl': loss_kl.data,
                       # 'loss_kl_map': loss_kl_map.data,
                       # 'loss_kl_part': loss_kl_part.data,
-                      # 'loss_ipc': loss_ipc.data,
-                      # 'loss_ipd': loss_ipd.data,
+                      'loss_ipc': loss_ipc.data,
+                      'loss_ipd': loss_ipd.data,
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 200 == 0:
