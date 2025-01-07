@@ -91,7 +91,7 @@ def main(config):
             infrared_labels_list = torch.stack(infrared_labels, dim=0).cuda()
             visible_image_features_list = torch.stack(visible_image_features, dim=0).cuda()
             infrared_image_features_list = torch.stack(infrared_image_features, dim=0).cuda()
-            batch = config.stage1_batch_size
+            batch = config.stage1_batch_size * 2
             # num_image = infrared_labels_list.shape[0]
             num_image = visible_labels_list.shape[0]
             i_ter = num_image // batch
