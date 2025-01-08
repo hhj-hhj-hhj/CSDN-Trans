@@ -107,7 +107,8 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        load_name = 'backup_3/model_stage1_3share_prompt.pth'
+        # load_name = 'backup_3/model_stage1_3share_prompt.pth'
+        load_name = 'end_sysu/model_stage2_only_stage2_64.pth'
         model_path = os.path.join(r'D:/PretrainModel/CSDN/models/base/models', load_name)
         trained_model_state_dict = torch.load(model_path)
         model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})

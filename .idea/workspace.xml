@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="batchsize64">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="部位数改成12">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,14 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00096" summary="num_part从12改成14。">
-      <option name="closed" value="true" />
-      <created>1732210816021</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1732210816021</updated>
     </task>
     <task id="LOCAL-00097" summary="num_part从12改成14。">
       <option name="closed" value="true" />
@@ -483,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736228736018</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="部位数改成12">
+      <option name="closed" value="true" />
+      <created>1736237381880</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1736237381880</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +500,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="部位改回16。ipc和ipd系数从0.15改成0.2" />
     <MESSAGE value="ipd去除归一化。系数改回0.15" />
     <MESSAGE value="ipc_v2两种loss加上k系数" />
     <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
@@ -523,7 +524,8 @@
     <MESSAGE value="没有部位特征的版本，交叉注意力模块都没有。注释掉多余模块。" />
     <MESSAGE value="开始regdb" />
     <MESSAGE value="batchsize64" />
-    <option name="LAST_COMMIT_MESSAGE" value="batchsize64" />
+    <MESSAGE value="部位数改成12" />
+    <option name="LAST_COMMIT_MESSAGE" value="部位数改成12" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

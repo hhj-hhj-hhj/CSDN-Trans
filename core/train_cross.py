@@ -217,12 +217,12 @@ def train_2rgb(base, loaders, text_features, config):
 
         # atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
 
-        # loss_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        # loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
-        # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
+        loss_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
+        loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
+        loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) #+ loss_kl + loss_kl_map + loss_kl_part
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) + loss_kl + loss_kl_map + loss_kl_part
 
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) #+ \
                #config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss
@@ -238,9 +238,9 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      # 'loss_kl': loss_kl.data,
-                      # 'loss_kl_map': loss_kl_map.data,
-                      # 'loss_kl_part': loss_kl_part.data,
+                      'loss_kl': loss_kl.data,
+                      'loss_kl_map': loss_kl_map.data,
+                      'loss_kl_part': loss_kl_part.data,
                       'loss_ipc': loss_ipc.data,
                       'loss_ipd': loss_ipd.data,
                       })

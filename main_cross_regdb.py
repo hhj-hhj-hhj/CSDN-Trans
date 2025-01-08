@@ -189,7 +189,7 @@ if __name__ == '__main__':
     parser.add_argument('--img_w', default=144, type=int, metavar='imgw', help='img width')
     parser.add_argument('--img_h', default=288, type=int, metavar='imgh', help='img height')
     parser.add_argument('--seed', type=int, default=1)
-    parser.add_argument('--num_part', type=int, default=12)
+    parser.add_argument('--num_part', type=int, default=16)
     parser.add_argument('--pid_num', type=int, default=206)
     parser.add_argument('--learning_rate', type=float, default=0.0003)
     parser.add_argument('--weight_decay', type=float, default=0.0005)
@@ -197,7 +197,7 @@ if __name__ == '__main__':
                         help='milestones for the learning rate decay')
 
     parser.add_argument('--stage1_batch-size', default=32, type=int, metavar='B', help='training batch size')
-    parser.add_argument('--stage1_learning_rate', type=float, default=0.00035)
+    parser.add_argument('--stage1_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage2_learning_rate', type=float, default=0.0003)
     parser.add_argument('--stage1_weight_decay', type=float, default=1e-4)
     parser.add_argument('--stage1_lr_min', type=float, default=1e-6)
