@@ -514,12 +514,6 @@ class Model(nn.Module):
             image_features_maps = torch.cat([image_features_map1, image_features_map2], dim=0)
             image_features_maps = self.image_encoder(image_features_maps)
 
-            # with torch.no_grad():
-            # image_features_map1_flip = self.image_encoder1(x1_flip)
-            # image_features_map2_flip = self.image_encoder2(x2_flip)
-            # image_features_maps_flip = torch.cat([image_features_map1_flip, image_features_map2_flip], dim=0)
-            # image_features_maps_flip = self.image_encoder(image_features_maps_flip)
-
             image_features_proj = self.attnpool(image_features_maps)[0]
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
