@@ -13,7 +13,8 @@ def test(base, loader, config):
     # query_feat = np.zeros((loader.n_query, 3072))
     # query_feat = np.zeros((loader.n_query, 5120))
     query_feat = np.zeros((loader.n_query, 4096))
-    part_text = base.model(get_part_text=True)
+    with torch.no_grad():
+        part_text = base.model(get_part_text=True)
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)

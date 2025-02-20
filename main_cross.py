@@ -144,7 +144,8 @@ def main(config):
         model._init_optimizer_stage3()
 
         best_epoch=0
-        part_text = model.model(get_part_text=True)
+        with torch.no_grad():
+            part_text = model.model(get_part_text=True)
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 

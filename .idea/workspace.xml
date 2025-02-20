@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="part_sim">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="IPC和IPD加入置信度计算">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,22 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00103" summary="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1">
-      <option name="closed" value="true" />
-      <created>1732528478929</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
-      <option name="project" value="LOCAL" />
-      <updated>1732528478929</updated>
-    </task>
-    <task id="LOCAL-00104" summary="regdb数据集">
-      <option name="closed" value="true" />
-      <created>1732589036703</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1732589036703</updated>
     </task>
     <task id="LOCAL-00105" summary="regdb数据集">
       <option name="closed" value="true" />
@@ -485,7 +467,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740050065352</updated>
     </task>
-    <option name="localTasksCounter" value="152" />
+    <task id="LOCAL-00152" summary="IPC和IPD加入置信度计算">
+      <option name="closed" value="true" />
+      <created>1740054504172</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1740054504172</updated>
+    </task>
+    <task id="LOCAL-00153" summary="IPC和IPD加入置信度计算">
+      <option name="closed" value="true" />
+      <created>1740054614621</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1740054614621</updated>
+    </task>
+    <option name="localTasksCounter" value="154" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -500,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
     <MESSAGE value="prompt加上photo" />
     <MESSAGE value="load和save权重名字添加logger" />
@@ -525,7 +522,8 @@
     <MESSAGE value="？？？" />
     <MESSAGE value="part_text_提取" />
     <MESSAGE value="part_sim" />
-    <option name="LAST_COMMIT_MESSAGE" value="part_sim" />
+    <MESSAGE value="IPC和IPD加入置信度计算" />
+    <option name="LAST_COMMIT_MESSAGE" value="IPC和IPD加入置信度计算" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -543,7 +541,7 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/core/train_cross.py</url>
           <line>213</line>
-          <option name="timeStamp" value="21" />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
