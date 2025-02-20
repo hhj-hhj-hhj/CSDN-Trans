@@ -121,7 +121,7 @@ class PromptLearner_part(nn.Module):
         self.register_buffer(f"token_prefix", embedding[:, :pre_ctx + 1, :])
         self.register_buffer(f"token_suffix", embedding[:, pre_ctx + 1 + 1:, :])
 
-    def forward(self, b):
+    def forward(self):
         prompts = []
         for i in range(self.num_parts):
             prefix = self.token_prefix
@@ -129,15 +129,15 @@ class PromptLearner_part(nn.Module):
             suffix = self.token_suffix
             prompt = torch.cat(
                 [
-                    prefix,  # (b, 7, dim)
-                    cls_ctx,  # (b, 1, dim)
-                    suffix,  # (b, *, dim)
+                    prefix,  # (1, 7, dim)
+                    cls_ctx,  # (1, 1, dim)
+                    suffix,  # (1, *, dim)
                 ],
                 dim=1,
             )
             prompts.append(prompt)
         prompts = torch.stack(prompts, dim=0)
-        return prompts  # (num_parts, b, *, dim)
+        return prompts  # (num_parts, 1, *, dim)
 
 class PromptLearner_part_without_cls(nn.Module):
     def __init__(self, dtype, token_embedding):
@@ -469,7 +469,7 @@ class Model(nn.Module):
         self.text_encoder = TextEncoder(clip_model)
         self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=2048, num_part=self.prompt_part.num_parts)
 
-    def forward(self, x1=None, x1_flip=None, x2=None, x2_flip=None, label1=None, label2=None, label=None, get_image=False, get_text=False):
+    def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, part_text=None, get_image=False, get_text=False, get_part_text=False):
         if get_image == True:
             if x1 is not None and x2 is None:
                 image_features_map1 = self.image_encoder1(x1)
@@ -496,6 +496,17 @@ class Model(nn.Module):
                 text_features_common = self.text_encoder(prompts_common, self.prompt_learner.tokenized_prompts)
                 return text_features_common
 
+        if get_part_text == True:
+            text_features_part = []
+            prompts = self.prompt_part()
+            for i in range(self.prompt_part.num_parts):
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+
+            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
+            text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
+            # text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
+            return text_features_part
+
         if x1 is not None and x2 is not None:
 
             image_features_map1 = self.image_encoder1(x1)
@@ -513,14 +524,7 @@ class Model(nn.Module):
             features, cls_scores, _ = self.classifier(image_features_maps)
             cls_scores_proj, _ = self.classifier2(image_features_proj)
 
-            text_features_part = []
-            prompts = self.prompt_part(label.size(0))
-            for i in range(self.prompt_part.num_parts):
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
-
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
+            text_features_part = part_text  # (b, num_parts, dim)
 
             part_features, attention_weight = self.cross_attention(image_features_maps, text_features_part)  # (num_parts + 1, b, D_o)
             per_part_features = part_features[1:]  # (num_parts, b, D_o)
@@ -540,15 +544,8 @@ class Model(nn.Module):
             # _, test_features1_proj = self.classifier2(image_features1_proj)
             test_features1_proj = self.l2_norm(image_features1_proj)
 
-            text_features_part = []
-            prompts = self.prompt_part(x1.size(0))
-            for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+            text_features_part = part_text  # (b, num_parts, dim)
 
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            text_features_part = text_features_part.expand(x1.size(0), -1, -1)  # (b, num_parts, dim)
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
             part_features = part_features[0]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
             part_features = part_features.view(part_features.size(0), -1)
@@ -565,15 +562,9 @@ class Model(nn.Module):
             _, _, test_features2 = self.classifier(image_features_map2)
             # _, test_features2_proj = self.classifier2(image_features2_proj)
             test_features2_proj = self.l2_norm(image_features2_proj)
-            text_features_part = []
-            prompts = self.prompt_part(x2.size(0))
-            for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            text_features_part = text_features_part.expand(x2.size(0), -1, -1)  # (b, num_parts, dim)
+            text_features_part = part_text  # (b, num_parts, dim)
+
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
             part_features = part_features[0] # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
             part_features = self.l2_norm(part_features)

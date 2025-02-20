@@ -144,11 +144,12 @@ def main(config):
         model._init_optimizer_stage3()
 
         best_epoch=0
+        part_text = model.model(get_part_text=True)
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
             # _, result = train(model, loaders, text_features, config)
-            _, result = train_2rgb(model, loaders, text_features, config)
+            _, result = train_2rgb(model, loaders, text_features, part_text, config)
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 
@@ -172,7 +173,7 @@ def main(config):
                 logger(f'now best result: [{best_rank1} {best_rank10}] {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
-        model.resume_model(config.resume_test_model)
+        # model.resume_model(config.resume_test_model)
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
@@ -184,7 +185,7 @@ if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
-    parser.add_argument('--mode', type=str, default='train', help='train, test')
+    parser.add_argument('--mode', type=str, default='test', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')

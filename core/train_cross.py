@@ -169,12 +169,14 @@ def train(base, loaders, text_features, config):
     return meter.get_val(), meter.get_str()
 
 # 有两种rgb图像
-def train_2rgb(base, loaders, text_features, config):
+def train_2rgb(base, loaders, text_features, part_text, config):
 
     base.set_train()
     meter = MultiItemAverageMeter()
     loader = loaders.get_train_loader()
     # for iter, (rgb_1, rgb_1_flip, rgb_2, rgb_2_flip, ir_1, ir_1_flip, rgb_pids, ir_pids) in enumerate(loader):
+    # part_text = base.model(get_part_text=True)
+
     for iter, (rgb_1, rgb_2, ir_1, rgb_pids, ir_pids) in enumerate(loader):
         # rgb_imgs1, rgb_imgs2, rgb_pids = input1_0, input1_1, label1
         # ir_imgs, ir_pids = input2, label2
@@ -186,7 +188,9 @@ def train_2rgb(base, loaders, text_features, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        text_features_part = part_text.expand(label.size(0), -1, -1)
+
+        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, part_text=text_features_part, label=pids)
         # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         n = features[1].shape[0] // 3

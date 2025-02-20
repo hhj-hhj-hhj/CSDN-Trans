@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="测试+kl的精度。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="？？？">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,35 +39,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
-    &quot;Python.base_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.base_cross.executor&quot;: &quot;Run&quot;,
-    &quot;Python.dataset_cross.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_cross.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_cross_regdb.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.model_cross.executor&quot;: &quot;Run&quot;,
-    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.tmp.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train.executor&quot;: &quot;Run&quot;,
-    &quot;Python.train_cross.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;209__v2&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/win10/Desktop/vmunet&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.GradCam.executor": "Run",
+    "Python.base_attention.executor": "Run",
+    "Python.base_cross.executor": "Run",
+    "Python.dataset_cross.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.main_attention.executor": "Run",
+    "Python.main_cross.executor": "Run",
+    "Python.main_cross_regdb.executor": "Run",
+    "Python.main_one_trans.executor": "Run",
+    "Python.main_test.executor": "Run",
+    "Python.main_trans.executor": "Debug",
+    "Python.model_cross.executor": "Debug",
+    "Python.model_trans.executor": "Run",
+    "Python.mutil_test.executor": "Run",
+    "Python.run_tSNE.executor": "Run",
+    "Python.test.executor": "Run",
+    "Python.tmp.executor": "Run",
+    "Python.train.executor": "Run",
+    "Python.train_cross.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "209__v2",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/win10/Desktop/vmunet",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\hhjhhj\CSDN\data_loader" />
@@ -90,14 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00098" summary="将ipc系数调整成和ipd一样的0.1">
-      <option name="closed" value="true" />
-      <created>1732310662927</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1732310662927</updated>
     </task>
     <task id="LOCAL-00099" summary="num_part从14改成16。">
       <option name="closed" value="true" />
@@ -483,7 +478,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736333530939</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <task id="LOCAL-00147" summary="？？？">
+      <option name="closed" value="true" />
+      <created>1740045968494</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1740045968495</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +501,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipc_v2两种loss加上k系数" />
     <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
     <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
@@ -523,7 +525,8 @@
     <MESSAGE value="batchsize64" />
     <MESSAGE value="部位数改成12" />
     <MESSAGE value="测试+kl的精度。" />
-    <option name="LAST_COMMIT_MESSAGE" value="测试+kl的精度。" />
+    <MESSAGE value="？？？" />
+    <option name="LAST_COMMIT_MESSAGE" value="？？？" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -537,6 +540,11 @@
           <url>file://$PROJECT_DIR$/core/train_attention.py</url>
           <line>91</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
+          <line>139</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
