@@ -204,12 +204,18 @@ def train_2rgb(base, loaders, text_features, part_text, config):
         ir_logits = ir_attn_features @ text_features.t()
         num_part = per_part_features.size(0)
         loss_ipc = 0
-        for i in range(num_part):
-            loss_ipc += base.IPC(per_part_features[i], rgb_pids, part_sim[i])
+        if iter < 20:
+            for i in range(num_part):
+                loss_ipc += base.IPC(per_part_features[i], rgb_pids)
+        else:
+            for i in range(num_part):
+                loss_ipc += base.IPC_W(per_part_features[i], rgb_pids, part_sim[i])
 
         loss_ipc /= num_part
-
-        loss_ipd = base.IPD(per_part_features, rgb_pids, part_sim)
+        if iter < 20:
+            loss_ipd = base.IPD(per_part_features, rgb_pids)
+        else:
+            loss_ipd = base.IPD_W(per_part_features, rgb_pids, part_sim)
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
         ide_loss_proj = base.pid_creiteron(cls_score[1], pids)

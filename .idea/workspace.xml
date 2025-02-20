@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="IPC和IPD加入置信度计算">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="开启一阶段。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,35 +38,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GradCam.executor": "Run",
-    "Python.base_attention.executor": "Run",
-    "Python.base_cross.executor": "Run",
-    "Python.dataset_cross.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Debug",
-    "Python.main_cross_regdb.executor": "Run",
-    "Python.main_one_trans.executor": "Run",
-    "Python.main_test.executor": "Run",
-    "Python.main_trans.executor": "Debug",
-    "Python.model_cross.executor": "Debug",
-    "Python.model_trans.executor": "Run",
-    "Python.mutil_test.executor": "Run",
-    "Python.run_tSNE.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.tmp.executor": "Run",
-    "Python.train.executor": "Run",
-    "Python.train_cross.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "209__v2",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/win10/Desktop/vmunet",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GradCam.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.base_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dataset_cross.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_cross.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.main_cross_regdb.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main_trans.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.model_cross.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.model_trans.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mutil_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_tSNE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tmp.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_cross.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;209__v2&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/win10/Desktop/vmunet&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\hhjhhj\CSDN\data_loader" />
@@ -90,22 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00105" summary="regdb数据集">
-      <option name="closed" value="true" />
-      <created>1732589192324</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
-      <option name="project" value="LOCAL" />
-      <updated>1732589192324</updated>
-    </task>
-    <task id="LOCAL-00106" summary="regdb main">
-      <option name="closed" value="true" />
-      <created>1732589985031</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
-      <option name="project" value="LOCAL" />
-      <updated>1732589985031</updated>
     </task>
     <task id="LOCAL-00107" summary="回到0.05">
       <option name="closed" value="true" />
@@ -483,7 +469,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740054614621</updated>
     </task>
-    <option name="localTasksCounter" value="154" />
+    <task id="LOCAL-00154" summary="修正，提取part_text时不参与梯度。">
+      <option name="closed" value="true" />
+      <created>1740055919564</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1740055919564</updated>
+    </task>
+    <task id="LOCAL-00155" summary="开启一阶段。">
+      <option name="closed" value="true" />
+      <created>1740055947419</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1740055947419</updated>
+    </task>
+    <option name="localTasksCounter" value="156" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,8 +500,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="针对regdb的修改" />
-    <MESSAGE value="prompt加上photo" />
     <MESSAGE value="load和save权重名字添加logger" />
     <MESSAGE value="load和save权重名字添加logger，修正版。" />
     <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
@@ -523,7 +523,9 @@
     <MESSAGE value="part_text_提取" />
     <MESSAGE value="part_sim" />
     <MESSAGE value="IPC和IPD加入置信度计算" />
-    <option name="LAST_COMMIT_MESSAGE" value="IPC和IPD加入置信度计算" />
+    <MESSAGE value="修正，提取part_text时不参与梯度。" />
+    <MESSAGE value="开启一阶段。" />
+    <option name="LAST_COMMIT_MESSAGE" value="开启一阶段。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -540,7 +542,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/core/train_cross.py</url>
-          <line>213</line>
+          <line>219</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
