@@ -187,7 +187,7 @@ if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
-    parser.add_argument('--mode', type=str, default='test', help='train, test')
+    parser.add_argument('--mode', type=str, default='train', help='train, test')
     parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
     parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')

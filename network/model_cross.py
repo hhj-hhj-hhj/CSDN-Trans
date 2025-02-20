@@ -444,6 +444,7 @@ class Model(nn.Module):
         self.in_planes = 2048
         self.num_part = num_part
         self.num_classes = num_classes
+        self.part_dim = 1024
 
         self.h_resolution = int((img_h - 16) // 16 + 1)
         self.w_resolution = int((img_w - 16) // 16 + 1)
@@ -463,11 +464,11 @@ class Model(nn.Module):
         self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=self.num_part)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
-        self.classifier_part = Classifier_part(self.num_classes, 2048)
+        self.classifier_part = Classifier_part(self.num_classes, self.part_dim)
 
         self.prompt_learner = PromptLearner_share(num_classes, clip_model.dtype, clip_model.token_embedding)
         self.text_encoder = TextEncoder(clip_model)
-        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=1024, num_part=self.prompt_part.num_parts)
+        self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.part_dim, num_part=self.prompt_part.num_parts)
 
     def forward(self, x1=None, x2=None, label1=None, label2=None, label=None, part_text=None, get_image=False, get_text=False, get_part_text=False):
         if get_image == True:
