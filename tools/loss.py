@@ -290,6 +290,35 @@ class IPD(nn.Module):
         loss /= xcen.shape[1]
         return loss
 
+class IPD_Weight(nn.Module):
+    def __init__(self, margin=0.3):
+        super(IPD_Weight, self).__init__()
+        self.margin = margin
+
+    def forward(self, x, pids, sim):
+        K, B, D = x.shape
+        num_pid = len(pids.unique())
+        x = x.reshape(K, 3 * num_pid, -1, D)
+        sim = sim.reshape(K, 3 * num_pid, -1)
+        xcen = []
+        for i in range(K):
+            center = torch.cat([x[i][:num_pid], x[i][num_pid:2 * num_pid], x[i][2 * num_pid:]], dim=1)
+            sim_cen = torch.cat([sim[i][:num_pid], sim[i][num_pid:2 * num_pid], sim[i][2 * num_pid:]], dim=1)
+            sim_cen_expanded = sim_cen.unsqueeze(-1)
+            center = (center * sim_cen_expanded).sum(dim=1) / sim_cen_expanded.sum(dim=1)
+            xcen.append(center)
+        xcen = torch.stack(xcen, dim=0)
+        xcen = F.normalize(xcen, p=2, dim=-1)
+        loss = 0
+        label = torch.tensor([i for i in range (K)]).cuda()
+        for i in range(xcen.shape[1]):
+            x_i = xcen[:, i, :]
+            dist, mask = compute_dist_euc(x_i, x_i, label, label)
+            step_loss = (self.margin - dist.masked_select(~mask)).clamp(min=0)
+            loss += step_loss.mean()
+
+        loss /= xcen.shape[1]
+        return loss
 class IPD_V3(nn.Module):
     def __init__(self, margin=0.3):
         super(IPD_V3, self).__init__()
@@ -307,7 +336,6 @@ class IPD_V3(nn.Module):
 
         loss /= B
         return loss
-
 class IPC_v2(nn.Module):
     def __init__(self, margin=0.6, k1=1.0, k2=1.0):
         super(IPC_v2, self).__init__()
@@ -324,6 +352,32 @@ class IPC_v2(nn.Module):
         xcen = xcen.mean(dim=1)
 
         dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
+        loss1 = dist.masked_select(mask).mean()
+        loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
+        loss = self.k1 * loss1 + self.k2 * loss2
+        return loss
+class IPC_v2_Weight(nn.Module):
+    def __init__(self, margin=0.6, k1=1.0, k2=1.0):
+        super(IPC_v2_Weight, self).__init__()
+        self.margin = margin
+        self.k1 = k1
+        self.k2 = k2
+
+    def forward(self, x, pids, sim):
+        num_pid = len(pids.unique())
+        d = x.shape[-1]
+        pidcen = pids.reshape(num_pid, -1)[:, 0]
+        xcen = x.reshape(3 * num_pid, -1, d)
+        sim_cen = sim.reshape(3 * num_pid, -1)
+        xcen = torch.cat([xcen[:num_pid], xcen[num_pid:2*num_pid], xcen[2*num_pid:]], dim=1)
+        sim_cen = torch.cat([sim_cen[:num_pid], sim_cen[num_pid:2*num_pid], sim_cen[2*num_pid:]], dim=1)
+        sim_cen_expanded = sim_cen.unsqueeze(-1)
+        # xcen = xcen.mean(dim=1)
+        xcen = (xcen * sim_cen_expanded).sum(dim=1) / sim_cen_expanded.sum(dim=1)
+
+        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
+        sim_expanded = sim.unsqueeze(-1)
+        dist = dist * sim_expanded
         loss1 = dist.masked_select(mask).mean()
         loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
         loss = self.k1 * loss1 + self.k2 * loss2

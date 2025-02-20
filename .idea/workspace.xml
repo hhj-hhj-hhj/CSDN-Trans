@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="part_text_提取">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="part_sim">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +46,7 @@
     "Python.dataset_cross.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Run",
+    "Python.main_cross.executor": "Debug",
     "Python.main_cross_regdb.executor": "Run",
     "Python.main_one_trans.executor": "Run",
     "Python.main_test.executor": "Run",
@@ -93,22 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00101" summary="ipd再次加上均值后的归一化">
-      <option name="closed" value="true" />
-      <created>1732459375338</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1732459375338</updated>
-    </task>
-    <task id="LOCAL-00102" summary="ipc系数改为0.15">
-      <option name="closed" value="true" />
-      <created>1732460806402</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
-      <option name="project" value="LOCAL" />
-      <updated>1732460806402</updated>
     </task>
     <task id="LOCAL-00103" summary="ipc系数重新改回0.1。&#10;可见光i2t系数lambda2从0.05改为和红外lambda3一样的0.1">
       <option name="closed" value="true" />
@@ -486,7 +469,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740048834014</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="part_sim">
+      <option name="closed" value="true" />
+      <created>1740049777389</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1740049777389</updated>
+    </task>
+    <task id="LOCAL-00151" summary="part_sim">
+      <option name="closed" value="true" />
+      <created>1740050065352</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1740050065352</updated>
+    </task>
+    <option name="localTasksCounter" value="152" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -501,7 +500,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
     <MESSAGE value="prompt加上photo" />
@@ -526,7 +524,8 @@
     <MESSAGE value="测试+kl的精度。" />
     <MESSAGE value="？？？" />
     <MESSAGE value="part_text_提取" />
-    <option name="LAST_COMMIT_MESSAGE" value="part_text_提取" />
+    <MESSAGE value="part_sim" />
+    <option name="LAST_COMMIT_MESSAGE" value="part_sim" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -542,9 +541,9 @@
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
-          <line>139</line>
-          <option name="timeStamp" value="17" />
+          <url>file://$PROJECT_DIR$/core/train_cross.py</url>
+          <line>213</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
