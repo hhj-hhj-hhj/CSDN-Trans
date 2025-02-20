@@ -12,11 +12,14 @@ def test(base, loader, config):
     ptr = 0
     # query_feat = np.zeros((loader.n_query, 3072))
     query_feat = np.zeros((loader.n_query, 5120))
+    # query_feat = np.zeros((loader.n_query, 4096))
+    part_text = base.model(get_part_text=True)
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)
             input = input.to(base.device)
-            feat = base.model(x2=input)
+            text_features_part = part_text.expand(input.size(0), -1, -1)
+            feat = base.model(x2=input, part_text=text_features_part)
 
             query_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
             ptr = ptr + batch_num
@@ -32,11 +35,13 @@ def test(base, loader, config):
             gall_loader = loader.gallery_loaders[i]
             # gall_feat = np.zeros((loader.n_gallery, 3072))
             gall_feat = np.zeros((loader.n_gallery, 5120))
+            # gall_feat = np.zeros((loader.n_gallery, 4096))
             with torch.no_grad():
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)
                     input = input.to(base.device)
-                    feat = base.model(x1=input)
+                    text_features_part = part_text.expand(input.size(0), -1, -1)
+                    feat = base.model(x1=input, part_text=text_features_part)
 
                     gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
                     ptr = ptr + batch_num
@@ -52,13 +57,15 @@ def test(base, loader, config):
 
     elif loader.dataset == 'regdb':
         gall_loader = loader.gallery_loaders
-        gall_feat = np.zeros((loader.n_gallery, 3072))
+        # gall_feat = np.zeros((loader.n_gallery, 3072))
+        gall_feat = np.zeros((loader.n_gallery, 5120))
         ptr = 0
         with torch.no_grad():
             for batch_idx, (input, label) in enumerate(gall_loader):
                 batch_num = input.size(0)
                 input = input.to(base.device)
-                feat = base.model(x1=input)
+                text_features_part = part_text.expand(input.size(0), -1, -1)
+                feat = base.model(x1=input, part_text=text_features_part)
 
                 gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
 

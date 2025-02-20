@@ -6,7 +6,44 @@ from bisect import bisect_right
 from visual.visual_model import Model
 from network.lr import CosineLRScheduler
 from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, hcc_euc, hcc_kl
+from torch.nn import functional as F
 
+def compute_dist_euc(x1,x2,p1,p2):
+    m, n = x1.shape[0], x2.shape[0]
+    dist = torch.pow(x1, 2).sum(dim=1, keepdim=True).expand(m, n) + \
+           torch.pow(x2, 2).sum(dim=1, keepdim=True).expand(n, m).t()
+    dist.addmm_(x1, x2.t(), beta=1, alpha=-2)
+    dist = dist.clamp(min=1e-12).sqrt()
+    mask = p1.expand(n, m).t().eq(p2.expand(m, n))
+    return dist, mask
+
+
+class IPD(nn.Module):
+    def __init__(self, margin=0.3):
+        super(IPD, self).__init__()
+        self.margin = margin
+
+    def forward(self, x, pids):
+        K, B, D = x.shape
+        num_pid = len(pids.unique())
+        x = x.reshape(K, num_pid, -1, D)
+        xcen = []
+        for i in range(K):
+            center = x[i]
+            center = center.mean(dim=1)
+            xcen.append(center)
+        xcen = torch.stack(xcen, dim=0)
+        xcen = F.normalize(xcen, p=2, dim=-1)
+        loss = 0
+        label = torch.tensor([i for i in range (K)]).cuda()
+        for i in range(xcen.shape[1]):
+            x_i = xcen[:, i, :]
+            dist, mask = compute_dist_euc(x_i, x_i, label, label)
+            step_loss = (self.margin - dist.masked_select(~mask)).clamp(min=0)
+            loss += step_loss.mean()
+
+        loss /= xcen.shape[1]
+        return loss
 def create_scheduler(optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range = None):
 
     lr_scheduler = CosineLRScheduler(
@@ -55,6 +92,7 @@ class Base:
 
         self._init_device()
         self._init_model()
+        self._init_creiteron()
 
     def _init_device(self):
         self.device = torch.device('cuda')
@@ -64,7 +102,8 @@ class Base:
         self.model = Model(self.pid_num, self.img_h, self.img_w)
         self.model = nn.DataParallel(self.model).to(self.device)
 
-
+    def _init_creiteron(self):
+        self.IPD = IPD(margin=0.3)
     def _init_optimizer_stage1(self):
         params = []
         keys = []
@@ -187,3 +226,4 @@ class WarmupMultiStepLR(torch.optim.lr_scheduler._LRScheduler):
             * self.gamma ** bisect_right(self.milestones, self.last_epoch)
             for base_lr in self.base_lrs
         ]
+

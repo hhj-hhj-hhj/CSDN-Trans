@@ -407,6 +407,7 @@ class MultiCrossAttention(nn.Module):
         self.num_heads = num_heads
 
     def forward(self, x, text):
+        N, C, H, W = x.shape
         x = x.reshape(x.shape[0], x.shape[1], x.shape[2] * x.shape[3]).permute(2, 0, 1)  # NCHW -> (HW)NC
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)  # (HW+1)NC
         x = x + self.positional_embedding[:, None, :].to(x.dtype)  # (HW+1)NC
@@ -434,7 +435,8 @@ class MultiCrossAttention(nn.Module):
             training=self.training,
             need_weights=False
         )
-
+        # attn = attn[0, :, 1:] # (N, L+1, HW+1) -> (N, L, HW)
+        # attn = attn.reshape(attn.shape[0], H, W)
         return x
 
 
@@ -469,26 +471,30 @@ class Model(nn.Module):
         self.cross_attention = MultiCrossAttention(embed_dim=self.in_planes, output_dim=self.in_planes, num_part=self.prompt_part.num_parts)
         # self.cross_attention = CrossAttention(D=self.in_planes, D_o=self.in_planes)
 
-    def forward(self, data=None):
-            image_features_map1 = self.image_encoder1(data)
-            # image_features_map2 = self.image_encoder2(x2)
-            image_features_maps = image_features_map1
-            image_features_maps = self.image_encoder(image_features_maps)
+    def forward(self, data=None, get_per=False):
+        image_features_map1 = self.image_encoder1(data)
+        # image_features_map2 = self.image_encoder2(x2)
+        image_features_maps = image_features_map1
+        image_features_maps = self.image_encoder(image_features_maps)
 
-            image_features_proj = self.attnpool(image_features_maps)[0]
+        image_features_proj = self.attnpool(image_features_maps)[0]
 
-            text_features_part = []
-            prompts = self.prompt_part(data.size(0))
-            for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+        text_features_part = []
+        prompts = self.prompt_part(data.size(0))
+        for i in range(self.prompt_part.num_parts):
+            # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+            text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
 
-            text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
-            text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
-            text_features_part = text_features_part.expand(data.size(0), -1, -1)  # (b, num_parts, dim)
+        text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, b, dim)
+        text_features_part = text_features_part.transpose(0, 1)  # (b, num_parts, dim)
+        text_features_part = text_features_part.expand(data.size(0), -1, -1)  # (b, num_parts, dim)
 
-            part_features = self.cross_attention(image_features_maps, text_features_part)
-            return part_features[0]
+        part_features = self.cross_attention(image_features_maps, text_features_part)[1:]
+        part_features = self.l2_norm(part_features)
+        if(get_per):
+            return part_features
+        part_features = part_features.permute(1, 0, 2)  # (b, num_parts, dim)
+        return part_features[:, 0, :]
 
 
 from network.clip import clip

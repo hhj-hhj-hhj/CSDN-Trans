@@ -3,7 +3,11 @@ import torch
 import cv2
 import numpy as np
 from pytorch_grad_cam import GradCAM
-from pytorch_grad_cam.utils.image import show_cam_on_image, preprocess_image
+from pytorch_grad_cam import GuidedBackpropReLUModel
+from pytorch_grad_cam.utils.image import (
+    show_cam_on_image, deprocess_image, preprocess_image
+)
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 # from visual.visual_base import Base
 from PIL import Image
 # from visual.visual_base_attention import Base as BaseAtt
@@ -20,7 +24,7 @@ def main(config):
     model_trans = base.model
     # model_trans.eval()
 
-    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0003.jpg"
+    image_path = r"E:\hhj\SYSU-MM01\cam2\0001\0001.jpg"
     image = Image.open(image_path)
 
     model_name = 'model_86_v11.pth'
@@ -39,19 +43,28 @@ def main(config):
     img_tensor = img_tensor.to(base.device)
 
     input_tensor = img_tensor
+    input_tensor.requires_grad = True
+    per_part_features = model_trans(input_tensor, get_per=True)
+    num_part = per_part_features.size(0)
+    rgb_pids = torch.zeros(1, dtype=torch.long).to(base.device)
+    loss_ipd = base.IPD(per_part_features, rgb_pids)
+    loss = loss_ipd
+    loss.backward()
 
     target_layers = [model_trans.module.image_encoder[-1][-1]]
+    # target_layers = [model_trans.module.cross_attention]
     cam = GradCAM(model=model_trans, target_layers=target_layers)
 
+    targets = [ClassifierOutputTarget([0])]
     grayscale_cam = cam(input_tensor=input_tensor, targets=None)
     grayscale_cam = grayscale_cam[0, :]
 
     img = np.array(image)
     img = cv2.resize(img, (config.img_w, config.img_h))
-    # 将grayscale_cam的输出逐行写入一个txt文件
-    with open('output.txt', 'w') as f:
-        for line in grayscale_cam:
-            f.write(' '.join(map(str, line)) + '\n')
+    # # 将grayscale_cam的输出逐行写入一个txt文件
+    # with open('output.txt', 'w') as f:
+    #     for line in grayscale_cam:
+    #         f.write(' '.join(map(str, line)) + '\n')
 
     visualization = show_cam_on_image(img.astype(dtype=np.float32)/255.0, grayscale_cam, use_rgb=True)
     print(visualization.shape)

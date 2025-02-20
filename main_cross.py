@@ -18,6 +18,7 @@ warnings.filterwarnings("ignore")
 
 best_mAP = 0
 best_rank1 = 0
+best_rank10 = 0
 def seed_torch(seed):
     seed = int(seed)
     random.seed(seed)
@@ -33,6 +34,7 @@ def seed_torch(seed):
 def main(config):
     global best_mAP
     global best_rank1
+    global best_rank10
 
     loaders = Loader(config)
     model = Base(config)
@@ -105,13 +107,16 @@ def main(config):
         #     logger('Time: {}; Epoch: {}; LR: {}; {}'.format(time_now(), current_epoch,
         #                                                     model.model_lr_scheduler_stage1._get_lr
         #                                                     (current_epoch)[0], result))
-        # model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_3', 'model_stage1_3share_prompt.pth')
-        # trained_model_state_dict = torch.load(model_path)
-        # model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
-        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\testModel', 'model_14.pth')
-        model.model.load_state_dict(torch.load(model_path))
-        print(f'Load the prompt_learner1 end')
-        logger('The 1st Stage of Trained')
+        # load_name = 'backup_3/model_stage1_3share_prompt.pth'
+        load_name = 'end_sysu/model_stage2_only_stage2_64.pth'
+        model_path = os.path.join(r'D:/PretrainModel/CSDN/models/base/models', load_name)
+        trained_model_state_dict = torch.load(model_path)
+        model.model.module.prompt_learner.load_state_dict({k.replace('module.prompt_learner.', ''): v for k, v in trained_model_state_dict.items() if k.startswith('module.prompt_learner.')})
+        print(f'Load the prompt_learner end,load_name: {load_name}')
+        # save_name = f'stage1_part/{config.num_part}.pth'
+        # model_file_path = os.path.join(model.save_model_path, save_name)
+        # torch.save(model.model.state_dict(), model_file_path)
+        # logger(f'The 1st Stage of Trained,asave_name: {save_name}')
 
 
         logger('Start the 3st Stage Training')
@@ -139,11 +144,12 @@ def main(config):
         model._init_optimizer_stage3()
 
         best_epoch=0
+        part_text = model.model(get_part_text=True)
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
             # _, result = train(model, loaders, text_features, config)
-            _, result = train_2rgb(model, loaders, text_features, config)
+            _, result = train_2rgb(model, loaders, text_features, part_text, config)
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 
@@ -153,6 +159,7 @@ def main(config):
                 if cmc[0] + mAP > best_rank1 + best_mAP:
                     is_best_result = True
                     best_rank1 = cmc[0]
+                    best_rank10 = cmc[9]
                     best_mAP = mAP
                     best_epoch = current_epoch
                 else:
@@ -163,7 +170,7 @@ def main(config):
                 logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
                                                                                             config.dataset,
                                                                                             mINP, mAP, rank_1_10_20))
-                logger(f'now best result: {best_rank1} {best_mAP} in epoch {best_epoch}\n')
+                logger(f'now best result: [{best_rank1} {best_rank10}] {best_mAP} in epoch {best_epoch}\n')
 
     elif config.mode == 'test':
         loader = loaders.get_train_loader()
@@ -182,8 +189,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', type=str, default='cuda')
     parser.add_argument('--mode', type=str, default='test', help='train, test')
-    parser.add_argument('--test_mode', default='indoor', type=str, help='all or indoor')
-    parser.add_argument('--gall_mode', default='multi', type=str, help='single or multi')
+    parser.add_argument('--test_mode', default='all', type=str, help='all or indoor')
+    parser.add_argument('--gall_mode', default='single', type=str, help='single or multi')
     parser.add_argument('--regdb_test_mode', default='v-t', type=str, help='')
     parser.add_argument('--dataset', default='sysu', help='dataset name: regdb or sysu]')
     # parser.add_argument('--sysu_data_path', type=str, default='E:/hhj/SYSU-MM01-PART/')
