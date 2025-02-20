@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="？？？">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="part_text_提取">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
@@ -93,22 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00099" summary="num_part从14改成16。">
-      <option name="closed" value="true" />
-      <created>1732342906639</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1732342906639</updated>
-    </task>
-    <task id="LOCAL-00100" summary="main加上best_rank10显示。ipd去除均值后的归一化">
-      <option name="closed" value="true" />
-      <created>1732413767184</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1732413767184</updated>
     </task>
     <task id="LOCAL-00101" summary="ipd再次加上均值后的归一化">
       <option name="closed" value="true" />
@@ -486,7 +470,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740045968495</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="part_text_提取">
+      <option name="closed" value="true" />
+      <created>1740048721685</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1740048721685</updated>
+    </task>
+    <task id="LOCAL-00149" summary="part_text_提取">
+      <option name="closed" value="true" />
+      <created>1740048834014</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1740048834014</updated>
+    </task>
+    <option name="localTasksCounter" value="150" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -501,7 +501,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipc的k1变成1.5.ipd的归一化重新加上" />
     <MESSAGE value="ipc的margin改成0.5" />
     <MESSAGE value="针对regdb的更改" />
     <MESSAGE value="针对regdb的修改" />
@@ -526,7 +525,8 @@
     <MESSAGE value="部位数改成12" />
     <MESSAGE value="测试+kl的精度。" />
     <MESSAGE value="？？？" />
-    <option name="LAST_COMMIT_MESSAGE" value="？？？" />
+    <MESSAGE value="part_text_提取" />
+    <option name="LAST_COMMIT_MESSAGE" value="part_text_提取" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

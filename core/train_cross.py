@@ -1,5 +1,6 @@
 import torch
 from tools import MultiItemAverageMeter
+import torch.nn.functional as F
 
 def train_stage1_randomcolor(base, data_loader):
     base.set_train()
@@ -188,10 +189,13 @@ def train_2rgb(base, loaders, text_features, part_text, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        text_features_part = part_text.expand(label.size(0), -1, -1)
+        text_features_part = part_text.expand(label.size(0), -1, -1) # (b, num_parts, dim)
+        trans_text_part = text_features_part.transpose(0, 1) # (num_parts, b, dim)
 
         features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, part_text=text_features_part, label=pids)
         # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+
+        part_sim = F.cosine_similarity(trans_text_part, per_part_features, dim=-1) # (num_parts, b)
 
         n = features[1].shape[0] // 3
         rgb_attn_features = features[1].narrow(0, 0, n)

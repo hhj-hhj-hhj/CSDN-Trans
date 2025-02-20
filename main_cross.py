@@ -174,6 +174,8 @@ def main(config):
 
     elif config.mode == 'test':
         # model.resume_model(config.resume_test_model)
+        model_path = os.path.join(r'D:\PretrainModel\CSDN\models\base\models\backup_with_attention', 'model_101_v18.pth')
+        model.model.load_state_dict(torch.load(model_path))
         cmc, mAP, mINP = test(model, loaders, config)
         rank_1_10_20 = [cmc[0], cmc[9], cmc[19]]
         logger('Time: {}; Test on Dataset: {}, \nmINP: {} \nmAP: {} \nRank_1_10_20: {}'.format(time_now(),
