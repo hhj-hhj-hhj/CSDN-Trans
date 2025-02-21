@@ -233,7 +233,7 @@ def train_2rgb(base, loaders, text_features, config):
         # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
 
         loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) #+ loss_kl + loss_kl_map + loss_kl_part
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) + mesl_loss + mesl_loss_proj + mesl_loss_part
 
         # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
         #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_kl + loss_kl_map

@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="恢复成普通的IPC和IPD。部位维度回到2048.">
-      <change afterPath="$PROJECT_DIR$/tools/MSEL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加入msel">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,22 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00115" summary="ipd去除归一化。系数改回0.15">
-      <option name="closed" value="true" />
-      <created>1733027403376</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
-      <option name="project" value="LOCAL" />
-      <updated>1733027403376</updated>
-    </task>
-    <task id="LOCAL-00116" summary="ipc_v2两种loss加上k系数">
-      <option name="closed" value="true" />
-      <created>1733157833122</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
-      <option name="project" value="LOCAL" />
-      <updated>1733157833122</updated>
     </task>
     <task id="LOCAL-00117" summary="ipc的k1变成1.5.ipd的归一化重新加上">
       <option name="closed" value="true" />
@@ -486,7 +467,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740119056299</updated>
     </task>
-    <option name="localTasksCounter" value="164" />
+    <task id="LOCAL-00164" summary="加入msel">
+      <option name="closed" value="true" />
+      <created>1740119753843</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
+      <option name="project" value="LOCAL" />
+      <updated>1740119753843</updated>
+    </task>
+    <task id="LOCAL-00165" summary="加入msel">
+      <option name="closed" value="true" />
+      <created>1740119907715</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1740119907715</updated>
+    </task>
+    <option name="localTasksCounter" value="166" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -501,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
     <MESSAGE value="针对部位的消融。num_part改成18" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
@@ -526,7 +522,8 @@
     <MESSAGE value="解开一阶段。" />
     <MESSAGE value="IPC置信度权重除以均值。" />
     <MESSAGE value="恢复成普通的IPC和IPD。部位维度回到2048." />
-    <option name="LAST_COMMIT_MESSAGE" value="恢复成普通的IPC和IPD。部位维度回到2048." />
+    <MESSAGE value="加入msel" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入msel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
