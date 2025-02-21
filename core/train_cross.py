@@ -189,9 +189,10 @@ def train_2rgb(base, loaders, text_features, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, part_features, cls_scores_part, per_part_features, text_features_part = base.model(x1=rgb_imgs, x2=ir_1, part_text=text_features_part, label=pids)
-        # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        features, cls_score, part_features, cls_scores_part, per_part_features, text_features_part = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
+        # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        trans_text_part = text_features_part.transpose(0, 1) # (num_parts, b, dim)
         part_sim = F.cosine_similarity(trans_text_part, per_part_features, dim=-1) # (num_parts, b)
 
         n = features[1].shape[0] // 3
