@@ -228,15 +228,8 @@ def train_2rgb(base, loaders, text_features, config):
         msel_loss_proj = base.msel_creiteron(torch.cat([rgb_attn_features, ir_attn_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
         msel_loss_part = base.msel_creiteron(torch.cat([rgb_part_features, ir_part_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
 
-        # loss_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
-        # loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
-        # loss_kl_part = base.criterion_hcc_kl_3(cls_scores_part, pids)
-
-        loss = ide_loss + ide_loss_proj + ide_loss_part + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc) + mesl_loss + mesl_loss_proj + mesl_loss_part
-
-        # loss = ide_loss + ide_loss_proj + config.lambda1 * (triplet_loss + triplet_loss_proj) + \
-        #        config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + loss_kl + loss_kl_map
+        loss = (ide_loss + ide_loss_proj + ide_loss_part) + ( msel_loss + msel_loss_proj + msel_loss_part) + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
+               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc)
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
