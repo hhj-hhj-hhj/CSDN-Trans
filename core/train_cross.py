@@ -189,15 +189,18 @@ def train_2rgb(base, loaders, text_features, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        features, cls_score, part_features, cls_scores_part, per_part_features, text_features_part = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
+        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
-        trans_text_part = text_features_part.transpose(0, 1) # (num_parts, b, dim)
-        part_sim = F.cosine_similarity(trans_text_part, per_part_features, dim=-1) # (num_parts, b)
 
         n = features[1].shape[0] // 3
+        rgb_features = features[0].squeeze().narrow(0, 0, n)  # 32.2048
+        ir_features = features[0].squeeze().narrow(0, 2 * n, n)  # 32,2048
         rgb_attn_features = features[1].narrow(0, 0, n)
         ir_attn_features = features[1].narrow(0, 2 * n, n)
+        rgb_part_features = part_features.narrow(0, 0, n)
+        ir_part_features = part_features.narrow(0, 2 * n, n)
+
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
         num_part = per_part_features.size(0)
@@ -221,7 +224,9 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        # atten_loss = base.euclidean(attention_weight, attention_weight_flip_flip) # / (attention_weight.size(-1) * attention_weight.size(-2))
+        msel_loss = base.msel_creiteron(torch.cat([rgb_features, ir_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
+        msel_loss_proj = base.msel_creiteron(torch.cat([rgb_attn_features, ir_attn_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
+        msel_loss_part = base.msel_creiteron(torch.cat([rgb_part_features, ir_part_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
 
         # loss_kl = base.criterion_hcc_kl_3(cls_score[1], pids)
         # loss_kl_map = base.criterion_hcc_kl_3(cls_score[0], pids)
@@ -249,6 +254,9 @@ def train_2rgb(base, loaders, text_features, config):
                       # 'loss_kl_part': loss_kl_part.data,
                       'loss_ipc': loss_ipc.data,
                       'loss_ipd': loss_ipd.data,
+                      'msel_loss': msel_loss.data,
+                      'msel_loss_proj': msel_loss_proj.data,
+                      'msel_loss_part': msel_loss_part.data,
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 200 == 0:
