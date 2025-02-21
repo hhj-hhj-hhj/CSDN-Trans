@@ -290,22 +290,19 @@ class IPD(nn.Module):
         loss /= xcen.shape[1]
         return loss
 
-class IPD_Weight(nn.Module):
+class IPD_rgb_ir(nn.Module):
     def __init__(self, margin=0.3):
-        super(IPD_Weight, self).__init__()
+        super(IPD_rgb_ir, self).__init__()
         self.margin = margin
 
-    def forward(self, x, pids, sim):
+    def forward(self, x, pids):
         K, B, D = x.shape
         num_pid = len(pids.unique())
-        x = x.reshape(K, 3 * num_pid, -1, D)
-        sim = sim.reshape(K, 3 * num_pid, -1)
+        x = x.reshape(K,2 * num_pid, -1, D)
         xcen = []
         for i in range(K):
-            center = torch.cat([x[i][:num_pid], x[i][num_pid:2 * num_pid], x[i][2 * num_pid:]], dim=1)
-            sim_cen = torch.cat([sim[i][:num_pid], sim[i][num_pid:2 * num_pid], sim[i][2 * num_pid:]], dim=1)
-            sim_cen_expanded = sim_cen.unsqueeze(-1)
-            center = (center * sim_cen_expanded).sum(dim=1) / sim_cen_expanded.sum(dim=1)
+            center = torch.cat([x[i][:num_pid], x[i][num_pid:]], dim=1)
+            center = center.mean(dim=1)
             xcen.append(center)
         xcen = torch.stack(xcen, dim=0)
         xcen = F.normalize(xcen, p=2, dim=-1)
@@ -356,30 +353,22 @@ class IPC_v2(nn.Module):
         loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
         loss = self.k1 * loss1 + self.k2 * loss2
         return loss
-class IPC_v2_Weight(nn.Module):
+class IPC_v2_rgb_ir(nn.Module):
     def __init__(self, margin=0.6, k1=1.0, k2=1.0):
-        super(IPC_v2_Weight, self).__init__()
+        super(IPC_v2_rgb_ir, self).__init__()
         self.margin = margin
         self.k1 = k1
         self.k2 = k2
 
-    def forward(self, x, pids, sim):
+    def forward(self, x, pids):
         num_pid = len(pids.unique())
         d = x.shape[-1]
         pidcen = pids.reshape(num_pid, -1)[:, 0]
-        xcen = x.reshape(3 * num_pid, -1, d)
-        sim_cen = sim.reshape(3 * num_pid, -1)
-        xcen = torch.cat([xcen[:num_pid], xcen[num_pid:2*num_pid], xcen[2*num_pid:]], dim=1)
-        sim_cen = torch.cat([sim_cen[:num_pid], sim_cen[num_pid:2*num_pid], sim_cen[2*num_pid:]], dim=1)
-        sim_cen_expanded = sim_cen.unsqueeze(-1)
-        # xcen = xcen.mean(dim=1)
-        xcen = (xcen * sim_cen_expanded).sum(dim=1) / sim_cen_expanded.sum(dim=1)
+        xcen = x.reshape(2 * num_pid, -1, d)
+        xcen = torch.cat([xcen[:num_pid], xcen[num_pid:]], dim=1)
+        xcen = xcen.mean(dim=1)
 
-        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
-        # 对sim除以均值以平衡置信度权重
-        # sim_ave = sim.mean(dim=0)
-        # sim_expanded = (sim / sim_ave).unsqueeze(-1)
-        # dist = dist * sim_expanded
+        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids], dim=0), pidcen)
         loss1 = dist.masked_select(mask).mean()
         loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
         loss = self.k1 * loss1 + self.k2 * loss2
