@@ -170,7 +170,7 @@ def train(base, loaders, text_features, config):
     return meter.get_val(), meter.get_str()
 
 # 有两种rgb图像
-def train_2rgb(base, loaders, text_features, part_text, config):
+def train_2rgb(base, loaders, text_features, config):
 
     base.set_train()
     meter = MultiItemAverageMeter()
@@ -189,10 +189,7 @@ def train_2rgb(base, loaders, text_features, part_text, config):
         # rgb_imgs_flip = torch.cat([rgb_1_flip, rgb_2_flip], dim=0)
         pids = torch.cat([rgb_pids, rgb_pids, ir_pids], dim=0)
 
-        text_features_part = part_text.expand(pids.size(0), -1, -1) # (b, num_parts, dim)
-        trans_text_part = text_features_part.transpose(0, 1) # (num_parts, b, dim)
-
-        features, cls_score, part_features, cls_scores_part, per_part_features = base.model(x1=rgb_imgs, x2=ir_1, part_text=text_features_part, label=pids)
+        features, cls_score, part_features, cls_scores_part, per_part_features, text_features_part = base.model(x1=rgb_imgs, x2=ir_1, part_text=text_features_part, label=pids)
         # features, cls_score = base.model(x1=rgb_imgs, x2=ir_1, label=pids)
 
         part_sim = F.cosine_similarity(trans_text_part, per_part_features, dim=-1) # (num_parts, b)
@@ -204,7 +201,7 @@ def train_2rgb(base, loaders, text_features, part_text, config):
         ir_logits = ir_attn_features @ text_features.t()
         num_part = per_part_features.size(0)
         loss_ipc = 0
-        if iter < 20:
+        if iter < 0:
             for i in range(num_part):
                 loss_ipc += base.IPC(per_part_features[i], rgb_pids)
         else:
@@ -212,7 +209,7 @@ def train_2rgb(base, loaders, text_features, part_text, config):
                 loss_ipc += base.IPC_W(per_part_features[i], rgb_pids, part_sim[i])
 
         loss_ipc /= num_part
-        if iter < 20:
+        if iter < 0:
             loss_ipd = base.IPD(per_part_features, rgb_pids)
         else:
             loss_ipd = base.IPD_W(per_part_features, rgb_pids, part_sim)

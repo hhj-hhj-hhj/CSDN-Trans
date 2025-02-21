@@ -134,13 +134,12 @@ def main(config):
         model._init_optimizer_stage3()
 
         best_epoch=0
-        with torch.no_grad():
-            part_text = model.model(get_part_text=True)
+
         for current_epoch in range(start_train_epoch, config.total_train_epoch):
             model.model_lr_scheduler_stage3.step(current_epoch)
 
             # _, result = train(model, loaders, text_features, config)
-            _, result = train_2rgb(model, loaders, text_features, part_text, config)
+            _, result = train_2rgb(model, loaders, text_features, config)
             logger('Time: {}; Epoch: {}; LR, {}; {}'.format(time_now(), current_epoch,
                                                             model.model_lr_scheduler_stage3.get_lr()[0], result))
 

@@ -13,14 +13,12 @@ def test(base, loader, config):
     # query_feat = np.zeros((loader.n_query, 3072))
     # query_feat = np.zeros((loader.n_query, 5120))
     query_feat = np.zeros((loader.n_query, 4096))
-    with torch.no_grad():
-        part_text = base.model(get_part_text=True)
+
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
             batch_num = input.size(0)
             input = input.to(base.device)
-            text_features_part = part_text.expand(input.size(0), -1, -1)
-            feat = base.model(x2=input, part_text=text_features_part)
+            feat = base.model(x2=input)
 
             query_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
             ptr = ptr + batch_num
@@ -41,8 +39,7 @@ def test(base, loader, config):
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)
                     input = input.to(base.device)
-                    text_features_part = part_text.expand(input.size(0), -1, -1)
-                    feat = base.model(x1=input, part_text=text_features_part)
+                    feat = base.model(x1=input)
 
                     gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
                     ptr = ptr + batch_num
@@ -66,8 +63,7 @@ def test(base, loader, config):
             for batch_idx, (input, label) in enumerate(gall_loader):
                 batch_num = input.size(0)
                 input = input.to(base.device)
-                text_features_part = part_text.expand(input.size(0), -1, -1)
-                feat = base.model(x1=input, part_text=text_features_part)
+                feat = base.model(x1=input)
 
                 gall_feat[ptr:ptr + batch_num, :] = feat.detach().cpu().numpy()
 
