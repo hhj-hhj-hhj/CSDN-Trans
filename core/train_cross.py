@@ -249,14 +249,11 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      # 'loss_kl': loss_kl.data,
-                      # 'loss_kl_map': loss_kl_map.data,
-                      # 'loss_kl_part': loss_kl_part.data,
-                      'loss_ipc': loss_ipc.data,
-                      'loss_ipd': loss_ipd.data,
                       'msel_loss': msel_loss.data,
                       'msel_loss_proj': msel_loss_proj.data,
                       'msel_loss_part': msel_loss_part.data,
+                      'loss_ipc': loss_ipc.data,
+                      'loss_ipd': loss_ipd.data,
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 200 == 0:

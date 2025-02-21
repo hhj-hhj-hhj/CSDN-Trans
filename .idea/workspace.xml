@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="IPC置信度权重除以均值。">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="恢复成普通的IPC和IPD。部位维度回到2048.">
+      <change afterPath="$PROJECT_DIR$/tools/MSEL.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,14 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00114" summary="部位改回16。ipc和ipd系数从0.15改成0.2">
-      <option name="closed" value="true" />
-      <created>1732954515139</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
-      <option name="project" value="LOCAL" />
-      <updated>1732954515139</updated>
     </task>
     <task id="LOCAL-00115" summary="ipd去除归一化。系数改回0.15">
       <option name="closed" value="true" />
@@ -488,7 +478,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740104169223</updated>
     </task>
-    <option name="localTasksCounter" value="163" />
+    <task id="LOCAL-00163" summary="恢复成普通的IPC和IPD。部位维度回到2048.">
+      <option name="closed" value="true" />
+      <created>1740119056299</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1740119056299</updated>
+    </task>
+    <option name="localTasksCounter" value="164" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -503,7 +501,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipd的margin改成 0.35" />
     <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
     <MESSAGE value="针对部位的消融。num_part改成18" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。" />
@@ -528,7 +525,8 @@
     <MESSAGE value="前面都错了。部位文本要在每次更新。" />
     <MESSAGE value="解开一阶段。" />
     <MESSAGE value="IPC置信度权重除以均值。" />
-    <option name="LAST_COMMIT_MESSAGE" value="IPC置信度权重除以均值。" />
+    <MESSAGE value="恢复成普通的IPC和IPD。部位维度回到2048." />
+    <option name="LAST_COMMIT_MESSAGE" value="恢复成普通的IPC和IPD。部位维度回到2048." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -542,11 +540,6 @@
           <url>file://$PROJECT_DIR$/core/train_attention.py</url>
           <line>91</line>
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/core/train_cross.py</url>
-          <line>211</line>
-          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
