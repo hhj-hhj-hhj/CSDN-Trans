@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加入msel">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="写出IPC和IPD只使用两种颜色的loss版本。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
@@ -90,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00119" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733305368916</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
-      <option name="project" value="LOCAL" />
-      <updated>1733305368916</updated>
     </task>
     <task id="LOCAL-00120" summary="针对regdb的更改">
       <option name="closed" value="true" />
@@ -483,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740120724440</updated>
     </task>
-    <option name="localTasksCounter" value="168" />
+    <task id="LOCAL-00168" summary="写出IPC和IPD只使用两种颜色的loss版本。">
+      <option name="closed" value="true" />
+      <created>1740124871063</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1740124871063</updated>
+    </task>
+    <option name="localTasksCounter" value="169" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="针对部位的消融。num_part改成18" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
     <MESSAGE value="对lambda4的消融。num_part定为16" />
@@ -523,7 +522,8 @@
     <MESSAGE value="IPC置信度权重除以均值。" />
     <MESSAGE value="恢复成普通的IPC和IPD。部位维度回到2048." />
     <MESSAGE value="加入msel" />
-    <option name="LAST_COMMIT_MESSAGE" value="加入msel" />
+    <MESSAGE value="写出IPC和IPD只使用两种颜色的loss版本。" />
+    <option name="LAST_COMMIT_MESSAGE" value="写出IPC和IPD只使用两种颜色的loss版本。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

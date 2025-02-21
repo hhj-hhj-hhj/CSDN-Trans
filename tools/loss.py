@@ -316,6 +316,36 @@ class IPD_rgb_ir(nn.Module):
 
         loss /= xcen.shape[1]
         return loss
+
+class IPD_rgb(nn.Module):
+    def __init__(self, margin=0.3):
+        super(IPD_rgb, self).__init__()
+        self.margin = margin
+    def single_ipd(self, x, pids):
+        K, B, D = x.shape
+        num_pid = len(pids.unique())
+        x = x.reshape(K, num_pid, -1, D)
+        xcen = []
+        for i in range(K):
+            center = x[i][:]
+            center = center.mean(dim=1)
+            xcen.append(center)
+        xcen = torch.stack(xcen, dim=0)
+        xcen = F.normalize(xcen, p=2, dim=-1)
+        loss = 0
+        label = torch.tensor([i for i in range(K)]).cuda()
+        for i in range(xcen.shape[1]):
+            x_i = xcen[:, i, :]
+            dist, mask = compute_dist_euc(x_i, x_i, label, label)
+            step_loss = (self.margin - dist.masked_select(~mask)).clamp(min=0)
+            loss += step_loss.mean()
+
+        loss /= xcen.shape[1]
+    def forward(self, x, pids):
+        rgb, ir = x[x.size(0)//2:], x[:x.size(0)//2]
+        loss = self.single_ipd(rgb, pids) + self.single_ipd(ir, pids)
+        return loss
+
 class IPD_V3(nn.Module):
     def __init__(self, margin=0.3):
         super(IPD_V3, self).__init__()
@@ -372,6 +402,30 @@ class IPC_v2_rgb_ir(nn.Module):
         loss1 = dist.masked_select(mask).mean()
         loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
         loss = self.k1 * loss1 + self.k2 * loss2
+        return loss
+
+class IPC_v2_rgb(nn.Module):
+    def __init__(self, margin=0.6, k1=1.0, k2=1.0):
+        super(IPC_v2_rgb, self).__init__()
+        self.margin = margin
+        self.k1 = k1
+        self.k2 = k2
+    def single_ipc(self, x, pids):
+        num_pid = len(pids.unique())
+        d = x.shape[-1]
+        pidcen = pids.reshape(num_pid, -1)[:, 0]
+        xcen = x.reshape(num_pid, -1, d)
+        xcen = xcen.mean(dim=1)
+
+        dist, mask = compute_dist_euc(x, xcen, pids, pidcen)
+        loss1 = dist.masked_select(mask).mean()
+        loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
+        loss = self.k1 * loss1 + self.k2 * loss2
+        return loss
+
+    def forward(self, x, pids):
+        rgb, ir = x[:x.size(0)//2], x[x.size(0)//2:]
+        loss = self.single_ipc(rgb, pids) + self.single_ipc(ir, pids)
         return loss
 
 class IPC_v3(nn.Module):
