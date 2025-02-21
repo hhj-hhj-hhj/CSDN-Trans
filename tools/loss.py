@@ -341,6 +341,7 @@ class IPD_rgb(nn.Module):
             loss += step_loss.mean()
 
         loss /= xcen.shape[1]
+        return loss
     def forward(self, x, pids):
         rgb, ir = x[x.size(0)//2:], x[:x.size(0)//2]
         loss = self.single_ipd(rgb, pids) + self.single_ipd(ir, pids)
