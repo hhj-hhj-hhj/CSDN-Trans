@@ -376,7 +376,9 @@ class IPC_v2_Weight(nn.Module):
         xcen = (xcen * sim_cen_expanded).sum(dim=1) / sim_cen_expanded.sum(dim=1)
 
         dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids], dim=0), pidcen)
-        sim_expanded = sim.unsqueeze(-1)
+        # 对sim除以均值以平衡置信度权重
+        sim_ave = sim.mean(dim=0)
+        sim_expanded = (sim / sim_ave).unsqueeze(-1)
         dist = dist * sim_expanded
         loss1 = dist.masked_select(mask).mean()
         loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()

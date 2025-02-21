@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="前面都错了。部位文本要在每次更新。">
-      <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="解开一阶段。">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,30 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00110" summary="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05">
-      <option name="closed" value="true" />
-      <created>1732716213294</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
-      <option name="project" value="LOCAL" />
-      <updated>1732716213294</updated>
-    </task>
-    <task id="LOCAL-00111" summary="ipc和ipd系数变成0.15">
-      <option name="closed" value="true" />
-      <created>1732785467527</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1732785467527</updated>
-    </task>
-    <task id="LOCAL-00112" summary="部位特征改为1024维度。">
-      <option name="closed" value="true" />
-      <created>1732855113193</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
-      <option name="project" value="LOCAL" />
-      <updated>1732855113193</updated>
     </task>
     <task id="LOCAL-00113" summary="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18">
       <option name="closed" value="true" />
@@ -483,7 +459,31 @@
       <option name="project" value="LOCAL" />
       <updated>1740100413235</updated>
     </task>
-    <option name="localTasksCounter" value="159" />
+    <task id="LOCAL-00159" summary="前面都错了。部位文本要在每次更新。">
+      <option name="closed" value="true" />
+      <created>1740100541774</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1740100541774</updated>
+    </task>
+    <task id="LOCAL-00160" summary="前面都错了。部位文本要在每次更新。">
+      <option name="closed" value="true" />
+      <created>1740100754978</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1740100754978</updated>
+    </task>
+    <task id="LOCAL-00161" summary="解开一阶段。">
+      <option name="closed" value="true" />
+      <created>1740100845053</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1740100845054</updated>
+    </task>
+    <option name="localTasksCounter" value="162" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
     <MESSAGE value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
     <MESSAGE value="ipd的margin改成 0.35" />
     <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
@@ -523,7 +522,8 @@
     <MESSAGE value="开启一阶段。" />
     <MESSAGE value="从20epoch开始使用置信度。" />
     <MESSAGE value="前面都错了。部位文本要在每次更新。" />
-    <option name="LAST_COMMIT_MESSAGE" value="前面都错了。部位文本要在每次更新。" />
+    <MESSAGE value="解开一阶段。" />
+    <option name="LAST_COMMIT_MESSAGE" value="解开一阶段。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
