@@ -73,9 +73,9 @@ class Base:
 
         self.criterion_hcc_kl_3 = hcc_kl_3(k2=1.2)
         self.IPC = IPC_v2(margin=0.6)
-        self.IPC_W = IPC_v2_Weight(margin=0.6)
+        # self.IPC_W = IPC_v2_Weight(margin=0.6)
         self.IPD = IPD(margin=0.3)
-        self.IPD_W = IPD_Weight(margin=0.3)
+        # self.IPD_W = IPD_Weight(margin=0.3)
         # self.IPD_v2 = IPD_v2(t=0.1)
 
     def _init_optimizer_stage1(self):

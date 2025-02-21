@@ -444,7 +444,7 @@ class Model(nn.Module):
         self.in_planes = 2048
         self.num_part = num_part
         self.num_classes = num_classes
-        self.part_dim = 1024
+        self.part_dim = 2048
 
         self.h_resolution = int((img_h - 16) // 16 + 1)
         self.w_resolution = int((img_w - 16) // 16 + 1)

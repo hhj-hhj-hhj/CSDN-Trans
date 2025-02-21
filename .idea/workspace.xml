@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="解开一阶段。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="IPC置信度权重除以均值。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,14 +95,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00113" summary="部位特征改回2048维度，1024精度较差。&#10;num_part从16变为18">
-      <option name="closed" value="true" />
-      <created>1732900363378</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
-      <option name="project" value="LOCAL" />
-      <updated>1732900363378</updated>
     </task>
     <task id="LOCAL-00114" summary="部位改回16。ipc和ipd系数从0.15改成0.2">
       <option name="closed" value="true" />
@@ -483,7 +480,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740100845054</updated>
     </task>
-    <option name="localTasksCounter" value="162" />
+    <task id="LOCAL-00162" summary="IPC置信度权重除以均值。">
+      <option name="closed" value="true" />
+      <created>1740104169223</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
+      <option name="project" value="LOCAL" />
+      <updated>1740104169223</updated>
+    </task>
+    <option name="localTasksCounter" value="163" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +503,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
     <MESSAGE value="ipd的margin改成 0.35" />
     <MESSAGE value="还是ipd*2效果好。另外换成stage1only64的文本。" />
     <MESSAGE value="针对部位的消融。num_part改成18" />
@@ -523,7 +527,8 @@
     <MESSAGE value="从20epoch开始使用置信度。" />
     <MESSAGE value="前面都错了。部位文本要在每次更新。" />
     <MESSAGE value="解开一阶段。" />
-    <option name="LAST_COMMIT_MESSAGE" value="解开一阶段。" />
+    <MESSAGE value="IPC置信度权重除以均值。" />
+    <option name="LAST_COMMIT_MESSAGE" value="IPC置信度权重除以均值。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -540,7 +545,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/core/train_cross.py</url>
-          <line>217</line>
+          <line>211</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>

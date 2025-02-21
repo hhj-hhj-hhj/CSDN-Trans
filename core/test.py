@@ -11,8 +11,8 @@ def test(base, loader, config):
     print('Extracting Query Feature...')
     ptr = 0
     # query_feat = np.zeros((loader.n_query, 3072))
-    # query_feat = np.zeros((loader.n_query, 5120))
-    query_feat = np.zeros((loader.n_query, 4096))
+    query_feat = np.zeros((loader.n_query, 5120))
+    # query_feat = np.zeros((loader.n_query, 4096))
 
     with torch.no_grad():
         for batch_idx, (input, label) in enumerate(loader.query_loader):
@@ -33,8 +33,8 @@ def test(base, loader, config):
             ptr = 0
             gall_loader = loader.gallery_loaders[i]
             # gall_feat = np.zeros((loader.n_gallery, 3072))
-            # gall_feat = np.zeros((loader.n_gallery, 5120))
-            gall_feat = np.zeros((loader.n_gallery, 4096))
+            gall_feat = np.zeros((loader.n_gallery, 5120))
+            # gall_feat = np.zeros((loader.n_gallery, 4096))
             with torch.no_grad():
                 for batch_idx, (input, label) in enumerate(gall_loader):
                     batch_num = input.size(0)
@@ -56,8 +56,8 @@ def test(base, loader, config):
     elif loader.dataset == 'regdb':
         gall_loader = loader.gallery_loaders
         # gall_feat = np.zeros((loader.n_gallery, 3072))
-        # gall_feat = np.zeros((loader.n_gallery, 5120))
-        gall_feat = np.zeros((loader.n_gallery, 4096))
+        gall_feat = np.zeros((loader.n_gallery, 5120))
+        # gall_feat = np.zeros((loader.n_gallery, 4096))
         ptr = 0
         with torch.no_grad():
             for batch_idx, (input, label) in enumerate(gall_loader):
