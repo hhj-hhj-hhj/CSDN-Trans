@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="写出IPC和IPD只使用两种颜色的loss版本。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="加入两种特定于模态的ipc和ipd。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00120" summary="针对regdb的更改">
-      <option name="closed" value="true" />
-      <created>1733307500926</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
-      <option name="project" value="LOCAL" />
-      <updated>1733307500926</updated>
     </task>
     <task id="LOCAL-00121" summary="针对regdb的更改">
       <option name="closed" value="true" />
@@ -483,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740124871063</updated>
     </task>
-    <option name="localTasksCounter" value="169" />
+    <task id="LOCAL-00169" summary="加入两种特定于模态的ipc和ipd。">
+      <option name="closed" value="true" />
+      <created>1740126458556</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1740126458556</updated>
+    </task>
+    <option name="localTasksCounter" value="170" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。" />
     <MESSAGE value="针对部位的消融。num_part改成18。同时将num_part集成到参数配置config中。同时输出的保存权重的log也使用config参数。" />
     <MESSAGE value="对lambda4的消融。num_part定为16" />
     <MESSAGE value="ipd系数还是改成1吧。" />
@@ -523,7 +523,8 @@
     <MESSAGE value="恢复成普通的IPC和IPD。部位维度回到2048." />
     <MESSAGE value="加入msel" />
     <MESSAGE value="写出IPC和IPD只使用两种颜色的loss版本。" />
-    <option name="LAST_COMMIT_MESSAGE" value="写出IPC和IPD只使用两种颜色的loss版本。" />
+    <MESSAGE value="加入两种特定于模态的ipc和ipd。" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入两种特定于模态的ipc和ipd。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
