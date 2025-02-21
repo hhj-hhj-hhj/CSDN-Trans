@@ -523,7 +523,7 @@ class Model(nn.Module):
             part_features = part_features[0]  # (num_parts + 1, b, D_o) -> (b, D_o), 只取cls token的特征
             cls_scores_part, _ = self.classifier_part(part_features)  # (b, num_classes)
 
-            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, per_part_feature, text_features_part
+            return [features, image_features_proj], [cls_scores, cls_scores_proj], part_features, cls_scores_part, per_part_features, text_features_part
             # return [features, image_features_proj], [cls_scores, cls_scores_proj]
 
         elif x1 is not None and x2 is None:
