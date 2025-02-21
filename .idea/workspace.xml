@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="从20epoch开始使用置信度。">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="前面都错了。部位文本要在每次更新。">
       <change beforePath="$PROJECT_DIR$/main_cross_regdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross_regdb.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
@@ -93,22 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00108" summary="使用IPC_v4">
-      <option name="closed" value="true" />
-      <created>1732599648658</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
-      <option name="project" value="LOCAL" />
-      <updated>1732599648658</updated>
-    </task>
-    <task id="LOCAL-00109" summary="IPC_v4，将k2改成1.2">
-      <option name="closed" value="true" />
-      <created>1732688215790</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
-      <option name="project" value="LOCAL" />
-      <updated>1732688215790</updated>
     </task>
     <task id="LOCAL-00110" summary="重新换回ipc_v2。ipc_v4的k2变回1.0。&#10;train中ipc和ipd系数从0.1变成0.05">
       <option name="closed" value="true" />
@@ -486,7 +467,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740068624614</updated>
     </task>
-    <option name="localTasksCounter" value="157" />
+    <task id="LOCAL-00157" summary="前面都错了。部位文本要在每次更新。">
+      <option name="closed" value="true" />
+      <created>1740100157571</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1740100157571</updated>
+    </task>
+    <task id="LOCAL-00158" summary="前面都错了。部位文本要在每次更新。">
+      <option name="closed" value="true" />
+      <created>1740100413235</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1740100413235</updated>
+    </task>
+    <option name="localTasksCounter" value="159" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -501,7 +498,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="load和save权重名字添加logger，修正版。" />
     <MESSAGE value="ipd系数乘以2。防止无法分离特征。" />
     <MESSAGE value="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。" />
     <MESSAGE value="ipd的margin改成 0.35" />
@@ -526,7 +522,8 @@
     <MESSAGE value="修正，提取part_text时不参与梯度。" />
     <MESSAGE value="开启一阶段。" />
     <MESSAGE value="从20epoch开始使用置信度。" />
-    <option name="LAST_COMMIT_MESSAGE" value="从20epoch开始使用置信度。" />
+    <MESSAGE value="前面都错了。部位文本要在每次更新。" />
+    <option name="LAST_COMMIT_MESSAGE" value="前面都错了。部位文本要在每次更新。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -543,7 +540,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/core/train_cross.py</url>
-          <line>216</line>
+          <line>217</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>

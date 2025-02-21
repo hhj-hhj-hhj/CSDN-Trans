@@ -542,7 +542,7 @@ class Model(nn.Module):
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
-            text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(x1.size(0), -1, -1)  # (b, num_parts, dim)
 
             part_features, _ = self.cross_attention(image_features_map1, text_features_part)
             part_features = part_features[0]  # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
@@ -568,7 +568,7 @@ class Model(nn.Module):
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
-            text_features_part = text_features_part.expand(label.size(0), -1, -1)  # (b, num_parts, dim)
+            text_features_part = text_features_part.expand(x2.size(0), -1, -1)  # (b, num_parts, dim)
 
             part_features, _ = self.cross_attention(image_features_map2, text_features_part)
             part_features = part_features[0] # (b, num_parts + 1, D_o) -> (b, D_o), 只取cls token的特征
