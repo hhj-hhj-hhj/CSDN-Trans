@@ -211,58 +211,6 @@ class hcc_kl_3(nn.Module):
         return loss_all
 
 # Intra-part Consistency Loss
-class IPC(nn.Module):
-    def __init__(self):
-        super(IPC, self).__init__()
-
-    def forward(self, x, pids):
-        num_pid = len(pids.unique())
-        d = x.shape[-1]
-        pidcen = pids.reshape(num_pid, -1)[:, 0]
-        xcen = x.reshape(3 * num_pid, -1, d).mean(dim=1)
-        per_mode = x.shape[0] // 3
-        per_mode_cen = xcen.shape[0] // 3
-
-        loss = 0
-        for i in range(3):
-            st = i * per_mode
-            ed = st + per_mode
-            st_cen = i * per_mode_cen
-            ed_cen = st_cen + per_mode_cen
-            dist, mask = compute_dist_euc(x[st:ed], xcen[st_cen:ed_cen], pids, pidcen)
-            loss += dist.masked_select(mask).mean()
-        return loss / 3
-
-
-class IPD_v2(nn.Module):
-    def __init__(self, t=1):
-        super(IPD_v2, self).__init__()
-        self.t = t
-        self.min_loss = 1e-6
-
-    def forward(self, x, pids):
-        K, B, D = x.shape
-        num_pid = len(pids.unique())
-        x = x.reshape(K, 3 * num_pid, -1, D)
-        xcen = []
-        for i in range(K):
-            center = torch.cat([x[i][:num_pid], x[i][num_pid:2 * num_pid], x[i][2 * num_pid:]], dim=1)
-            center = center.mean(dim=1)
-            xcen.append(center)
-        xcen = torch.stack(xcen, dim=0)
-        loss = 0
-        for i in range(xcen.shape[1]):
-            sim_matrix = F.cosine_similarity(xcen[:, i, :].unsqueeze(1), xcen[:, i, :].unsqueeze(0), dim=-1) / self.t  # K, K
-
-            exp_sim = torch.exp(sim_matrix)
-            denominator = exp_sim.sum(dim=1)
-            # print(sim_matrix.diagonal())
-            step_loss = -(sim_matrix.diagonal() - torch.log(denominator).clamp(min=1 + self.min_loss))
-            loss += step_loss.mean()
-
-        loss /= xcen.shape[1]
-        return loss
-
 class IPD(nn.Module):
     def __init__(self, margin=0.3):
         super(IPD, self).__init__()
@@ -347,23 +295,6 @@ class IPD_rgb(nn.Module):
         loss = self.single_ipd(rgb, pids) + self.single_ipd(ir, pids)
         return loss
 
-class IPD_V3(nn.Module):
-    def __init__(self, margin=0.3):
-        super(IPD_V3, self).__init__()
-        self.margin = margin
-
-    def forward(self, x, pids):
-        K, B, D = x.shape
-        loss = 0
-        label = torch.tensor([i for i in range (K)]).cuda()
-        for i in range(B):
-            x_i = x[:, i, :]
-            dist, mask = compute_dist_euc(x_i, x_i, label, label)
-            step_loss = (self.margin - dist.masked_select(~mask)).clamp(min=0)
-            loss += step_loss.mean()
-
-        loss /= B
-        return loss
 class IPC_v2(nn.Module):
     def __init__(self, margin=0.6, k1=1.0, k2=1.0):
         super(IPC_v2, self).__init__()
@@ -427,48 +358,4 @@ class IPC_v2_rgb(nn.Module):
     def forward(self, x, pids):
         rgb, ir = x[:x.size(0)//2], x[x.size(0)//2:]
         loss = self.single_ipc(rgb, pids) + self.single_ipc(ir, pids)
-        return loss
-
-class IPC_v3(nn.Module):
-    def __init__(self):
-        super(IPC_v3, self).__init__()
-
-    def forward(self, x, pids):
-        num_pid = len(pids.unique())
-        d = x.shape[-1]
-        pidcen = pids.reshape(num_pid, -1)[:, 0]
-        xcen = x.reshape(3 * num_pid, -1, d)
-        xcen = xcen.mean(dim=1)
-
-        loss = 0
-        for i in range(3):
-            xcen_i = xcen[i*num_pid:(i+1)*num_pid]
-            dist, mask = compute_dist_euc(x, xcen_i, torch.cat([pids, pids, pids], dim=0), pidcen)
-            loss += dist.masked_select(mask).mean()
-
-        loss /= 3
-        return loss
-
-class IPC_v4(nn.Module):
-    def __init__(self, margin=0.6, k1=1.0, k2=1.0):
-        super(IPC_v4, self).__init__()
-        self.margin = margin
-        self.k1 = k1
-        self.k2 = k2
-
-    def forward(self, x, pids):
-        num_pid = len(pids.unique())
-        d = x.shape[-1]
-        pidcen = pids.reshape(num_pid, -1)[:, 0]
-        xcen = x.reshape(3 * num_pid, -1, d)
-        xcen = xcen.mean(dim=1)
-
-        dist, mask = compute_dist_euc(x, xcen, torch.cat([pids, pids, pids]), torch.cat([pidcen, pidcen, pidcen]))
-        n, m = dist.shape
-        mid_n = n // 3 * 2
-        mid_m = m // 3 * 2
-        loss1 = torch.cat([dist[:mid_n, mid_m:][mask[:mid_n, mid_m:]], dist[mid_n:, :mid_m][mask[mid_n:, :mid_m]]]).mean()
-        loss2 = (self.margin - dist.masked_select(~mask)).clamp(min=0).mean()
-        loss = self.k1 * loss1 + self.k2 * loss2
-        # loss = loss1
         return loss

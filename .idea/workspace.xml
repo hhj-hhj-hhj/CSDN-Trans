@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1" />
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +47,7 @@
     &quot;Python.dataset_cross.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_attention.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main_cross.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.main_cross.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_cross_regdb.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_one_trans.executor&quot;: &quot;Run&quot;,
     &quot;Python.main_test.executor&quot;: &quot;Run&quot;,
@@ -87,22 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00122" summary="针对regdb的修改">
-      <option name="closed" value="true" />
-      <created>1733331763097</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
-      <option name="project" value="LOCAL" />
-      <updated>1733331763097</updated>
-    </task>
-    <task id="LOCAL-00123" summary="针对regdb的修改">
-      <option name="closed" value="true" />
-      <created>1733344804138</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
-      <option name="project" value="LOCAL" />
-      <updated>1733344804138</updated>
     </task>
     <task id="LOCAL-00124" summary="prompt加上photo">
       <option name="closed" value="true" />
@@ -480,7 +470,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740127530252</updated>
     </task>
-    <option name="localTasksCounter" value="171" />
+    <task id="LOCAL-00171" summary="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1">
+      <option name="closed" value="true" />
+      <created>1740132235989</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1740132235989</updated>
+    </task>
+    <task id="LOCAL-00172" summary="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1">
+      <option name="closed" value="true" />
+      <created>1740132338945</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1740132338945</updated>
+    </task>
+    <option name="localTasksCounter" value="173" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

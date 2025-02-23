@@ -229,12 +229,14 @@ def train_2rgb(base, loaders, text_features, config):
         rgb_i2t_ide_loss = base.pid_creiteron(rgb_logits, rgb_pids)
         ir_i2t_ide_loss = base.pid_creiteron(ir_logits, ir_pids)
 
-        msel_loss = base.msel_creiteron(torch.cat([rgb_features, ir_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
-        msel_loss_proj = base.msel_creiteron(torch.cat([rgb_attn_features, ir_attn_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
-        msel_loss_part = base.msel_creiteron(torch.cat([rgb_part_features, ir_part_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
+        # msel_loss = base.msel_creiteron(torch.cat([rgb_features, ir_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
+        # msel_loss_proj = base.msel_creiteron(torch.cat([rgb_attn_features, ir_attn_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
+        # msel_loss_part = base.msel_creiteron(torch.cat([rgb_part_features, ir_part_features], dim=0), torch.cat([rgb_pids, ir_pids], dim=0))
 
-        loss = (ide_loss + ide_loss_proj + ide_loss_part) + ( msel_loss + msel_loss_proj + msel_loss_part) + config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
-               config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + 0.15 * (2 * loss_ipd + 1 * loss_ipc)
+        loss = (ide_loss + ide_loss_proj + ide_loss_part) + \
+                config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
+                config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + \
+                0.15 * (2 * loss_ipd + 1 * loss_ipc) # + ( msel_loss + msel_loss_proj + msel_loss_part)
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -247,9 +249,9 @@ def train_2rgb(base, loaders, text_features, config):
                       'triplet_loss_part': triplet_loss_part.data,
                       'rgb_i2t_pid_loss': rgb_i2t_ide_loss.data,
                       'ir_i2t_pid_loss': ir_i2t_ide_loss.data,
-                      'msel_loss': msel_loss.data,
-                      'msel_loss_proj': msel_loss_proj.data,
-                      'msel_loss_part': msel_loss_part.data,
+                      # 'msel_loss': msel_loss.data,
+                      # 'msel_loss_proj': msel_loss_proj.data,
+                      # 'msel_loss_part': msel_loss_part.data,
                       'loss_ipc': loss_ipc.data,
                       'loss_ipd': loss_ipd.data,
                       })
