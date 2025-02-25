@@ -71,9 +71,9 @@ class Base:
         self.soft_pid_creiteron = CrossEntropyLabelSmooth()
         self.tri_creiteron = TripletLoss_WRT()
 
-        self.msel_creiteron = MSEL(4)
-        self.mselcos_creiteron = MSEL_Cos(4)
-        self.mselfeat_creiteron = MSEL_Feat(4)
+        # self.msel_creiteron = MSEL(4)
+        # self.mselcos_creiteron = MSEL_Cos(4)
+        # self.mselfeat_creiteron = MSEL_Feat(4)
 
         self.IPC = IPC_v2(margin=0.6)
         self.IPD = IPD(margin=0.3)

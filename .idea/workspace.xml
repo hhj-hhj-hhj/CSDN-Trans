@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/loss.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00124" summary="prompt加上photo">
-      <option name="closed" value="true" />
-      <created>1733502617456</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
-      <option name="project" value="LOCAL" />
-      <updated>1733502617456</updated>
     </task>
     <task id="LOCAL-00125" summary="load和save权重名字添加logger">
       <option name="closed" value="true" />
@@ -486,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740132338945</updated>
     </task>
-    <option name="localTasksCounter" value="173" />
+    <task id="LOCAL-00173" summary="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。">
+      <option name="closed" value="true" />
+      <created>1740336934752</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1740336934752</updated>
+    </task>
+    <option name="localTasksCounter" value="174" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -501,7 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="对lambda4的消融。num_part定为16" />
     <MESSAGE value="ipd系数还是改成1吧。" />
     <MESSAGE value="ipd系数还是改成2吧，保证变量。" />
     <MESSAGE value="去除ipd和ipc" />
@@ -526,7 +523,8 @@
     <MESSAGE value="写出IPC和IPD只使用两种颜色的loss版本。" />
     <MESSAGE value="加入两种特定于模态的ipc和ipd。" />
     <MESSAGE value="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1" />
-    <option name="LAST_COMMIT_MESSAGE" value="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1" />
+    <MESSAGE value="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。" />
+    <option name="LAST_COMMIT_MESSAGE" value="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
