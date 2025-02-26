@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="论文版本。但ipd系数和ipc都是1。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00125" summary="load和save权重名字添加logger">
-      <option name="closed" value="true" />
-      <created>1734893764660</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
-      <option name="project" value="LOCAL" />
-      <updated>1734893764661</updated>
     </task>
     <task id="LOCAL-00126" summary="load和save权重名字添加logger，修正版。">
       <option name="closed" value="true" />
@@ -484,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740336934752</updated>
     </task>
-    <option name="localTasksCounter" value="174" />
+    <task id="LOCAL-00174" summary="论文版本。但ipd系数和ipc都是1。">
+      <option name="closed" value="true" />
+      <created>1740464843615</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1740464843615</updated>
+    </task>
+    <option name="localTasksCounter" value="175" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,7 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ipd系数还是改成1吧。" />
     <MESSAGE value="ipd系数还是改成2吧，保证变量。" />
     <MESSAGE value="去除ipd和ipc" />
     <MESSAGE value="没有部位特征的版本，交叉注意力模块都没有。" />
@@ -524,7 +523,8 @@
     <MESSAGE value="加入两种特定于模态的ipc和ipd。" />
     <MESSAGE value="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1" />
     <MESSAGE value="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。" />
-    <option name="LAST_COMMIT_MESSAGE" value="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。" />
+    <MESSAGE value="论文版本。但ipd系数和ipc都是1。" />
+    <option name="LAST_COMMIT_MESSAGE" value="论文版本。但ipd系数和ipc都是1。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -236,7 +236,7 @@ def train_2rgb(base, loaders, text_features, config):
         loss = (ide_loss + ide_loss_proj + ide_loss_part) + \
                 config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
                 config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + \
-                0.15 * (1 * loss_ipd + 1 * loss_ipc) # + ( msel_loss + msel_loss_proj + msel_loss_part)
+                0.15 * (2 * loss_ipd + 1 * loss_ipc) # + ( msel_loss + msel_loss_proj + msel_loss_part)
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()

@@ -532,8 +532,8 @@ class Model(nn.Module):
             image_features_map1 = self.image_encoder(image_features_map1)
             image_features1_proj = self.attnpool(image_features_map1)[0]
             _, _, test_features1 = self.classifier(image_features_map1)
-            # _, test_features1_proj = self.classifier2(image_features1_proj)
-            test_features1_proj = self.l2_norm(image_features1_proj)
+            _, test_features1_proj = self.classifier2(image_features1_proj)
+            # test_features1_proj = self.l2_norm(image_features1_proj)
 
             text_features_part = []
             prompts = self.prompt_part()
@@ -558,8 +558,8 @@ class Model(nn.Module):
             image_features_map2 = self.image_encoder(image_features_map2)
             image_features2_proj = self.attnpool(image_features_map2)[0]
             _, _, test_features2 = self.classifier(image_features_map2)
-            # _, test_features2_proj = self.classifier2(image_features2_proj)
-            test_features2_proj = self.l2_norm(image_features2_proj)
+            _, test_features2_proj = self.classifier2(image_features2_proj)
+            # test_features2_proj = self.l2_norm(image_features2_proj)
 
             text_features_part = []
             prompts = self.prompt_part()
