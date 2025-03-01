@@ -213,8 +213,8 @@ def train_2rgb(base, loaders, text_features, config):
             # loss_ipc += base.IPC_1(rgb_ir_per_part_features[i], rgb_pids)
 
 
-        loss_ipc /= num_part
-        loss_ipd = base.IPD(per_part_features, rgb_pids)
+        # loss_ipc /= num_part
+        # loss_ipd = base.IPD(per_part_features, rgb_pids)
         # loss_ipd = base.IPD_1(rgb_ir_per_part_features, rgb_pids)
 
         ide_loss = base.pid_creiteron(cls_score[0], pids)
@@ -236,7 +236,7 @@ def train_2rgb(base, loaders, text_features, config):
         loss = (ide_loss + ide_loss_proj + ide_loss_part) + \
                 config.lambda1 * (triplet_loss + triplet_loss_proj + triplet_loss_part) + \
                 config.lambda2 * rgb_i2t_ide_loss + config.lambda3 * ir_i2t_ide_loss + \
-                0.15 * (1 * loss_ipd + 1 * loss_ipc) # + ( msel_loss + msel_loss_proj + msel_loss_part)
+                0.15 * (1 * loss_ipc) # + 1 * loss_ipd) # + ( msel_loss + msel_loss_proj + msel_loss_part)
 
         base.model_optimizer_stage3.zero_grad()
         loss.backward()
@@ -253,7 +253,7 @@ def train_2rgb(base, loaders, text_features, config):
                       # 'msel_loss_proj': msel_loss_proj.data,
                       # 'msel_loss_part': msel_loss_part.data,
                       'loss_ipc': loss_ipc.data,
-                      'loss_ipd': loss_ipd.data,
+                      # 'loss_ipd': loss_ipd.data,
                       })
         # print(f"iter = {iter}")
         # if (iter + 1) % 200 == 0:

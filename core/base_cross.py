@@ -5,7 +5,7 @@ import torch.nn as nn
 from bisect import bisect_right
 from network.model_cross import Model
 from network.lr import CosineLRScheduler
-from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, IPD, IPC_v2
+from tools import os_walk, CrossEntropyLabelSmooth, SupConLoss, TripletLoss_WRT, IPD, IPC_v2, IPC_v2_rgb, IPD_rgb,IPC_v2_rgb_ir, IPD_rgb_ir
 
 def create_scheduler(optimizer, num_epochs, lr_min, warmup_lr_init, warmup_t, noise_range = None):
 
@@ -78,10 +78,8 @@ class Base:
         self.IPC = IPC_v2(margin=0.6)
         self.IPD = IPD(margin=0.3)
 
-        # self.IPC_1 = IPC_v2_rgb_ir(margin=0.6)
-        # self.IPC_1 = IPC_v2_rgb(margin=0.6)
-        # self.IPD_1 = IPD_rgb_ir(margin=0.3)
-        # self.IPD_1 = IPD_rgb(margin=0.3)
+        self.IPC_1 = IPC_v2_rgb_ir(margin=0.6)
+        self.IPD_1 = IPD_rgb_ir(margin=0.3)
 
     def _init_optimizer_stage1(self):
         params = []
