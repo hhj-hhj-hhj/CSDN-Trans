@@ -90,14 +90,6 @@
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
     </task>
-    <task id="LOCAL-00129" summary="ipd的margin改成 0.35">
-      <option name="closed" value="true" />
-      <created>1735077105181</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1735077105181</updated>
-    </task>
     <task id="LOCAL-00130" summary="还是ipd*2效果好。另外换成stage1only64的文本。">
       <option name="closed" value="true" />
       <created>1735136113241</created>
@@ -482,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740802939181</updated>
     </task>
-    <option name="localTasksCounter" value="178" />
+    <task id="LOCAL-00178" summary="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。">
+      <option name="closed" value="true" />
+      <created>1740804110091</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1740804110091</updated>
+    </task>
+    <option name="localTasksCounter" value="179" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -510,8 +510,8 @@ class Model(nn.Module):
             text_features_part = []
             prompts = self.prompt_part()
             for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
@@ -538,8 +538,8 @@ class Model(nn.Module):
             text_features_part = []
             prompts = self.prompt_part()
             for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
@@ -565,8 +565,8 @@ class Model(nn.Module):
             text_features_part = []
             prompts = self.prompt_part()
             for i in range(self.prompt_part.num_parts):
-                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
-                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
+                text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts))
+                # text_features_part.append(self.text_encoder(prompts[i], self.prompt_part.tokenized_prompts_list[i]))
 
             text_features_part = torch.stack(text_features_part, dim=0)  # (num_parts, 1, dim)
             text_features_part = text_features_part.transpose(0, 1)  # (1, num_parts, dim)
