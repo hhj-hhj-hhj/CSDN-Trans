@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="ipd:1pc=1:1。best=74.5">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network/model_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/network/model_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +43,7 @@
     "Python.dataset_cross.executor": "Run",
     "Python.main.executor": "Run",
     "Python.main_attention.executor": "Run",
-    "Python.main_cross.executor": "Debug",
+    "Python.main_cross.executor": "Run",
     "Python.main_cross_regdb.executor": "Run",
     "Python.main_one_trans.executor": "Run",
     "Python.main_test.executor": "Run",
@@ -92,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00128" summary="ipd系数改回1。但ipd的margin从0.3改成0.4。加大分离效果。">
-      <option name="closed" value="true" />
-      <created>1735004723983</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1735004723983</updated>
     </task>
     <task id="LOCAL-00129" summary="ipd的margin改成 0.35">
       <option name="closed" value="true" />
@@ -485,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740708254159</updated>
     </task>
-    <option name="localTasksCounter" value="177" />
+    <task id="LOCAL-00177" summary="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。">
+      <option name="closed" value="true" />
+      <created>1740802939181</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1740802939181</updated>
+    </task>
+    <option name="localTasksCounter" value="178" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -500,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="没有部位特征的版本，交叉注意力模块都没有。" />
     <MESSAGE value="没有部位特征的版本，交叉注意力模块都没有。注释掉多余模块。" />
     <MESSAGE value="开始regdb" />
     <MESSAGE value="batchsize64" />
@@ -525,7 +521,8 @@
     <MESSAGE value="论文版本。但ipd系数和ipc都是1。" />
     <MESSAGE value="论文版本。" />
     <MESSAGE value="ipd:1pc=1:1。best=74.5" />
-    <option name="LAST_COMMIT_MESSAGE" value="ipd:1pc=1:1。best=74.5" />
+    <MESSAGE value="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。" />
+    <option name="LAST_COMMIT_MESSAGE" value="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

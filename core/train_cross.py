@@ -211,9 +211,8 @@ def train_2rgb(base, loaders, text_features, config):
         for i in range(num_part):
             loss_ipc += base.IPC(per_part_features[i], rgb_pids)
             # loss_ipc += base.IPC_1(rgb_ir_per_part_features[i], rgb_pids)
+        loss_ipc /= num_part
 
-
-        # loss_ipc /= num_part
         # loss_ipd = base.IPD(per_part_features, rgb_pids)
         # loss_ipd = base.IPD_1(rgb_ir_per_part_features, rgb_pids)
 
