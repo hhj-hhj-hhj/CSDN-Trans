@@ -200,9 +200,9 @@ def train_2rgb(base, loaders, text_features, config):
         # ir_features = features[0].squeeze().narrow(0, 2 * n, n)  # 32,2048
         # rgb_part_features = part_features.narrow(0, 0, n)
         # ir_part_features = part_features.narrow(0, 2 * n, n)
-        # rgb_per_part_features = per_part_features[:, :n, :]
-        # ir_per_part_features = per_part_features[:, 2 * n:, :]
-        # rgb_ir_per_part_features = torch.cat([rgb_per_part_features, ir_per_part_features], dim=1)
+        rgb_per_part_features = per_part_features[:, :n, :]
+        ir_per_part_features = per_part_features[:, 2 * n:, :]
+        rgb_ir_per_part_features = torch.cat([rgb_per_part_features, ir_per_part_features], dim=1)
 
         rgb_logits = rgb_attn_features @ text_features.t()
         ir_logits = ir_attn_features @ text_features.t()
