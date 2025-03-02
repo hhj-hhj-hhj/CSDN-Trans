@@ -459,8 +459,8 @@ class Model(nn.Module):
         self.image_encoder = nn.Sequential(clip_model.visual.layer1, clip_model.visual.layer2, clip_model.visual.layer3,
                                            clip_model.visual.layer4)
         self.attnpool = clip_model.visual.attnpool
-        # self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=self.num_part)
-        self.prompt_part = PromptLearner_part_without_cls(clip_model.dtype, clip_model.token_embedding)
+        self.prompt_part = PromptLearner_part(clip_model.dtype, clip_model.token_embedding, num_part=self.num_part)
+        # self.prompt_part = PromptLearner_part_without_cls(clip_model.dtype, clip_model.token_embedding)
         self.classifier = Classifier(self.num_classes)
         self.classifier2 = Classifier2(self.num_classes)
         self.classifier_part = Classifier_part(self.num_classes, self.part_dim)

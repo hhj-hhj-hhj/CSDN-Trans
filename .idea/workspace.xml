@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。">
+    <list default="true" id="b8d044e0-83cf-4b12-a03c-9f334b4afb48" name="更改" comment="论文版本。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/train_cross.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/train_cross.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,14 +90,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725535896025</updated>
-    </task>
-    <task id="LOCAL-00130" summary="还是ipd*2效果好。另外换成stage1only64的文本。">
-      <option name="closed" value="true" />
-      <created>1735136113241</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1735136113241</updated>
     </task>
     <task id="LOCAL-00131" summary="针对部位的消融。num_part改成18">
       <option name="closed" value="true" />
@@ -482,7 +475,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740804110091</updated>
     </task>
-    <option name="localTasksCounter" value="179" />
+    <task id="LOCAL-00179" summary="论文版本。">
+      <option name="closed" value="true" />
+      <created>1740843313296</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1740843313296</updated>
+    </task>
+    <option name="localTasksCounter" value="180" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -519,10 +520,10 @@
     <MESSAGE value="训练改成特定于颜色，只使用rgb和ir的ipc_1和ipd_1" />
     <MESSAGE value="去除msel损失。ipc和ipd使用特定于颜色的。删除非必要损失。" />
     <MESSAGE value="论文版本。但ipd系数和ipc都是1。" />
-    <MESSAGE value="论文版本。" />
     <MESSAGE value="ipd:1pc=1:1。best=74.5" />
     <MESSAGE value="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。" />
-    <option name="LAST_COMMIT_MESSAGE" value="without part_cls的版本。即部位特征直接使用固定的文本模板，而非学习到的。" />
+    <MESSAGE value="论文版本。" />
+    <option name="LAST_COMMIT_MESSAGE" value="论文版本。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -536,11 +537,6 @@
           <url>file://$PROJECT_DIR$/core/train_attention.py</url>
           <line>91</line>
           <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/network/model_cross.py</url>
-          <line>511</line>
-          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
